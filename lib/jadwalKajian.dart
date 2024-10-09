@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'dart:collection';
-import 'AddEvent.dart';
+import 'addEventPage.dart';
 
 void main() {
   runApp(const JadwalKajian());
@@ -15,6 +15,9 @@ class Event {
   final String timeB;
   final String duration;
   final String date;
+  final String loc;
+  final String theme;
+  final String usName;
   bool isCompleted;
 
   Event({
@@ -23,6 +26,9 @@ class Event {
     this.timeA = '',
     this.timeB = '',
     this.duration = '',
+    this.loc = '',
+    this.theme = '',
+    this.usName = '',
     String? date, // Accept date as a String
     bool? isCompleted,
   })  : date = date ??
@@ -62,14 +68,14 @@ class _JadwalKajianState extends State<JadwalKajian> {
         timeA: '10:00 AM',
         timeB: '12:00 AM',
         title: 'Kajian Hadits',
-        subtitle: 'Membahas Hadits',
+        theme: 'Membahas Hadits',
         duration: '2h',
       ),
       Event(
         timeA: '02:00 PM',
         timeB: '03:30 PM',
         title: 'Kajian Aqidah',
-        subtitle: 'Pembahasan Aqidah',
+        theme: 'Pembahasan Aqidah',
         duration: '1h 30m',
       ),
     ],
@@ -78,14 +84,14 @@ class _JadwalKajianState extends State<JadwalKajian> {
         timeA: '11:00 AM',
         timeB: '13:00 AM',
         title: 'Kajian Fiqih',
-        subtitle: 'Fiqih Muamalah',
+        theme: 'Fiqih Muamalah',
         duration: '2h',
       ),
       Event(
         timeA: '03:00 PM',
         timeB: '04:00 PM',
         title: 'Kajian Bahasa Arab',
-        subtitle: 'Kelas Bahasa Arab',
+        theme: 'Kelas Bahasa Arab',
         duration: '1h',
       ),
     ],
@@ -94,14 +100,14 @@ class _JadwalKajianState extends State<JadwalKajian> {
         timeA: '09:00 AM',
         timeB: '10:40 AM',
         title: 'Kajian Tafsir',
-        subtitle: 'Tafsir Al-Quran',
+        theme: 'Tafsir Al-Quran',
         duration: '1h 45m',
       ),
       Event(
         timeA: '04:00 PM',
         timeB: '05:30 PM',
         title: 'Kajian Sirah',
-        subtitle: 'Sejarah Nabi',
+        theme: 'Sejarah Nabi',
         duration: '1h 30m',
       ),
     ],
@@ -110,14 +116,14 @@ class _JadwalKajianState extends State<JadwalKajian> {
         timeA: '10:00 AM',
         timeB: '12:00 AM',
         title: 'Kajian Akhlak',
-        subtitle: 'Pembahasan Akhlak',
+        theme: 'Pembahasan Akhlak',
         duration: '2h',
       ),
       Event(
         timeA: '01:00 PM',
         timeB: '02:15 PM',
         title: 'Kajian Sejarah',
-        subtitle: 'Sejarah Islam',
+        theme: 'Sejarah Islam',
         duration: '1h 15m',
       ),
     ],
@@ -126,14 +132,14 @@ class _JadwalKajianState extends State<JadwalKajian> {
         timeA: '09:00 AM',
         timeB: '10.30 AM',
         title: 'Kajian Sirah',
-        subtitle: 'Sirah Nabi',
+        theme: 'Sirah Nabi',
         duration: '1h 30m',
       ),
       Event(
         timeA: '03:00 PM',
         timeB: '05:00 PM',
         title: 'Kajian Ibadah',
-        subtitle: 'Pembahasan Ibadah',
+        theme: 'Pembahasan Ibadah',
         duration: '2h',
       ),
     ],
@@ -153,50 +159,101 @@ class _JadwalKajianState extends State<JadwalKajian> {
     }
   }
 
-  void _addEvent(String title) {
-    if (title.isNotEmpty) {
-      setState(() {
-        if (_events[_selectedDay] != null) {
-          _events[_selectedDay]!.add(Event(title: title));
-        } else {
-          _events[_selectedDay!] = [Event(title: title)];
-        }
-        _selectedEvents = _getEventsForDay(_selectedDay!);
-      });
-    }
-  }
-
   void _showAddEventDialog() {
-    TextEditingController eventController = TextEditingController();
+    TextEditingController titleController = TextEditingController();
+    TextEditingController timeAController = TextEditingController();
+    TextEditingController timeBController = TextEditingController();
+    TextEditingController themeController = TextEditingController();
+    TextEditingController durationController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Tambah Jadwal'),
-          content: TextField(
-            controller: eventController,
-            decoration:
-                const InputDecoration(hintText: 'Masukkan judul kajian'),
+          content: Column(
+            children: [
+              TextField(
+                controller: titleController,
+                decoration:
+                    const InputDecoration(hintText: 'Masukkan judul kajian'),
+              ),
+              TextField(
+                controller: timeAController,
+                decoration: const InputDecoration(
+                    hintText: 'Masukkan waktu mulai (HH:MM AM/PM)'),
+              ),
+              TextField(
+                controller: timeBController,
+                decoration: const InputDecoration(
+                    hintText: 'Masukkan waktu selesai (HH:MM AM/PM)'),
+              ),
+              TextField(
+                controller: themeController,
+                decoration:
+                    const InputDecoration(hintText: 'Masukkan tema kajian'),
+              ),
+              TextField(
+                controller: durationController,
+                decoration: const InputDecoration(
+                    hintText: 'Masukkan durasi (e.g., 2h 30m)'),
+              ),
+            ],
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                _addEvent(eventController.text);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Simpan'),
-            ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
               child: const Text('Batal'),
             ),
+            TextButton(
+              onPressed: () {
+                _addEvent(
+                  title: titleController.text,
+                  timeA: timeAController.text,
+                  timeB: timeBController.text,
+                  theme: themeController.text,
+                  duration: durationController.text,
+                );
+                Navigator.of(context).pop();
+              },
+              child: const Text('Simpan'),
+            ),
           ],
         );
       },
     );
+  }
+
+  void _addEvent(
+      {required String title,
+      String timeA = '',
+      String timeB = '',
+      String theme = '',
+      String duration = ''}) {
+    if (title.isNotEmpty) {
+      setState(() {
+        if (_events[_selectedDay] != null) {
+          _events[_selectedDay]!.add(Event(
+              title: title,
+              timeA: timeA,
+              timeB: timeB,
+              theme: theme,
+              duration: duration));
+        } else {
+          _events[_selectedDay!] = [
+            Event(
+                title: title,
+                timeA: timeA,
+                timeB: timeB,
+                theme: theme,
+                duration: duration)
+          ];
+        }
+        _selectedEvents = _getEventsForDay(_selectedDay!);
+      });
+    }
   }
 
   @override
@@ -301,7 +358,7 @@ class _JadwalKajianState extends State<JadwalKajian> {
                                 children: [
                                   // Waktu di bagian atas
                                   Text(
-                                    "${event.timeA} - ${event.timeB}", // Menggabungkan jam awal dan durasi
+                                    "${event.timeA} - ${event.timeB}", // Menggabungkan jam mulai dan selesai
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -309,9 +366,9 @@ class _JadwalKajianState extends State<JadwalKajian> {
                                     ),
                                   ),
                                   const SizedBox(height: 8),
-                                  // Teks lainnya
+                                  // Nama Kajian (Title)
                                   Text(
-                                    event.toString(),
+                                    event.title, // Menampilkan nama kajian
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -321,19 +378,22 @@ class _JadwalKajianState extends State<JadwalKajian> {
                                     ),
                                   ),
                                   const SizedBox(height: 8),
+                                  // Tema Kajian (Subtitle)
                                   Text(
-                                    event.subtitle,
-                                    style: TextStyle(
+                                    event.theme, // Menampilkan tema kajian
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.brown,
                                     ),
                                   ),
                                   const SizedBox(height: 8),
+                                  // Durasi Kajian
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 12,
-                                        vertical:
-                                            8), // Padding dalam persegi panjang
+                                      horizontal: 12,
+                                      vertical:
+                                          8, // Padding dalam persegi panjang
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Colors
                                           .brown, // Warna latar belakang persegi panjang
@@ -341,7 +401,8 @@ class _JadwalKajianState extends State<JadwalKajian> {
                                           15), // Radius sudut persegi panjang
                                     ),
                                     child: Text(
-                                      event.duration,
+                                      event
+                                          .duration, // Menampilkan durasi kajian
                                       style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.white, // Warna teks
@@ -419,6 +480,33 @@ class _JadwalKajianState extends State<JadwalKajian> {
                 BorderRadius.circular(30), // Menjadikan latar belakang bulat
           ),
         ),
+        bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Colors.brown,
+          unselectedItemColor: Colors.grey,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Beranda',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Jadwal',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long),
+              label: 'Tiket',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notes),
+              label: 'Catatan',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profil',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -448,7 +536,7 @@ class TicketDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Subtitle: ${event.subtitle}',
+              'Theme: ${event.theme}',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
