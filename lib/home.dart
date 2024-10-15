@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kajian/bayar_tiket.dart';
+import 'package:kajian/detailKajian.dart';
+import 'package:kajian/jadwalKajian.dart';
+import 'package:kajian/tiket.dart';
 // import 'package:kajian/pages/jadwal.dart';
 
 class HomePage extends StatelessWidget {
@@ -82,10 +86,10 @@ class HomePage extends StatelessWidget {
                   icon: const Icon(Icons.arrow_forward_ios,
                       color: Colors.brown, size: 16),
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => KajianListPage()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => JadwalKajian()),
+                    );
                   },
                 ),
               ],
@@ -106,7 +110,12 @@ class HomePage extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.arrow_forward_ios,
                       color: Colors.brown, size: 16),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Tiket()),
+                    );
+                  },
                 ),
               ],
             ),
@@ -116,7 +125,7 @@ class HomePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2,
+        currentIndex: 0,
         selectedItemColor: Colors.brown,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
@@ -225,35 +234,44 @@ class KajianCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 700,
-      height: 130,
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        color: Color(0xFFEAE6CD),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0), // Tambahkan padding di sini
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "14:00 - 15:00 PM",
-                style: TextStyle(fontSize: 14, color: Colors.brown),
-              ),
-              SizedBox(height: 8),
-              Text(
-                "Kajian Ustadz Hanan Attaki",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.brown),
-              ),
-              SizedBox(height: 4),
-              Text(
-                "Rahasia Merubah Takdir",
-                style: TextStyle(fontSize: 14, color: Colors.brown),
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => KajianDetailAdminPage()),
+        ); // Ganti dengan rute yang sesuai
+      },
+      child: Container(
+        width: 700,
+        height: 130,
+        child: Card(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          color: Color(0xFFEAE6CD),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "14:00 - 15:00 PM",
+                  style: TextStyle(fontSize: 14, color: Colors.brown),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Kajian Ustadz Hanan Attaki",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.brown),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  "Rahasia Merubah Takdir",
+                  style: TextStyle(fontSize: 14, color: Colors.brown),
+                ),
+              ],
+            ),
           ),
         ),
       ),

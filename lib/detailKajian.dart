@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class KajianDetailAdminPage extends StatelessWidget {
+  const KajianDetailAdminPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+        home: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -185,6 +187,7 @@ class KajianDetailAdminPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 1,
         selectedItemColor: Colors.brown,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
@@ -201,7 +204,7 @@ class KajianDetailAdminPage extends StatelessWidget {
               Navigator.pushNamed(context, '/tiket');
               break;
             case 3:
-              Navigator.pushNamed(context, '/tiket');
+              Navigator.pushNamed(context, '/catatan');
               break;
             case 4:
               Navigator.pushNamed(context, '/profile');
@@ -231,6 +234,6 @@ class KajianDetailAdminPage extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }
