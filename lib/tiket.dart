@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const Jadwal());
+  runApp(const Tiket());
 }
 
-class Jadwal extends StatelessWidget {
-  const Jadwal({super.key});
+class Tiket extends StatelessWidget {
+  const Tiket({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class Jadwal extends StatelessWidget {
         appBar: AppBar(
           title: Center(
             child: Text(
-              'Jadwal Kajian',
+              'Tiket Saya',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -163,6 +163,54 @@ class Jadwal extends StatelessWidget {
               ],
             ),
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: 2,
+          selectedItemColor: Colors.brown,
+          unselectedItemColor: Colors.grey,
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) {
+            // Navigate to the corresponding page based on the selected index
+            switch (index) {
+              case 0:
+                Navigator.pushNamed(context, '/home');
+                break;
+              case 1:
+                Navigator.pushNamed(context, '/jadwal');
+                break;
+              case 2:
+                Navigator.pushNamed(context, '/tiket');
+                break;
+              case 3:
+                Navigator.pushNamed(context, '/catatan');
+                break;
+              case 4:
+                Navigator.pushNamed(context, '/profile');
+                break;
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Beranda',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Jadwal',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long),
+              label: 'Tiket',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notes),
+              label: 'Catatan',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profil',
+            ),
+          ],
         ),
       ),
     );

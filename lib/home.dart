@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 // import 'package:kajian/pages/jadwal.dart';
 
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+        home: Scaffold(
       appBar: AppBar(
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -18,7 +18,10 @@ class HomePage extends StatelessWidget {
             ),
             Text(
               'Yusriyah F',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
           ],
         ),
@@ -28,10 +31,10 @@ class HomePage extends StatelessWidget {
         actions: [
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => ProfilePage()),
+              // );
             },
             child: const CircleAvatar(
               backgroundImage: AssetImage(
@@ -42,7 +45,7 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 40),
+        padding: EdgeInsets.symmetric(horizontal: 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -73,12 +76,13 @@ class HomePage extends StatelessWidget {
                       color: Colors.brown),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios, color: Colors.brown, size: 16),
+                  icon: const Icon(Icons.arrow_forward_ios,
+                      color: Colors.brown, size: 16),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => KajianListPage()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => KajianListPage()),
+                    // );
                   },
                 ),
               ],
@@ -97,13 +101,9 @@ class HomePage extends StatelessWidget {
                       color: Colors.brown),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios, color: Colors.brown, size: 16),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TiketPage()),
-                    );
-                  },
+                  icon: const Icon(Icons.arrow_forward_ios,
+                      color: Colors.brown, size: 16),
+                  onPressed: () {},
                 ),
               ],
             ),
@@ -113,92 +113,109 @@ class HomePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 2,
+        selectedItemColor: Colors.brown,
+        unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
-        items: const [
+        onTap: (index) {
+          // Navigate to the corresponding page based on the selected index
+          switch (index) {
+            case 0:
+              Navigator.pushNamed(context, '/home');
+              break;
+            case 1:
+              Navigator.pushNamed(context, '/jadwal');
+              break;
+            case 2:
+              Navigator.pushNamed(context, '/tiket');
+              break;
+            case 3:
+              Navigator.pushNamed(context, '/catatan');
+              break;
+            case 4:
+              Navigator.pushNamed(context, '/profile');
+              break;
+          }
+        },
+        items: [
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('asset/img/iconhome.png')),
+            icon: Icon(Icons.home),
             label: 'Beranda',
-            
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('asset/img/calendar.png')),
+            icon: Icon(Icons.calendar_today),
             label: 'Jadwal',
           ),
-            BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('asset/img/ticket.png'),
-              size: 50, // Adjust the size as needed
-            ),
-            label: 'Tiket',
-            ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('asset/img/notes.png')),
+            icon: Icon(Icons.receipt_long),
+            label: 'Tiket',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notes),
             label: 'Catatan',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('asset/img/person.png')),
+            icon: Icon(Icons.person),
             label: 'Profil',
           ),
         ],
-        selectedItemColor: Colors.brown,
-        unselectedItemColor: Colors.grey,
       ),
-    );
+    ));
   }
 }
 
 // Sample page for "Kajian Terdekat" navigation
-class KajianListPage extends StatelessWidget {
-  const KajianListPage({super.key});
+// class KajianListPage extends StatelessWidget {
+//   const KajianListPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Kajian Terdekat'),
-        backgroundColor: Colors.brown,
-      ),
-      body: const Center(
-        child: Text('Daftar Kajian Terdekat', style: TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Kajian Terdekat'),
+//         backgroundColor: Colors.brown,
+//       ),
+//       body: const Center(
+//         child: Text('Daftar Kajian Terdekat', style: TextStyle(fontSize: 24)),
+//       ),
+//     );
+//   }
+// }
 
 // Sample page for "Tiket Kajian Saya" navigation
-class TiketPage extends StatelessWidget {
-  const TiketPage({super.key});
+// class TiketPage extends StatelessWidget {
+//   const TiketPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tiket Kajian Saya'),
-        backgroundColor: Colors.brown,
-      ),
-      body: const Center(
-        child: Text('Daftar Tiket Kajian Saya', style: TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Tiket Kajian Saya'),
+//         backgroundColor: Colors.brown,
+//       ),
+//       body: const Center(
+//         child: Text('Daftar Tiket Kajian Saya', style: TextStyle(fontSize: 24)),
+//       ),
+//     );
+//   }
+// }
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+// class ProfilePage extends StatelessWidget {
+//   const ProfilePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tiket Kajian Saya'),
-        backgroundColor: Colors.brown,
-      ),
-      body: const Center(
-        child: Text('this is profile page', style: TextStyle(fontSize: 24)),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Tiket Kajian Saya'),
+//         backgroundColor: Colors.brown,
+//       ),
+//       body: const Center(
+//         child: Text('this is profile page', style: TextStyle(fontSize: 24)),
+//       ),
+//     );
+//   }
+// }
 
 class KajianCard extends StatelessWidget {
   const KajianCard({super.key});
@@ -209,7 +226,9 @@ class KajianCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       color: Colors.brown.shade50,
       child: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0), // Adjusted padding for wider appearance
+        padding: EdgeInsets.symmetric(
+            vertical: 20.0,
+            horizontal: 60.0), // Adjusted padding for wider appearance
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -221,7 +240,9 @@ class KajianCard extends StatelessWidget {
             Text(
               "Kajian Ustadz Hanan Attaki",
               style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             SizedBox(height: 4),
             Text(

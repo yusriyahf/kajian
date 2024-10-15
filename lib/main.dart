@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/camera.dart';
 import 'package:kajian/detailKajian.dart';
+import 'package:kajian/home.dart';
 import 'package:kajian/jadwalKajian.dart';
 import 'package:kajian/notes.dart';
 import 'package:kajian/onboard.dart';
+import 'package:kajian/pages/admin.dart';
 import 'package:kajian/profile.dart';
+import 'package:kajian/tiket.dart';
 
 void main(List<String> args) {
   runApp(MyApp());
@@ -19,10 +22,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
       routes: {
+        '/home': (context) => HomePage(),
         '/profile': (context) => ProfilePage(),
         '/jadwal': (context) => JadwalKajian(),
+        '/tiket': (context) => Tiket(),
         '/catatan': (context) => Notes(),
-        // '/home' : (context) =>
         '/detailkajian': (context) => KajianDetailAdminPage(),
       },
     );

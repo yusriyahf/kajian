@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kajian/detailKajian.dart';
+import 'package:kajian/home.dart';
+// import 'package:kajian/detailKajian.dart';
+import 'package:kajian/pages/admin.dart';
 import 'package:kajian/signup.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -85,8 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => KajianDetailAdminPage()),
+                    MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
