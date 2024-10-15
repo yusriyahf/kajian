@@ -104,9 +104,29 @@ class ProfilePage extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 4,
-        type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.brown,
-        unselectedItemColor: Colors.grey.shade600,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          // Navigate to the corresponding page based on the selected index
+          switch (index) {
+            case 0:
+              Navigator.pushNamed(context, '/home');
+              break;
+            case 1:
+              Navigator.pushNamed(context, '/jadwal');
+              break;
+            case 2:
+              Navigator.pushNamed(context, '/catatan');
+              break;
+            case 3:
+              Navigator.pushNamed(context, '/catatan');
+              break;
+            case 4:
+              Navigator.pushNamed(context, '/profile');
+              break;
+          }
+        },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -117,11 +137,11 @@ class ProfilePage extends StatelessWidget {
             label: 'Jadwal',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.local_activity),
+            icon: Icon(Icons.receipt_long),
             label: 'Tiket',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.note),
+            icon: Icon(Icons.notes),
             label: 'Catatan',
           ),
           BottomNavigationBarItem(

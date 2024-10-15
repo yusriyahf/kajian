@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/camera.dart';
 import 'package:kajian/detailKajian.dart';
+import 'package:kajian/jadwalKajian.dart';
+import 'package:kajian/notes.dart';
 import 'package:kajian/onboard.dart';
 import 'package:kajian/profile.dart';
 
@@ -18,6 +20,8 @@ class MyApp extends StatelessWidget {
       home: SplashScreen(),
       routes: {
         '/profile': (context) => ProfilePage(),
+        '/jadwal': (context) => JadwalKajian(),
+        '/catatan': (context) => Notes(),
         // '/home' : (context) =>
         '/detailkajian': (context) => KajianDetailAdminPage(),
       },
