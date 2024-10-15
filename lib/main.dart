@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/jadwal': (context) => JadwalKajian(),
         '/tiket': (context) => Tiket(),
         '/catatan': (context) => Notes(),
+        '/detailkajianAdmin': (context) => KajianDetailAdminPage(),
         '/detailkajian': (context) => KajianDetailAdminPage(),
       },
     );

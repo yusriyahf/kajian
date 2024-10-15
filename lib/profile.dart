@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kajian/cange_password.dart';
+import 'package:kajian/onboard.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,8 +34,8 @@ class ProfilePage extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 60,
-              backgroundImage:
-                  AssetImage('assets/img/joki.png'), // Use local asset image
+              backgroundImage: AssetImage(
+                  'asset/img/fotoprofile.png'), // Use local asset image
             ),
             SizedBox(height: 20),
             Container(
@@ -85,14 +87,22 @@ class ProfilePage extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.lock_outline, color: Colors.brown),
                     title: Text('Ganti Password'),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyAppPass()),
+                      );
+                    },
                     contentPadding: EdgeInsets.zero,
                   ),
                   ListTile(
                     leading: Icon(Icons.logout, color: Colors.brown),
                     title: Text('Logout'),
                     onTap: () {
-                      print('logout');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SplashScreen()),
+                      );
                     },
                     contentPadding: EdgeInsets.zero,
                   ),
@@ -117,7 +127,7 @@ class ProfilePage extends StatelessWidget {
               Navigator.pushNamed(context, '/jadwal');
               break;
             case 2:
-              Navigator.pushNamed(context, '/catatan');
+              Navigator.pushNamed(context, '/tiket');
               break;
             case 3:
               Navigator.pushNamed(context, '/catatan');
