@@ -8,20 +8,23 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 5),
             Text(
               'Selamat Datang',
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
+            SizedBox(height: 5),
             Text(
               'Yusriyah F',
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black),
+                  color: Colors.brown),
             ),
           ],
         ),
@@ -45,11 +48,11 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 40),
+        padding: EdgeInsets.symmetric(horizontal: 19),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 4),
+            const SizedBox(height: 15),
             const Text(
               "Rabu, 19 Des 2024",
               style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -222,34 +225,36 @@ class KajianCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: Colors.brown.shade50,
-      child: const Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: 20.0,
-            horizontal: 60.0), // Adjusted padding for wider appearance
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "14:00 - 15:00 PM",
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            SizedBox(height: 8),
-            Text(
-              "Kajian Ustadz Hanan Attaki",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
-            SizedBox(height: 4),
-            Text(
-              "Rahasia Merubah Takdir",
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-          ],
+    return Container(
+      width: 700,
+      height: 130,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        color: Color(0xFFEAE6CD),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0), // Tambahkan padding di sini
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "14:00 - 15:00 PM",
+                style: TextStyle(fontSize: 14, color: Colors.brown),
+              ),
+              SizedBox(height: 8),
+              Text(
+                "Kajian Ustadz Hanan Attaki",
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown),
+              ),
+              SizedBox(height: 4),
+              Text(
+                "Rahasia Merubah Takdir",
+                style: TextStyle(fontSize: 14, color: Colors.brown),
+              ),
+            ],
+          ),
         ),
       ),
     );
