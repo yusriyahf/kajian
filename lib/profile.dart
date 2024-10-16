@@ -35,7 +35,7 @@ class ProfilePage extends StatelessWidget {
             CircleAvatar(
               radius: 60,
               backgroundImage: AssetImage(
-                  'asset/img/fotoprofile.png'), // Use local asset image
+                  'assets/images/profile.png'), // Use local asset image
             ),
             SizedBox(height: 20),
             Container(
@@ -76,7 +76,7 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'cacingattack27@gmail.com', // Replace with dynamic data if needed
+                    'yusriyah9@gmail.com', // Replace with dynamic data if needed
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

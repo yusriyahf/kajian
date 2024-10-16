@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kajian/bayar_tiket.dart';
 
-class KajianDetailAdminPage extends StatelessWidget {
-  const KajianDetailAdminPage({super.key});
+// void main() {
+//   runApp(MyApp());
+// }
+
+// class KajianUser extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: KajianDetailPage(),
+//     );
+//   }
+// }
+
+class KajianDetailPage extends StatelessWidget {
+  const KajianDetailPage({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,7 +28,7 @@ class KajianDetailAdminPage extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.brown),
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
           },
         ),
         title: Text(
@@ -90,95 +106,59 @@ class KajianDetailAdminPage extends StatelessWidget {
                         Text('Ustadz Hanan Attaki'),
                       ],
                     ),
-
                     SizedBox(height: 16),
-
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.brown.shade100),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: Icon(Icons.people, color: Colors.brown),
-                            title: Text('25 Orang'),
-                            onTap: () {
-                              // Add functionality to change password
-                            },
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.man, color: Colors.brown),
-                            title: Text('3 Laki-laki'),
-                            onTap: () {
-                              // Add functionality for logout
-                            },
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.woman, color: Colors.brown),
-                            title: Text('3 Perempuan'),
-                            onTap: () {
-                              // Add functionality for logout
-                            },
-                            contentPadding: EdgeInsets.zero,
-                          ),
-                        ],
-                      ),
-                    ),
-
+                    // Peta Google Maps
+                    // Container(
+                    //   height: 200,
+                    //   child: GoogleMap(
+                    //     initialCameraPosition: CameraPosition(
+                    //       target: LatLng(
+                    //           -6.200000, 106.816666), // Koordinat Jakarta
+                    //       zoom: 14,
+                    //     ),
+                    //     markers: {
+                    //       Marker(
+                    //         markerId: MarkerId('masjid_borcelle'),
+                    //         position: LatLng(-6.200000, 106.816666),
+                    //         infoWindow: InfoWindow(title: 'Masjid Borcelle'),
+                    //       ),
+                    //     },
+                    //   ),
+                    // ),
                     SizedBox(height: 16),
                     // Button Pesan Tiket
                     Center(
                       child: Container(
-                        width: double.infinity,
+                        width: 320,
                         height: 59,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Color(0xFF98614A), // Set background color
+                            backgroundColor: Color(
+                                0xFF98614A), // Mengganti 'primary' menjadi 'backgroundColor'
                             shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.circular(10), // Border radius
                             ),
                           ),
                           onPressed: () {
-                            // Action when the button is pressed
-                            print('Pesan Tiket button pressed');
+                            // Aksi ketika button ditekan
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BayarTiket()),
+                            );
                           },
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.center, // Center the content
-                            children: [
-                              Image.asset(
-                                'assets/images/scanicon.png', // Path to the local icon
-                                width: 24, // Width of the icon
-                                height: 24, // Height of the icon
-                                color: Colors
-                                    .white, // Apply color to the icon (optional)
-                              ),
-                              // Icon(
-                              //   Icons
-                              //       .qr_code_scanner, // Use an appropriate scan icon
-                              //   color: Colors.white, // Color of the icon
-                              //   size: 24, // Size of the icon
-                              // ),
-                              SizedBox(width: 8), // Space between icon and text
-                              Text(
-                                'Scan Kehadiran',
-                                style: TextStyle(
-                                  color: Colors.white, // Color of the text
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                          child: Text(
+                            'Pesan Tiket',
+                            style: TextStyle(
+                              color: Colors.white, // Warna tulisan putih
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -187,30 +167,8 @@ class KajianDetailAdminPage extends StatelessWidget {
         ),
       ),
       // bottomNavigationBar: BottomNavigationBar(
-      //   currentIndex: 1,
       //   selectedItemColor: Colors.brown,
       //   unselectedItemColor: Colors.grey,
-      //   type: BottomNavigationBarType.fixed,
-      //   onTap: (index) {
-      //     // Navigate to the corresponding page based on the selected index
-      //     switch (index) {
-      //       case 0:
-      //         Navigator.pushNamed(context, '/home');
-      //         break;
-      //       case 1:
-      //         Navigator.pushNamed(context, '/jadwal');
-      //         break;
-      //       case 2:
-      //         Navigator.pushNamed(context, '/tiket');
-      //         break;
-      //       case 3:
-      //         Navigator.pushNamed(context, '/catatan');
-      //         break;
-      //       case 4:
-      //         Navigator.pushNamed(context, '/profile');
-      //         break;
-      //     }
-      //   },
       //   items: [
       //     BottomNavigationBarItem(
       //       icon: Icon(Icons.home),

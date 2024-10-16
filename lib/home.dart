@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/bayar_tiket.dart';
 import 'package:kajian/detailKajian.dart';
+import 'package:kajian/detailkajiann.dart';
 import 'package:kajian/jadwalKajian.dart';
 import 'package:kajian/tiket.dart';
 // import 'package:kajian/pages/jadwal.dart';
@@ -42,7 +43,7 @@ class HomePage extends StatelessWidget {
             },
             child: const CircleAvatar(
               backgroundImage: AssetImage(
-                  'asset/img/fotoprofile.png'), // replace with user's image
+                  'assets/images/profile.png'), // replace with user's image
             ),
           ),
           const SizedBox(width: 16),
@@ -235,7 +236,7 @@ class KajianCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => KajianDetailAdminPage()),
+          MaterialPageRoute(builder: (context) => KajianDetailPage()),
         ); // Ganti dengan rute yang sesuai
       },
       child: Card(
