@@ -38,8 +38,8 @@ Future<ApiResponse> login(String email, String password) async {
 }
 
 // Register
-Future<ApiResponse> register(
-    String first_name, String last_name, String email, String password) async {
+Future<ApiResponse> register(String first_name, String last_name, String email,
+    String password, String passwordConfirmation) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     final response = await http.post(Uri.parse(registerURL), headers: {
@@ -49,7 +49,7 @@ Future<ApiResponse> register(
       'last_name': last_name,
       'email': email,
       'password': password,
-      'password_confirmation': password
+      'password_confirmation': passwordConfirmation
     });
 
     switch (response.statusCode) {
@@ -141,7 +141,7 @@ Future<String> getToken() async {
 // get user id
 Future<int> getUserId() async {
   SharedPreferences pref = await SharedPreferences.getInstance();
-  return pref.getInt('userId') ?? 0;
+  return pref.getInt('user_id') ?? 0;
 }
 
 // logout

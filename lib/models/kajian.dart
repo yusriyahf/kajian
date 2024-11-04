@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Post {
+class Kajian {
   int? kajian_id;
   String? image;
   String? title;
@@ -11,7 +11,7 @@ class Post {
   TimeOfDay? start_time;
   TimeOfDay? end_time;
 
-  Post({
+  Kajian({
     this.kajian_id,
     this.image,
     this.title,
@@ -23,10 +23,10 @@ class Post {
     this.end_time,
   });
 
-// map json to post model
+// map json to kajian model
 
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
+  factory Kajian.fromJson(Map<String, dynamic> json) {
+    return Kajian(
       kajian_id: json['kajian_id'],
       image: json['image'],
       title: json['title'],

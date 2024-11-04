@@ -2,22 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:kajian/cange_password.dart';
 import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/services/user_service.dart';
+import 'package:kajian/models/user.dart';
 
-void main() {
-  runApp(MyApp());
-}
+import 'package:kajian/models/api_response.dart';
 
-class MyApp extends StatelessWidget {
+import '../constant.dart';
+
+// void main() {
+//   runApp(MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: ProfilePage(),
+//     );
+//   }
+// }
+
+class ProfilePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ProfilePage(),
-    );
-  }
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class ProfilePage extends StatelessWidget {
+class _ProfilePageState extends State<ProfilePage> {
+  User? user;
+
+  // get user detail
+  void getUser() async {
+    ApiResponse response = await getUserDetail();
+    if (response.error == null) {
+      setState(() {
+        user = response.data as User;
+        // loading = false;
+        // txtNameController.text = user!.name ?? '';
+      });
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => SplashScreen()),
+                (route) => false)
+          });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+  }
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,87 +74,87 @@ class ProfilePage extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 60,
-              backgroundImage: AssetImage(
-                  'assets/images/profile.png'), // Use local asset image
+              backgroundImage: AssetImage('assets/images/profile.png'),
             ),
             SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.brown.shade100),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Profile Saya',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+            if (user != null) // Check if 'user' is not null
+              Container(
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.brown.shade100),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Profile Saya',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Username',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
+                    SizedBox(height: 10),
+                    Text(
+                      'Username',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'Yusriyah', // Replace with dynamic data if needed
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    Text(
+                      '${user!.first_name} ${user!.last_name}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Email',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
+                    SizedBox(height: 10),
+                    Text(
+                      'Email',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'yusriyah9@gmail.com', // Replace with dynamic data if needed
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    Text(
+                      '${user!.email}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Divider(color: Colors.brown.shade100),
-                  ListTile(
-                    leading: Icon(Icons.lock_outline, color: Colors.brown),
-                    title: Text('Ganti Password'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MyAppPass()),
-                      );
-                    },
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.logout, color: Colors.brown),
-                    title: Text('Logout'),
-                    onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => SplashScreen()),
-                      // );
-                      logout().then((value) => {
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => SplashScreen()),
-                                (route) => false)
-                          });
-                    },
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ],
-              ),
-            ),
+                    SizedBox(height: 20),
+                    Divider(color: Colors.brown.shade100),
+                    ListTile(
+                      leading: Icon(Icons.lock_outline, color: Colors.brown),
+                      title: Text('Ganti Password'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MyAppPass()),
+                        );
+                      },
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.logout, color: Colors.brown),
+                      title: Text('Logout'),
+                      onTap: () {
+                        logout().then((value) => {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => SplashScreen()),
+                                  (route) => false)
+                            });
+                      },
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                  ],
+                ),
+              )
+            else
+              Center(
+                  child:
+                      CircularProgressIndicator()), // Show a loader if 'user' is null
           ],
         ),
       ),
@@ -125,7 +164,6 @@ class ProfilePage extends StatelessWidget {
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
-          // Navigate to the corresponding page based on the selected index
           switch (index) {
             case 0:
               Navigator.pushNamed(context, '/home');

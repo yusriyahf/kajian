@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kajian/screens/home.dart';
 // import 'package:kajian/detailKajian.dart';
 import 'package:kajian/screens/admin.dart';
-import 'package:kajian/signup.dart';
+import 'package:kajian/screens/signup.dart';
 
 import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/user.dart';

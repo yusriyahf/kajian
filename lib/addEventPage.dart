@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'jadwalKajian.dart';
+import 'screens/jadwalKajian.dart';
 
 class AddEventPage extends StatefulWidget {
   final Function(Event) onEventAdded;

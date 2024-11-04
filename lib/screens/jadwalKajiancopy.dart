@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kajian/detailKajian.dart';
 import 'package:kajian/detailkajiann.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'dart:collection';
-import 'addEventPage.dart';
+import '../addEventPage.dart';
 
 void main() {
   runApp(const JadwalKajian());

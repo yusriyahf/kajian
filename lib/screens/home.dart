@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kajian/bayar_tiket.dart';
 import 'package:kajian/detailKajian.dart';
 import 'package:kajian/detailkajiann.dart';
-import 'package:kajian/jadwalKajian.dart';
-import 'package:kajian/tiket.dart';
+import 'package:kajian/screens/jadwalKajian.dart';
+import 'package:kajian/screens/tiket.dart';
 // import 'package:kajian/pages/jadwal.dart';
 
 class HomePage extends StatelessWidget {

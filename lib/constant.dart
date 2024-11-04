@@ -6,7 +6,8 @@ const loginURL = baseURL + '/login';
 const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
-const postsURL = baseURL + '/posts';
+const kajianURL = baseURL + '/kajian';
+const tiketURL = baseURL + '/tiket';
 const commentsURL = baseURL + '/comments';
 
 // ----- Errors -----
