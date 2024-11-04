@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/camera.dart';
-import 'package:kajian/login.dart';
+import 'package:kajian/screens/login.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override

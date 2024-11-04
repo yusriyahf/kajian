@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/cange_password.dart';
-import 'package:kajian/onboard.dart';
+import 'package:kajian/screens/onboard.dart';
+import 'package:kajian/services/user_service.dart';
 
 void main() {
   runApp(MyApp());
@@ -99,10 +100,16 @@ class ProfilePage extends StatelessWidget {
                     leading: Icon(Icons.logout, color: Colors.brown),
                     title: Text('Logout'),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SplashScreen()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => SplashScreen()),
+                      // );
+                      logout().then((value) => {
+                            Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => SplashScreen()),
+                                (route) => false)
+                          });
                     },
                     contentPadding: EdgeInsets.zero,
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/detailKajian.dart';
+import 'package:kajian/detailkajiann.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'dart:collection';
@@ -428,7 +429,7 @@ class _JadwalKajianState extends State<JadwalKajian> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            KajianDetailAdminPage(),
+                                            KajianDetailPage(),
                                       ),
                                     );
                                   },

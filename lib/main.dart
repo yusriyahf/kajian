@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/camera.dart';
 import 'package:kajian/detailKajian.dart';
-import 'package:kajian/home.dart';
+import 'package:kajian/screens/home.dart';
 import 'package:kajian/jadwalKajian.dart';
 import 'package:kajian/notes.dart';
-import 'package:kajian/onboard.dart';
-import 'package:kajian/pages/admin.dart';
-import 'package:kajian/profile.dart';
+import 'package:kajian/screens/onboard.dart';
+import 'package:kajian/screens/admin.dart';
+import 'package:kajian/screens/profile.dart';
+import 'package:kajian/screens/loading.dart';
 import 'package:kajian/tiket.dart';
 
 void main(List<String> args) {
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: Loading(),
       routes: {
         '/home': (context) => HomePage(),
         '/profile': (context) => ProfilePage(),

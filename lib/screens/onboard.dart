@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/detailKajian.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kajian/login.dart';
+import 'package:kajian/screens/login.dart';
 import 'package:kajian/signup.dart';
 
 class SplashScreen extends StatelessWidget {
