@@ -23,7 +23,7 @@ class _TiketState extends State<Tiket> {
   // bool _loading = true;
 
   // get all posts
-  Future<void> retrievePosts() async {
+  Future<void> retrieveTiket() async {
     userId = await getUserId();
     ApiResponse response = await getTiket();
 
@@ -47,7 +47,7 @@ class _TiketState extends State<Tiket> {
 
   @override
   void initState() {
-    retrievePosts();
+    retrieveTiket();
     super.initState();
   }
 
@@ -100,7 +100,7 @@ class _TiketState extends State<Tiket> {
                       left: 40,
                       top: 64,
                       child: Text(
-                        '${tiket}', // Title from data
+                        'a', // Title from data
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           color: Color(0xFF724820),

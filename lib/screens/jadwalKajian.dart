@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kajian/detailKajian.dart';
 import 'package:kajian/detailkajiann.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -171,58 +170,60 @@ class _JadwalKajianState extends State<JadwalKajian> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Tambah Jadwal'),
-          content: Column(
-            children: [
-              TextField(
-                controller: titleController,
-                decoration:
-                    const InputDecoration(hintText: 'Masukkan judul kajian'),
+        return Form(
+          child: AlertDialog(
+            title: const Text('Tambah Jadwal'),
+            content: Column(
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration:
+                      const InputDecoration(hintText: 'Masukkan judul kajian'),
+                ),
+                TextField(
+                  controller: timeAController,
+                  decoration: const InputDecoration(
+                      hintText: 'Masukkan waktu mulai (HH:MM AM/PM)'),
+                ),
+                TextField(
+                  controller: timeBController,
+                  decoration: const InputDecoration(
+                      hintText: 'Masukkan waktu selesai (HH:MM AM/PM)'),
+                ),
+                TextField(
+                  controller: themeController,
+                  decoration:
+                      const InputDecoration(hintText: 'Masukkan tema kajian'),
+                ),
+                TextField(
+                  controller: durationController,
+                  decoration: const InputDecoration(
+                      hintText: 'Masukkan durasi (e.g., 2h 30m)'),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Batal'),
               ),
-              TextField(
-                controller: timeAController,
-                decoration: const InputDecoration(
-                    hintText: 'Masukkan waktu mulai (HH:MM AM/PM)'),
-              ),
-              TextField(
-                controller: timeBController,
-                decoration: const InputDecoration(
-                    hintText: 'Masukkan waktu selesai (HH:MM AM/PM)'),
-              ),
-              TextField(
-                controller: themeController,
-                decoration:
-                    const InputDecoration(hintText: 'Masukkan tema kajian'),
-              ),
-              TextField(
-                controller: durationController,
-                decoration: const InputDecoration(
-                    hintText: 'Masukkan durasi (e.g., 2h 30m)'),
+              TextButton(
+                onPressed: () {
+                  _addEvent(
+                    title: titleController.text,
+                    timeA: timeAController.text,
+                    timeB: timeBController.text,
+                    theme: themeController.text,
+                    duration: durationController.text,
+                  );
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Simpan'),
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Batal'),
-            ),
-            TextButton(
-              onPressed: () {
-                _addEvent(
-                  title: titleController.text,
-                  timeA: timeAController.text,
-                  timeB: timeBController.text,
-                  theme: themeController.text,
-                  duration: durationController.text,
-                );
-                Navigator.of(context).pop();
-              },
-              child: const Text('Simpan'),
-            ),
-          ],
         );
       },
     );
@@ -462,17 +463,7 @@ class _JadwalKajianState extends State<JadwalKajian> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AddEventPage(
-                  onEventAdded: (newEvent) {
-                    setState(() {
-                      if (_selectedDay != null) {
-                        _events[_selectedDay!] = _events[_selectedDay!] ?? [];
-                        _events[_selectedDay!]!.add(newEvent);
-                        _selectedEvents = _getEventsForDay(_selectedDay!);
-                      }
-                    });
-                  },
-                ),
+                builder: (context) => AddEventPage(),
               ),
             );
           },

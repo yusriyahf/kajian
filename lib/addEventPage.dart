@@ -1,24 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'screens/jadwalKajian.dart';
+import 'package:kajian/screens/jadwalKajian.dart';
+
+import 'package:kajian/constant.dart';
+import 'package:kajian/models/api_response.dart';
+import 'package:kajian/models/kajian.dart';
+import 'package:kajian/screens/onboard.dart';
+import 'package:kajian/services/kajian_service.dart';
+import 'package:kajian/services/user_service.dart';
+import 'dart:io';
 
 class AddEventPage extends StatefulWidget {
-  final Function(Event) onEventAdded;
+  // final Function(Event) onEventAdded;
+  // final Kajian? kajian; // Declare as final without initializing here
 
-  const AddEventPage({Key? key, required this.onEventAdded}) : super(key: key);
+  // // Constructor now includes kajian as a parameter
+  // const AddEventPage({
+  //   Key? key,
+  //   required this.onEventAdded,
+  //   this.kajian, // Pass kajian as a parameter
+  // }) : super(key: key); // Pass key to the superclass
 
   @override
   _AddEventPageState createState() => _AddEventPageState();
 }
 
 class _AddEventPageState extends State<AddEventPage> {
-  final _formKey = GlobalKey<FormState>();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _subtitleController = TextEditingController();
-  final TextEditingController _timeAController = TextEditingController();
-  final TextEditingController _timeBController = TextEditingController();
-  final TextEditingController _durationController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
+  // final _formKey = GlobalKey<FormState>();
+  // final TextEditingController _titleController = TextEditingController();
+  // final TextEditingController _subtitleController = TextEditingController();
+  // final TextEditingController _timeAController = TextEditingController();
+  // final TextEditingController _timeBController = TextEditingController();
+  // final TextEditingController _durationController = TextEditingController();
+  // final TextEditingController _locController = TextEditingController();
+  // final TextEditingController _themeController = TextEditingController();
+  // final TextEditingController _usNameController = TextEditingController();
+  // final TextEditingController _dateController = TextEditingController();
 
   void _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -31,23 +48,90 @@ class _AddEventPageState extends State<AddEventPage> {
     if (pickedDate != null) {
       setState(() {
         // Format the date and set it to the controller
-        _dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+        _txtControllerDate.text = DateFormat('yyyy-MM-dd').format(pickedDate);
       });
     }
   }
 
-  void _saveEvent() {
-    if (_formKey.currentState!.validate()) {
-      final newEvent = Event(
-        title: _titleController.text,
-        subtitle: _subtitleController.text,
-        timeA: _timeAController.text,
-        timeB: _timeBController.text,
-        duration: _durationController.text,
-        date: _dateController.text,
-      );
-      widget.onEventAdded(newEvent);
-      Navigator.pop(context); // Kembali ke halaman sebelumnya
+  // void _saveEvent() {
+  //   if (_formKey.currentState!.validate()) {
+  //     final newEvent = Event(
+  //       title: _titleController.text,
+  //       subtitle: _subtitleController.text,
+  //       timeA: _timeAController.text,
+  //       timeB: _timeBController.text,
+  //       duration: _durationController.text,
+  //       loc: _locController.text,
+  //       theme: _themeController.text,
+  //       date: _dateController.text,
+  //     );
+  //     widget.onEventAdded(newEvent);
+  //     Navigator.pop(context); // Kembali ke halaman sebelumnya
+  //   }
+  // }
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _txtControllerTitle = TextEditingController();
+  final TextEditingController _txtControllerSpeakername =
+      TextEditingController();
+  final TextEditingController _txtControllerTheme = TextEditingController();
+  final TextEditingController _txtControllerDate = TextEditingController();
+  final TextEditingController _txtControllerLocation = TextEditingController();
+  final TextEditingController _txtControllerStarttime = TextEditingController();
+  final TextEditingController _txtControllerEndtime = TextEditingController();
+  bool _loading = false;
+  File? _imageFile;
+  // final _picker = ImagePicker();
+
+  // Future getImage() async {
+  //   final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _imageFile = File(pickedFile.path);
+  //     });
+  //   }
+  // }
+
+  void _createPost() async {
+    TimeOfDay parseTimeOfDay(String time) {
+      final parts = time.split(':');
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      return TimeOfDay(hour: hour, minute: minute);
+    }
+
+    final String startTimeString = _txtControllerStarttime.text;
+    final String endTimeString = _txtControllerEndtime.text;
+    TimeOfDay startTime = parseTimeOfDay(startTimeString);
+    TimeOfDay endTime = parseTimeOfDay(endTimeString);
+    String? image = _imageFile == null ? null : getStringImage(_imageFile);
+    DateTime parsedDate =
+        DateFormat('yyyy-MM-dd').parse(_txtControllerDate.text);
+    ApiResponse response = await createKajian(
+      _txtControllerTitle.text,
+      _txtControllerSpeakername.text,
+      _txtControllerTheme.text,
+      parsedDate,
+      _txtControllerLocation.text,
+      startTime,
+      endTime,
+      image,
+    );
+
+    if (response.error == null) {
+      Navigator.of(context).pop();
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => SplashScreen()),
+                (route) => false)
+          });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+      setState(() {
+        _loading = !_loading;
+      });
     }
   }
 
@@ -55,16 +139,24 @@ class _AddEventPageState extends State<AddEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios,
+              color: Colors.brown), // Ikon panah kembali
+          iconSize: 20,
+          onPressed: () {
+            Navigator.pop(context); // Kembali ke layar sebelumnya
+          },
+        ),
         title: const Text(
           'Tambah Jadwal Kajian',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.brown),
         ),
-        backgroundColor: Colors.brown,
+        backgroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -83,8 +175,10 @@ class _AddEventPageState extends State<AddEventPage> {
               const SizedBox(height: 32), // Add space between title and form
               Text('Nama Kajian'),
               SizedBox(height: 6),
-              TextField(
-                controller: _titleController,
+              TextFormField(
+                controller: _txtControllerTitle,
+                validator: (val) =>
+                    val!.isEmpty ? 'Kajian name is required' : null,
                 decoration: InputDecoration(
                   hintText: 'Masukkan Nama Kajian',
                   hintStyle: TextStyle(
@@ -98,9 +192,9 @@ class _AddEventPageState extends State<AddEventPage> {
               const SizedBox(height: 16),
               Text('Tanggal Kajian'),
               SizedBox(height: 6),
-              TextField(
+              TextFormField(
                 controller:
-                    _dateController, // Use the new controller for the date
+                    _txtControllerDate, // Use the new controller for the date
                 readOnly: true, // Make it read-only
                 decoration: InputDecoration(
                   hintText: 'Masukkan Tanggal Kajian',
@@ -109,50 +203,136 @@ class _AddEventPageState extends State<AddEventPage> {
                     color: Colors.grey,
                   ),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.calendar_today), // Icon kalender
+                    onPressed: () =>
+                        _selectDate(context), // Open date picker on tap
+                  ),
                 ),
                 onTap: () => _selectDate(context), // Open date picker on tap
               ),
+
               const SizedBox(height: 16),
+              Row(
+                children: [
+                  Text('Waktu Kajian'),
+                  const SizedBox(height: 6), // Adjust spacing as needed
+                ],
+              ),
+              const SizedBox(height: 6),
               Row(
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: _timeAController,
-                      decoration:
-                          const InputDecoration(labelText: 'Waktu Mulai'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Waktu mulai harus diisi';
-                        }
-                        return null;
-                      },
+                      controller: _txtControllerStarttime,
+                      decoration: InputDecoration(
+                        hintText: 'Waktu Mulai',
+                        hintStyle: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextFormField(
-                      controller: _timeBController,
-                      decoration:
-                          const InputDecoration(labelText: 'Waktu Selesai'),
+                      controller: _txtControllerEndtime,
+                      decoration: InputDecoration(
+                        hintText: 'Waktu Selesai',
+                        hintStyle: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey,
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
                     ),
                   ),
                 ],
               ),
+
               const SizedBox(height: 16),
+              Text('Lokasi Kajian'),
+              SizedBox(height: 6),
               TextFormField(
-                controller: _durationController,
-                decoration: const InputDecoration(labelText: 'Durasi'),
+                controller: _txtControllerLocation,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan Lokasi Kajian',
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
               ),
+              const SizedBox(height: 16),
+              Text('Tema Kajian'),
+              SizedBox(height: 6),
+              TextFormField(
+                controller: _txtControllerTheme,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan Tema Kajian',
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text('Nama Ustadz'),
+              SizedBox(height: 6),
+              TextFormField(
+                controller: _txtControllerSpeakername,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan Nama Ustadz',
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+              // TextFormField(
+              //   controller: _durationController,
+              //   decoration: const InputDecoration(labelText: 'Durasi'),
+              // ),
               const SizedBox(height: 32),
               Center(
-                child: ElevatedButton(
-                  onPressed: _saveEvent,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Colors.brown, // Warna latar belakang tombol
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 5, horizontal: 100), // Adjust padding as needed
+                  decoration: BoxDecoration(
+                    color: Colors.brown, // Background color of the box
+                    borderRadius: BorderRadius.circular(20), // Rounded corners
                   ),
-                  child: const Text('Simpan Jadwal'),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          // loading = !loading;
+                          _createPost();
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors
+                          .transparent, // Make the button background transparent
+                      elevation: 0, // Remove button elevation
+                    ),
+                    child: const Text(
+                      'Simpan',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               ),
             ],

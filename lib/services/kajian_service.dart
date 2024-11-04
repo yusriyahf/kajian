@@ -40,7 +40,7 @@ Future<ApiResponse> getPosts() async {
 }
 
 // Create post
-Future<ApiResponse> createPost(
+Future<ApiResponse> createKajian(
     String title,
     String speaker_name,
     String theme,
@@ -62,6 +62,7 @@ Future<ApiResponse> createPost(
                 'image': image,
                 'title': title,
                 'speaker_name': speaker_name,
+                'theme': theme,
                 'date': date,
                 'location': location,
                 'start_time': start_time,
@@ -70,6 +71,7 @@ Future<ApiResponse> createPost(
             : {
                 'title': title,
                 'speaker_name': speaker_name,
+                'theme': theme,
                 'date': date,
                 'location': location,
                 'start_time': start_time,
