@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:kajian/screens/onboard.dart';
 import 'addNotes.dart'; // Import file baru
 import 'noteDetail.dart'; // Import untuk melihat detail catatan
+import 'package:kajian/constant.dart';
+import 'package:kajian/models/api_response.dart';
+import 'package:kajian/models/catatan.dart';
+import 'package:kajian/services/catatan_service.dart';
+import 'package:kajian/services/user_service.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const Notes());
@@ -14,7 +21,40 @@ class Notes extends StatefulWidget {
 }
 
 class _NotesState extends State<Notes> {
-  List<Map<String, String>> notes = []; // List untuk menyimpan catatan
+  // List<Map<String, String>> notes = []; // List untuk menyimpan catatan
+
+  List<dynamic> _catatanList = [];
+  int userId = 0;
+  bool _loading = true;
+
+  // get all posts
+  Future<void> retrieveCatatan() async {
+    userId = await getUserId();
+    ApiResponse response = await getCatatan();
+
+    if (response.error == null) {
+      setState(() {
+        _catatanList = response.data as List<dynamic>;
+        _loading = _loading ? !_loading : _loading;
+      });
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => SplashScreen()),
+                (route) => false)
+          });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${response.error}'),
+      ));
+    }
+  }
+
+  @override
+  void initState() {
+    retrieveCatatan();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +77,9 @@ class _NotesState extends State<Notes> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: notes.length, // Jumlah catatan
+                  itemCount: _catatanList.length, // Jumlah catatan
                   itemBuilder: (context, index) {
+                    Catatan catatan = _catatanList[index];
                     return Padding(
                       padding: const EdgeInsets.only(
                           bottom: 16.0), // Menambahkan jarak antar Card
@@ -50,7 +91,7 @@ class _NotesState extends State<Notes> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => NoteDetail(
-                                note: notes[index], // Kirim data catatan
+                                catatan: catatan, // Kirim data catatan
                               ),
                             ),
                           );
@@ -71,8 +112,7 @@ class _NotesState extends State<Notes> {
                                   Row(
                                     children: [
                                       Text(
-                                        notes[index]['title'] ??
-                                            '', // Judul Catatan
+                                        '${catatan.title}',
                                         style: const TextStyle(
                                           color: Color(0xFF724820),
                                           fontSize: 18,
@@ -81,8 +121,7 @@ class _NotesState extends State<Notes> {
                                       ),
                                       const Spacer(), // Spacer untuk mendorong tanggal ke kanan
                                       Text(
-                                        notes[index]['date'] ??
-                                            '', // Tanggal catatan
+                                        '${catatan.createdAt}', // Tanggal catatan
                                         style: const TextStyle(
                                           color: Color(0xFF724820),
                                           fontSize: 12,
@@ -94,10 +133,11 @@ class _NotesState extends State<Notes> {
                                   const SizedBox(height: 20),
                                   Text(
                                     // Memastikan konten tidak null sebelum menggunakan substring
-                                    (notes[index]['content']?.length ?? 0) > 20
-                                        ? '${notes[index]['content']?.substring(0, 20)}...' // Batasi sampai 20 karakter dan tambahkan ellipsis
-                                        : notes[index]['content'] ??
-                                            '', // Tampilkan semua
+                                    '${catatan.description}',
+                                    // ('${catatan.description}'?.length ?? 0) > 20
+                                    //     ? '${catatan.description}'?.substring(0, 20)}... // Batasi sampai 20 karakter dan tambahkan ellipsis
+                                    //     : '${catatan.description}' ??
+                                    //         '', // Tampilkan semua
                                     style: const TextStyle(
                                       color: Color(0xFF724820),
                                       fontSize: 12,
@@ -118,18 +158,24 @@ class _NotesState extends State<Notes> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final result = await Navigator.push(
+          onPressed: () {
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const AddNote()),
             );
-            if (result != null) {
-              setState(() {
-                // Menambahkan catatan baru ke dalam list notes
-                notes.add(result);
-              });
-            }
           },
+          // onPressed: () async {
+          //   final result = await Navigator.push(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => const AddNote()),
+          //   );
+          //   if (result != null) {
+          //     setState(() {
+          //       // Menambahkan catatan baru ke dalam list notes
+          //       notes.add(result);
+          //     });
+          //   }
+          // },
           backgroundColor: Colors.brown,
           child: const Icon(Icons.add, color: Colors.white),
           shape: RoundedRectangleBorder(

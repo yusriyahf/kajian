@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kajian/camera.dart';
 import 'package:kajian/detailKajian.dart';
 import 'package:kajian/screens/home.dart';
 import 'package:kajian/screens/jadwalKajian.dart';
 import 'package:kajian/notes.dart';
-import 'package:kajian/screens/onboard.dart';
-import 'package:kajian/screens/admin.dart';
 import 'package:kajian/screens/profile.dart';
 import 'package:kajian/screens/loading.dart';
 import 'package:kajian/screens/tiket.dart';

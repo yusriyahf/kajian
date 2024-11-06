@@ -19,18 +19,16 @@ class Tiket extends StatefulWidget {
 
 class _TiketState extends State<Tiket> {
   List<dynamic> _tiketList = [];
-  int userId = 0;
-  // bool _loading = true;
+  bool _loading = true;
 
   // get all posts
   Future<void> retrieveTiket() async {
-    userId = await getUserId();
     ApiResponse response = await getTiket();
 
     if (response.error == null) {
       setState(() {
         _tiketList = response.data as List<dynamic>;
-        // _loading = false;
+        _loading = _loading ? !_loading : _loading;
       });
     } else if (response.error == unauthorized) {
       logout().then((value) => {
@@ -64,89 +62,80 @@ class _TiketState extends State<Tiket> {
           ),
           backgroundColor: Colors.brown,
         ),
-        body: ListView.builder(
-          padding: const EdgeInsets.all(16.0),
-          itemCount: _tiketList.length,
-          itemBuilder: (context, index) {
-            Tiket tiket = _tiketList[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Container(
-                width: 414,
-                clipBehavior: Clip.antiAlias,
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 20,
-                      top: 20,
+        body: _loading
+            ? Center(child: CircularProgressIndicator())
+            : RefreshIndicator(
+                onRefresh: () {
+                  return retrieveTiket();
+                },
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16.0),
+                  itemCount: _tiketList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Tiket tiket = _tiketList[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
                       child: Container(
-                        width: 320,
-                        height: 107,
+                        width: 414,
+                        clipBehavior: Clip.antiAlias,
                         decoration: ShapeDecoration(
-                          color: Color(0xFFEAE6CD),
+                          color: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 40,
-                      top: 64,
-                      child: Text(
-                        'a', // Title from data
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: Color(0xFF724820),
-                          fontSize: 18,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w700,
-                          height: 1.2,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              left: 20,
+                              top: 20,
+                              child: Container(
+                                width: 320,
+                                height: 107,
+                                decoration: ShapeDecoration(
+                                  color: Color(0xFFEAE6CD),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              left: 40,
+                              top: 64,
+                              child: Text(
+                                '1', // Title from data
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Color(0xFF724820),
+                                  fontSize: 18,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              left: 40,
+                              top: 88,
+                              child: Text(
+                                '1', // Subtitle from data
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Color(0xFF724820),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    Positioned(
-                      left: 40,
-                      top: 88,
-                      child: Text(
-                        'p', // Subtitle from data
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: Color(0xFF724820),
-                          fontSize: 12,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w400,
-                          height: 1.2,
-                        ),
-                      ),
-                    ),
-                    // Positioned(
-                    //   left: 40,
-                    //   top: 37,
-                    //   child: Text(
-                    //     ticket['time'], // Time from data
-                    //     textAlign: TextAlign.left,
-                    //     style: TextStyle(
-                    //       color: Color(0xFF724820),
-                    //       fontSize: 10,
-                    //       fontFamily: 'Inter',
-                    //       fontWeight: FontWeight.w500,
-                    //       height: 1.2,
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
+                    );
+                  },
+                )),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: 2,
           selectedItemColor: Colors.brown,

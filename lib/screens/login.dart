@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _saveAndRedirectToHome(User user) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString('token', user.token ?? '');
-    await pref.setInt('userId', user.user_id ?? 0);
+    await pref.setInt('userId', user.id ?? 0);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
   }

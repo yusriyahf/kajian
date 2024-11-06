@@ -1,30 +1,27 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:kajian/models/api_response.dart';
-import 'package:kajian/models/kajian.dart';
+import 'package:kajian/models/catatan.dart';
 import 'package:kajian/services/user_service.dart';
 import 'package:http/http.dart' as http;
 
 import '../constant.dart';
 
 // get all posts
-Future<ApiResponse> getPosts() async {
+Future<ApiResponse> getCatatan() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.get(Uri.parse(kajianURL), headers: {
+    final response = await http.get(Uri.parse(catatanURL), headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token'
     });
 
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = jsonDecode(response.body)['kajian']
-            .map((p) => Kajian.fromJson(p))
+        apiResponse.data = jsonDecode(response.body)['catatan']
+            .map((catatanJson) => Catatan.fromJson(catatanJson))
             .toList();
-        // we get list of posts, so we need to map each item to post model
-        apiResponse.data as List<dynamic>;
         break;
       case 401:
         apiResponse.error = unauthorized;
@@ -40,48 +37,26 @@ Future<ApiResponse> getPosts() async {
 }
 
 // Create post
-Future<ApiResponse> createKajian(
-    String title,
-    String speaker_name,
-    String theme,
-    DateTime date,
-    String location,
-    TimeOfDay start_time,
-    TimeOfDay end_time,
-    String? image) async {
+Future<ApiResponse> createCatatan(String title, String description) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.post(Uri.parse(kajianURL),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-        body: image != null
-            ? {
-                'image': image,
-                'title': title,
-                'speaker_name': speaker_name,
-                'theme': theme,
-                'date': date,
-                'location': location,
-                'start_time': start_time,
-                'end_time': end_time,
-              }
-            : {
-                'title': title,
-                'speaker_name': speaker_name,
-                'theme': theme,
-                // 'date': date,
-                'location': location,
-                // 'start_time': start_time,
-                // 'end_time': end_time,
-              });
-
-    // here if the image is null we just send the body, if not null we send the image too
+    final response = await http.post(
+      Uri.parse(catatanURL),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: {
+        'title': title,
+        'description': description,
+        'user_id': '1', // pastikan user_id dikirim sebagai String
+      },
+    );
 
     switch (response.statusCode) {
-      case 200:
+      case 200: // Jika status kode 200 (OK)
+      case 201: // Jika status kode 201 (Created)
         apiResponse.data = jsonDecode(response.body);
         break;
       case 422:
@@ -103,29 +78,21 @@ Future<ApiResponse> createKajian(
 }
 
 // Edit post
-Future<ApiResponse> editPost(
-    int postId,
-    String title,
-    String speaker_name,
-    String theme,
-    DateTime date,
-    String location,
-    TimeOfDay start_time,
-    TimeOfDay end_time) async {
+Future<ApiResponse> editCatatan(
+    int catatanId, String title, String description) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.put(Uri.parse('$kajianURL/$postId'), headers: {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
-    }, body: {
-      'title': title,
-      'speaker_name': speaker_name,
-      'date': date,
-      'location': location,
-      'start_time': start_time,
-      'end_time': end_time,
-    });
+    final response = await http.put(Uri.parse('$catatanURL/$catatanId'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: {
+          'title': title,
+          'description': description,
+          'user_id': '1'
+        });
 
     switch (response.statusCode) {
       case 200:
@@ -152,7 +119,7 @@ Future<ApiResponse> deletePost(int postId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.delete(Uri.parse('$kajianURL/$postId'),
+    final response = await http.delete(Uri.parse('$catatanURL/$postId'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token'
@@ -164,6 +131,34 @@ Future<ApiResponse> deletePost(int postId) async {
         break;
       case 403:
         apiResponse.error = jsonDecode(response.body)['message'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
+// Like or unlike post
+Future<ApiResponse> likeUnlikePost(int postId) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.post(Uri.parse('$catatanURL/$postId/likes'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        });
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['message'];
         break;
       case 401:
         apiResponse.error = unauthorized;
