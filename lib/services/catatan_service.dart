@@ -36,7 +36,7 @@ Future<ApiResponse> getCatatan() async {
   return apiResponse;
 }
 
-// Create post
+// Create catatan
 Future<ApiResponse> createCatatan(String title, String description) async {
   ApiResponse apiResponse = ApiResponse();
   try {

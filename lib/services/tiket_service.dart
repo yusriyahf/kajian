@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:kajian/models/api_response.dart';
-import 'package:kajian/models/tiket.dart';
+import 'package:kajian/models/tiketModel.dart';
 import 'package:kajian/services/user_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -20,10 +20,8 @@ Future<ApiResponse> getTiket() async {
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(response.body)['tiket']
-            .map((p) => Tiket.fromJson(p))
+            .map((tiketJson) => TiketModel.fromJson(tiketJson))
             .toList();
-        // we get list of posts, so we need to map each item to post model
-        apiResponse.data as List<dynamic>;
         break;
       case 401:
         apiResponse.error = unauthorized;

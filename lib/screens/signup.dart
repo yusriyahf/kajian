@@ -140,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 validator: (val) =>
                     val!.length < 6 ? 'Required at least 6 chars' : null,
                 decoration: InputDecoration(
-                  hintText: 'Kata Sandi',
+                  hintText: 'Kata Sandi mu blok',
                   hintStyle: TextStyle(
                     fontWeight:
                         FontWeight.normal, // Mengatur agar teks tidak bold
@@ -157,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 controller: passwordConfirmController,
                 obscureText: true,
                 validator: (val) =>
-                    val!.length < 6 ? 'Required at least 6 chars' : null,
+                    val!.length < 6 ? 'Fuck you' : null,
                 decoration: InputDecoration(
                   hintText: 'Kata Sandi',
                   hintStyle: TextStyle(

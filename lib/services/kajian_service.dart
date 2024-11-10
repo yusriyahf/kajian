@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import '../constant.dart';
 
 // get all posts
-Future<ApiResponse> getPosts() async {
+Future<ApiResponse> getKajian() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -21,10 +21,8 @@ Future<ApiResponse> getPosts() async {
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(response.body)['kajian']
-            .map((p) => Kajian.fromJson(p))
+            .map((kajianJson) => Kajian.fromJson(kajianJson))
             .toList();
-        // we get list of posts, so we need to map each item to post model
-        apiResponse.data as List<dynamic>;
         break;
       case 401:
         apiResponse.error = unauthorized;
@@ -44,10 +42,10 @@ Future<ApiResponse> createKajian(
     String title,
     String speaker_name,
     String theme,
-    DateTime date,
+    String date,
     String location,
-    TimeOfDay start_time,
-    TimeOfDay end_time,
+    String start_time,
+    String end_time,
     String? image) async {
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -72,16 +70,19 @@ Future<ApiResponse> createKajian(
                 'title': title,
                 'speaker_name': speaker_name,
                 'theme': theme,
-                // 'date': date,
+                'date': date,
                 'location': location,
-                // 'start_time': start_time,
-                // 'end_time': end_time,
+                'start_time': start_time,
+                'end_time': '09:00',
               });
 
     // here if the image is null we just send the body, if not null we send the image too
 
     switch (response.statusCode) {
       case 200:
+      // apiResponse.data = jsonDecode(response.body);
+      // break;
+      case 201: // Jika status kode 201 (Created)
         apiResponse.data = jsonDecode(response.body);
         break;
       case 422:

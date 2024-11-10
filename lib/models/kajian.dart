@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+TimeOfDay parseTimeOfDay(String time) {
+  final parts = time.split(':');
+  return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+}
+
 class Kajian {
   int? id;
   String? image;
@@ -23,8 +28,7 @@ class Kajian {
     this.end_time,
   });
 
-// map json to kajian model
-
+  // Factory constructor
   factory Kajian.fromJson(Map<String, dynamic> json) {
     return Kajian(
       id: json['id'],
@@ -32,10 +36,10 @@ class Kajian {
       title: json['title'],
       speaker_name: json['speaker_name'],
       theme: json['theme'],
-      date: json['date'],
+      date: DateTime.parse(json['date']),
       location: json['location'],
-      start_time: json['start_time'],
-      end_time: json['end_time'],
+      start_time: parseTimeOfDay(json['start_time']),
+      end_time: parseTimeOfDay(json['end_time']),
     );
   }
 }

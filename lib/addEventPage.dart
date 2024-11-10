@@ -100,10 +100,18 @@ class _AddEventPageState extends State<AddEventPage> {
       return TimeOfDay(hour: hour, minute: minute);
     }
 
+    String formatTimeOfDay(TimeOfDay time) {
+      return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+    }
+
     final String startTimeString = _txtControllerStarttime.text;
     final String endTimeString = _txtControllerEndtime.text;
     TimeOfDay startTime = parseTimeOfDay(startTimeString);
+    final String startTimes = formatTimeOfDay(startTime);
+
     TimeOfDay endTime = parseTimeOfDay(endTimeString);
+    final String endTimes = formatTimeOfDay(endTime);
+
     String? image = _imageFile == null ? null : getStringImage(_imageFile);
     DateTime parsedDate =
         DateFormat('yyyy-MM-dd').parse(_txtControllerDate.text);
@@ -113,8 +121,8 @@ class _AddEventPageState extends State<AddEventPage> {
       _txtControllerTheme.text,
       parsedDate,
       _txtControllerLocation.text,
-      startTime,
-      endTime,
+      startTimes,
+      endTimes,
       image,
     );
 
@@ -316,6 +324,7 @@ class _AddEventPageState extends State<AddEventPage> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
+                      print(_txtControllerStarttime);
                       if (_formKey.currentState!.validate()) {
                         setState(() {
                           // loading = !loading;
