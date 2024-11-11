@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kajian/bayar_tiket.dart';
+import 'package:kajian/models/kajian.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -16,8 +17,17 @@ import 'package:kajian/bayar_tiket.dart';
 //   }
 // }
 
-class KajianDetailPage extends StatelessWidget {
-  const KajianDetailPage({super.key});
+class KajianDetailPage extends StatefulWidget {
+  final Kajian? kajian;
+  // final Map<String, String> note; // Menerima data catatan
+
+  KajianDetailPage({this.kajian});
+
+  @override
+  State<KajianDetailPage> createState() => _KajianDetailPageState();
+}
+
+class _KajianDetailPageState extends State<KajianDetailPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

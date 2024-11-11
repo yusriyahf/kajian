@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/screens/onboard.dart';
+import 'package:kajian/services/kajian_service.dart';
 import 'addNotes.dart'; // Import file baru
 import 'noteDetail.dart'; // Import untuk melihat detail catatan
 import 'package:kajian/constant.dart';

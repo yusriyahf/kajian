@@ -11,31 +11,31 @@ import 'package:kajian/services/user_service.dart';
 import 'dart:io';
 
 class AddEventPage extends StatefulWidget {
-  // final Function(Event) onEventAdded;
-  // final Kajian? kajian; // Declare as final without initializing here
-
-  // // Constructor now includes kajian as a parameter
-  // const AddEventPage({
-  //   Key? key,
-  //   required this.onEventAdded,
-  //   this.kajian, // Pass kajian as a parameter
-  // }) : super(key: key); // Pass key to the superclass
-
   @override
   _AddEventPageState createState() => _AddEventPageState();
 }
 
 class _AddEventPageState extends State<AddEventPage> {
-  // final _formKey = GlobalKey<FormState>();
-  // final TextEditingController _titleController = TextEditingController();
-  // final TextEditingController _subtitleController = TextEditingController();
-  // final TextEditingController _timeAController = TextEditingController();
-  // final TextEditingController _timeBController = TextEditingController();
-  // final TextEditingController _durationController = TextEditingController();
-  // final TextEditingController _locController = TextEditingController();
-  // final TextEditingController _themeController = TextEditingController();
-  // final TextEditingController _usNameController = TextEditingController();
-  // final TextEditingController _dateController = TextEditingController();
+  Future<void> _selectTime(
+      BuildContext context, TextEditingController controller) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(), // Waktu awal, bisa disesuaikan
+    );
+
+    if (pickedTime != null) {
+      // Format waktu yang dipilih ke dalam format 'HH:mm'
+      final String formattedTime =
+          '${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}';
+      setState(() {
+        controller.text =
+            formattedTime; // Set waktu yang dipilih ke dalam TextFormField
+      });
+    } else {
+      // Menangani kasus jika waktu tidak dipilih
+      print("Waktu tidak dipilih.");
+    }
+  }
 
   void _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -53,23 +53,6 @@ class _AddEventPageState extends State<AddEventPage> {
     }
   }
 
-  // void _saveEvent() {
-  //   if (_formKey.currentState!.validate()) {
-  //     final newEvent = Event(
-  //       title: _titleController.text,
-  //       subtitle: _subtitleController.text,
-  //       timeA: _timeAController.text,
-  //       timeB: _timeBController.text,
-  //       duration: _durationController.text,
-  //       loc: _locController.text,
-  //       theme: _themeController.text,
-  //       date: _dateController.text,
-  //     );
-  //     widget.onEventAdded(newEvent);
-  //     Navigator.pop(context); // Kembali ke halaman sebelumnya
-  //   }
-  // }
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _txtControllerTitle = TextEditingController();
   final TextEditingController _txtControllerSpeakername =
@@ -81,24 +64,16 @@ class _AddEventPageState extends State<AddEventPage> {
   final TextEditingController _txtControllerEndtime = TextEditingController();
   bool _loading = false;
   File? _imageFile;
-  // final _picker = ImagePicker();
-
-  // Future getImage() async {
-  //   final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _imageFile = File(pickedFile.path);
-  //     });
-  //   }
-  // }
 
   void _createPost() async {
-    TimeOfDay parseTimeOfDay(String time) {
-      final parts = time.split(':');
-      final hour = int.parse(parts[0]);
-      final minute = int.parse(parts[1]);
-      return TimeOfDay(hour: hour, minute: minute);
+    DateTime parseDate(String date) {
+      return DateFormat('yyyy-MM-dd').parse(date);
     }
+
+    final String dateString = _txtControllerDate.text;
+    DateTime parsedDate = parseDate(dateString);
+
+    String formattedDate = DateFormat('yyyy-MM-dd').format(parsedDate);
 
     String formatTimeOfDay(TimeOfDay time) {
       return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
@@ -113,13 +88,11 @@ class _AddEventPageState extends State<AddEventPage> {
     final String endTimes = formatTimeOfDay(endTime);
 
     String? image = _imageFile == null ? null : getStringImage(_imageFile);
-    DateTime parsedDate =
-        DateFormat('yyyy-MM-dd').parse(_txtControllerDate.text);
     ApiResponse response = await createKajian(
       _txtControllerTitle.text,
       _txtControllerSpeakername.text,
       _txtControllerTheme.text,
-      parsedDate,
+      formattedDate,
       _txtControllerLocation.text,
       startTimes,
       endTimes,
@@ -246,6 +219,25 @@ class _AddEventPageState extends State<AddEventPage> {
                       ),
                     ),
                   ),
+                  // Expanded(
+                  //   child: GestureDetector(
+                  //     onTap: () => _selectTime(context,
+                  //         _txtControllerStarttime), // Tampil dialog waktu saat ketuk
+                  //     child: TextFormField(
+                  //       controller: _txtControllerStarttime,
+                  //       readOnly: true, // Agar tidak bisa mengetik langsung
+                  //       decoration: InputDecoration(
+                  //         hintText: 'Waktu Mulai',
+                  //         hintStyle: TextStyle(
+                  //           fontWeight: FontWeight.normal,
+                  //           color: Colors.grey,
+                  //         ),
+                  //         border: OutlineInputBorder(
+                  //             borderRadius: BorderRadius.circular(10)),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextFormField(
