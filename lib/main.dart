@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:kajian/detailKajian.dart';
 import 'package:kajian/screens/home.dart';
 import 'package:kajian/screens/jadwalKajian.dart';
@@ -9,7 +10,9 @@ import 'package:kajian/screens/loading.dart';
 import 'package:kajian/screens/tiket.dart';
 
 void main(List<String> args) {
-  runApp(MyApp());
+  initializeDateFormatting('id_ID', null).then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {

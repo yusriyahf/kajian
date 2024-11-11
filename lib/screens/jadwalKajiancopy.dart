@@ -333,6 +333,63 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                                             child: GestureDetector(
                                               onTap: () {
                                                 // Navigasi ke halaman detail
+                                                DateTime startTime = DateFormat(
+                                                        "HH:mm")
+                                                    .parse(kajian
+                                                        .timeA); // Convert time string to DateTime
+                                                DateTime endTime =
+                                                    DateFormat("HH:mm")
+                                                        .parse(kajian.timeB);
+
+                                                // Convert DateTime to TimeOfDay if needed
+                                                TimeOfDay startTimeOfDay =
+                                                    TimeOfDay(
+                                                        hour: startTime.hour,
+                                                        minute:
+                                                            startTime.minute);
+                                                TimeOfDay endTimeOfDay =
+                                                    TimeOfDay(
+                                                        hour: endTime.hour,
+                                                        minute: endTime.minute);
+
+                                                // Create a Kajian object from the Event
+                                                Kajian kajianModel = Kajian(
+                                                  title: kajian.title,
+                                                  start_time:
+                                                      startTimeOfDay, // Use TimeOfDay for start_time
+                                                  end_time:
+                                                      endTimeOfDay, // Use TimeOfDay for end_time
+                                                  theme: kajian.theme,
+                                                  location: kajian.loc,
+                                                  speaker_name: kajian.usName,
+                                                  date: DateTime.parse(kajian
+                                                      .date), // Ensure date is in DateTime format
+                                                );
+
+                                                print('Kajian Details:');
+                                                print(
+                                                    'Title: ${kajianModel.title}');
+                                                print(
+                                                    'Start Time: ${kajianModel.start_time}');
+                                                print(
+                                                    'End Time: ${kajianModel.end_time}');
+                                                print(
+                                                    'Theme: ${kajianModel.theme}');
+                                                print(
+                                                    'Location: ${kajianModel.location}');
+                                                print(
+                                                    'Speaker Name: ${kajianModel.speaker_name}');
+                                                print(
+                                                    'Date: ${kajianModel.date}');
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        KajianDetailPage(
+                                                            kajian:
+                                                                kajianModel),
+                                                  ),
+                                                );
                                               },
                                               child: CircleAvatar(
                                                 radius: 25, // Ukuran lingkaran

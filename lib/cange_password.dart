@@ -139,35 +139,53 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 4,
-        onTap: (index) {},
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.brown,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Jadwal',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.airplane_ticket),
-            label: 'Tiket',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notes),
-            label: 'Catatan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: 5,
+      //   selectedItemColor: Colors.brown,
+      //   unselectedItemColor: Colors.grey,
+      //   type: BottomNavigationBarType.fixed,
+      //   onTap: (index) {
+      //     switch (index) {
+      //       case 0:
+      //         Navigator.pushNamed(context, '/home');
+      //         break;
+      //       case 1:
+      //         Navigator.pushNamed(context, '/jadwal');
+      //         break;
+      //       case 2:
+      //         Navigator.pushNamed(context, '/tiket');
+      //         break;
+      //       case 3:
+      //         Navigator.pushNamed(context, '/catatan');
+      //         break;
+      //       case 4:
+      //         Navigator.pushNamed(context, '/profile');
+      //         break;
+      //     }
+      //   },
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Beranda',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.calendar_today),
+      //       label: 'Jadwal',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.receipt_long),
+      //       label: 'Tiket',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.notes),
+      //       label: 'Catatan',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.person),
+      //       label: 'Profil',
+      //     ),
+      //   ],
+      // )
     );
   }
 }

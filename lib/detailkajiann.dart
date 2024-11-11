@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:kajian/bayar_tiket.dart';
 import 'package:kajian/models/kajian.dart';
 
@@ -28,6 +29,13 @@ class KajianDetailPage extends StatefulWidget {
 }
 
 class _KajianDetailPageState extends State<KajianDetailPage> {
+  String formatTimeOfDay(TimeOfDay time) {
+    final now = DateTime.now();
+    final timeOfDay =
+        DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    return '${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,7 +46,7 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.brown),
           onPressed: () {
-            // Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
         title: Text(
@@ -68,7 +76,7 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'Kajian Ustadz Hanan Attaki',
+                      'kajian ${widget.kajian!.title!}',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -81,7 +89,10 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                         Icon(Icons.calendar_today_outlined,
                             color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('Rabu, 19 Des 2024'),
+                        Text(DateFormat('EEEE, dd MMM yyyy', 'id_ID')
+                            .format(widget.kajian!.date!)),
+
+                        // Text('Rabu, 19 Des 2024'),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -89,7 +100,8 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                       children: [
                         Icon(Icons.access_time_outlined, color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('15:00 - 17:00'),
+                        Text(
+                            '${formatTimeOfDay(widget.kajian!.start_time!)} - ${formatTimeOfDay(widget.kajian!.end_time!)}'),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -97,7 +109,7 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                       children: [
                         Icon(Icons.location_on_outlined, color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('Masjid Borcelle'),
+                        Text('${widget.kajian!.location}'),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -105,7 +117,7 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                       children: [
                         Icon(Icons.book_outlined, color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('Kajian Akhir Zaman'),
+                        Text('${widget.kajian!.theme}'),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -113,7 +125,7 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                       children: [
                         Icon(Icons.person_outlined, color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('Ustadz Hanan Attaki'),
+                        Text('${widget.kajian!.speaker_name}'),
                       ],
                     ),
                     SizedBox(height: 16),
