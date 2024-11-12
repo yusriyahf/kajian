@@ -73,7 +73,7 @@ Future<ApiResponse> createKajian(
                 'date': date,
                 'location': location,
                 'start_time': start_time,
-                'end_time': '09:00',
+                'end_time': end_time,
               });
 
     // here if the image is null we just send the body, if not null we send the image too
