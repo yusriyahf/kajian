@@ -132,6 +132,39 @@ Future<ApiResponse> updateUser(String name, String? image) async {
   return apiResponse;
 }
 
+Future<ApiResponse> updatePassword(
+    String password, String passwordConfirmation) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.put(Uri.parse(passwordURL), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    }, body: {
+      'password': password,
+      'password_confirmation': passwordConfirmation,
+    });
+    // user can update his/her name or name and image
+
+    switch (response.statusCode) {
+      case 200: // Jika status kode 200 (OK)
+      case 201: // Jika status kode 201 (Created)
+        apiResponse.data = jsonDecode(response.body);
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        print(response.body);
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
 // get token
 Future<String> getToken() async {
   SharedPreferences pref = await SharedPreferences.getInstance();

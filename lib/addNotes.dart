@@ -41,54 +41,6 @@ class _AddNoteState extends State<AddNote> {
       });
     }
   }
-  // final _noteTitleController = TextEditingController();
-  // final _noteContentController = TextEditingController();
-  // String _formattedDate = ''; // Variabel untuk menyimpan tanggal
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // Mendapatkan dan memformat tanggal saat ini
-  //   _formattedDate = DateFormat('dd MMM yyyy').format(DateTime.now());
-  // }
-
-  // @override
-  // void dispose() {
-  //   _noteTitleController.dispose();
-  //   _noteContentController.dispose();
-  //   super.dispose();
-  // }
-
-  // void _saveNote() {
-  //   final title = _noteTitleController.text;
-  //   final content = _noteContentController.text;
-
-  //   if (title.isNotEmpty && content.isNotEmpty) {
-  //     // Kirim data catatan bersama tanggal saat ini
-  //     Navigator.pop(context, {
-  //       'title': title,
-  //       'content': content,
-  //       'date': _formattedDate,
-  //     });
-  //   } else {
-  //     // Tampilkan pesan peringatan jika field kosong
-  //     showDialog(
-  //       context: context,
-  //       builder: (context) => AlertDialog(
-  //         title: const Text('Warning'),
-  //         content: const Text('Both fields must be filled!'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context);
-  //             },
-  //             child: const Text('OK'),
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

@@ -141,128 +141,111 @@ class _ProfilePageState extends State<ProfilePage> {
                         title: Text('Logout'),
                         onTap: () {
                           showModalBottomSheet(
-                            backgroundColor: Colors.white,
-                            isDismissible: false,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(24),
-                                topRight: Radius.circular(24),
-                              ),
-                            ),
                             context: context,
-                            builder: (context) => SizedBox(
-                              child: Padding(
+                            isScrollControlled: true,
+                            builder: (BuildContext context) {
+                              return Container(
                                 padding: EdgeInsets.all(16),
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(height: 20),
-                                      Center(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Image.asset(
-                                              'assets/images/advertising.png',
-                                              width: 230,
-                                              height: 230,
-                                            ),
-                                            SizedBox(height: 10),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  'Ingin keluar dari akun Anda?',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                SizedBox(height: 5),
-                                                Text(
-                                                  'Semua perubahan yang belum disimpan akan hilang, dan Anda harus masuk kembali untuk mengakses fitur.',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              onPressed: () {},
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            64),
-                                                    side: BorderSide(
-                                                        color: Colors.black)),
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 12),
-                                              ),
-                                              child: Text(
-                                                'Tidak',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.black),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                              width: 10), // Spasi antar tombol
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                logout().then((value) => {
-                                                      Navigator.of(context)
-                                                          .pushAndRemoveUntil(
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          SplashScreen()),
-                                                              (route) => false)
-                                                    });
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.black,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(64),
-                                                ),
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 12),
-                                              ),
-                                              child: Text(
-                                                'Iya',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                height:
+                                    MediaQuery.of(context).size.height * 0.25,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
                                   ),
                                 ),
-                              ),
-                            ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(height: 15),
+                                    Text(
+                                      'Keluar dari akun',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(height: 20),
+                                    Text(
+                                      'Apakah anda ingin keluar?',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(height: 40),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(64),
+                                                side: BorderSide(
+                                                    color: Colors.brown),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 12),
+                                            ),
+                                            child: Text(
+                                              'Tidak',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.brown,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              logout().then((value) => {
+                                                    Navigator.of(context)
+                                                        .pushAndRemoveUntil(
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        SplashScreen()),
+                                                            (route) => false)
+                                                  });
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.brown,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(64),
+                                              ),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 12),
+                                            ),
+                                            child: Text(
+                                              'Iya',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           );
+
                           // logout().then((value) => {
                           //       Navigator.of(context).pushAndRemoveUntil(
                           //           MaterialPageRoute(
