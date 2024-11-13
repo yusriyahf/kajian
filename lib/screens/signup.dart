@@ -34,13 +34,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         passwordController.text,
         passwordConfirmController.text);
     if (response.error == null) {
+      _showSuccessDialog(); // Show success dialog
       _saveAndRedirectToHome(response.data as User);
     } else {
       setState(() {
-        loading = !loading;
+        loading = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${response.error}')));
+      _showErrorDialog(
+          response.error ?? 'An unknown error occurred.'); // Show error dialog
     }
   }
 
@@ -52,6 +53,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => LoginScreen()),
         (route) => false);
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sukses'),
+          content: Text('Akun Anda berhasil dibuat.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(errorMessage),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

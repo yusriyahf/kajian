@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/cange_password.dart';
+import 'package:kajian/tentangAplikasi.dart';
 import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/services/user_service.dart';
 import 'package:kajian/models/user.dart';
@@ -252,6 +253,19 @@ class _ProfilePageState extends State<ProfilePage> {
                           //               builder: (context) => SplashScreen()),
                           //           (route) => false)
                           //     });
+                        },
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.info_outline, color: Colors.brown),
+                        title: Text('Tentang Saya'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    AboutPage()), // Navigate to About Me Page
+                          );
                         },
                         contentPadding: EdgeInsets.zero,
                       ),

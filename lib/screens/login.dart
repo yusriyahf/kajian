@@ -35,13 +35,14 @@ class _LoginScreenState extends State<LoginScreen> {
   void _loginUser() async {
     ApiResponse response = await login(txtEmail.text, txtPassword.text);
     if (response.error == null) {
+      _showSuccessDialog(); // Show success dialog
       _saveAndRedirectToHome(response.data as User);
     } else {
       setState(() {
         loading = false;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${response.error}')));
+      _showErrorDialog(
+          response.error ?? 'An unknown error occurred.'); // Show error dialog
     }
   }
 
@@ -51,6 +52,45 @@ class _LoginScreenState extends State<LoginScreen> {
     await pref.setInt('userId', user.id ?? 0);
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // Prevent dismissing the dialog by tapping outside
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sukses'),
+          content: Text('Akun Anda berhasil dibuat.'),
+        );
+      },
+    );
+
+    // Automatically close the dialog after a delay
+    Future.delayed(Duration(seconds: 60), () {
+      Navigator.of(context).pop(); // Close the dialog after 3 seconds
+    });
+  }
+
+  void _showErrorDialog(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Gagal Masuk'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

@@ -14,6 +14,31 @@ class Tiket extends StatefulWidget {
   State<Tiket> createState() => _TiketState();
 }
 
+class DashedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Color(0xFF724820)
+      ..strokeWidth = 1;
+
+    const dashWidth = 3.0;
+    const dashSpace = 5.0;
+    double startX = 0;
+
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, 0),
+        Offset(startX + dashWidth, 0),
+        paint,
+      );
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
 class _TiketState extends State<Tiket> {
   String formatTimeOfDay(TimeOfDay time) {
     final now = DateTime.now();
@@ -87,11 +112,12 @@ class _TiketState extends State<Tiket> {
                           },
                           child: SizedBox(
                             width: 414,
-                            height: 150,
+                            height: 180, // Adjusted height
                             child: Container(
                               decoration: ShapeDecoration(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(
+                                      20), // Border radius remains the same
                                 ),
                               ),
                               child: Stack(
@@ -101,12 +127,13 @@ class _TiketState extends State<Tiket> {
                                     top: 20,
                                     child: Container(
                                       width: 320,
-                                      height: 107,
+                                      height:
+                                          145, // Adjusted inner container height without affecting border radius
                                       decoration: ShapeDecoration(
                                         color: Color(0xFFEAE6CD),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                          borderRadius: BorderRadius.circular(
+                                              15), // Border radius remains the same
                                         ),
                                       ),
                                     ),
@@ -119,31 +146,33 @@ class _TiketState extends State<Tiket> {
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         color: Color(0xFF724820),
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w500,
                                         height: 1.2,
                                       ),
                                     ),
                                   ),
+// Increased spacing between time and title
                                   Positioned(
                                     left: 40,
-                                    top: 64,
+                                    top: 64, // Adjusted spacing for title
                                     child: Text(
                                       '${tiket.kajian!.title}',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         color: Color(0xFF724820),
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w700,
                                         height: 1.2,
                                       ),
                                     ),
                                   ),
+// Increased spacing between title and theme
                                   Positioned(
                                     left: 40,
-                                    top: 88,
+                                    top: 94, // Increased top value for theme
                                     child: Text(
                                       '${tiket.kajian!.theme}',
                                       textAlign: TextAlign.left,
@@ -152,6 +181,37 @@ class _TiketState extends State<Tiket> {
                                         fontSize: 12,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w400,
+                                        height: 1.2,
+                                      ),
+                                    ),
+                                  ),
+// Increased spacing between theme and dashed line
+                                  Positioned(
+                                    left: 40,
+                                    top:
+                                        120, // Adjusted top position for dashed line
+                                    child: SizedBox(
+                                      width:
+                                          283, // Set to match the width of the card
+                                      height:
+                                          1, // The height of the dashed line
+                                      child: CustomPaint(
+                                        painter: DashedLinePainter(),
+                                      ),
+                                    ),
+                                  ),
+// Increased spacing between dashed line and price
+                                  Positioned(
+                                    left: 40,
+                                    top: 128, // Adjusted top position for price
+                                    child: Text(
+                                      "Rp.156.450",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Color(0xFF724820),
+                                        fontSize: 18,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.bold,
                                         height: 1.2,
                                       ),
                                     ),

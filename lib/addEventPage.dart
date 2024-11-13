@@ -205,51 +205,65 @@ class _AddEventPageState extends State<AddEventPage> {
               const SizedBox(height: 6),
               Row(
                 children: [
+                  // Waktu Mulai Field
                   Expanded(
-                    child: TextFormField(
-                      controller: _txtControllerStarttime,
-                      decoration: InputDecoration(
-                        hintText: 'Waktu Mulai',
-                        hintStyle: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Colors.grey,
+                    child: GestureDetector(
+                      onTap: () async {
+                        TimeOfDay? pickedTime = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (pickedTime != null) {
+                          final formattedTime = pickedTime.format(context);
+                          _txtControllerStarttime.text = formattedTime;
+                        }
+                      },
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: _txtControllerStarttime,
+                          decoration: InputDecoration(
+                            hintText: 'Waktu Mulai',
+                            hintStyle: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                         ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                   ),
-                  // Expanded(
-                  //   child: GestureDetector(
-                  //     onTap: () => _selectTime(context,
-                  //         _txtControllerStarttime), // Tampil dialog waktu saat ketuk
-                  //     child: TextFormField(
-                  //       controller: _txtControllerStarttime,
-                  //       readOnly: true, // Agar tidak bisa mengetik langsung
-                  //       decoration: InputDecoration(
-                  //         hintText: 'Waktu Mulai',
-                  //         hintStyle: TextStyle(
-                  //           fontWeight: FontWeight.normal,
-                  //           color: Colors.grey,
-                  //         ),
-                  //         border: OutlineInputBorder(
-                  //             borderRadius: BorderRadius.circular(10)),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 10), // Add spacing between fields
+
+                  // Waktu Selesai Field
                   Expanded(
-                    child: TextFormField(
-                      controller: _txtControllerEndtime,
-                      decoration: InputDecoration(
-                        hintText: 'Waktu Selesai',
-                        hintStyle: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Colors.grey,
+                    child: GestureDetector(
+                      onTap: () async {
+                        TimeOfDay? pickedTime = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        );
+                        if (pickedTime != null) {
+                          final formattedTime = pickedTime.format(context);
+                          _txtControllerEndtime.text = formattedTime;
+                        }
+                      },
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          controller: _txtControllerEndtime,
+                          decoration: InputDecoration(
+                            hintText: 'Waktu Selesai',
+                            hintStyle: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                         ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
                       ),
                     ),
                   ),

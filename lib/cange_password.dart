@@ -32,16 +32,57 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _passwordConfirmationControllerBody =
       TextEditingController();
 
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sukses'),
+          content: Text('Kata sandi berhasil diubah.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Gagal'),
+          content: Text('Kata Sandi Tidak Berhasil Diubah'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _changePassword() async {
     ApiResponse response = await updatePassword(
         _passwordControllerBody.text, _passwordConfirmationControllerBody.text);
 
     if (response.error == null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => ProfilePage(),
-        ),
-      );
+      _showSuccessDialog(); // Show success dialog
     } else if (response.error == unauthorized) {
       logout().then((value) => {
             Navigator.of(context).pushAndRemoveUntil(
@@ -49,11 +90,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 (route) => false)
           });
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${response.error}')));
-      setState(() {
-        // _loading = !_loading;
-      });
+      // Use the null-aware operator to provide a default error message
+      _showErrorDialog(response.error ?? 'An unknown error occurred.');
     }
   }
 

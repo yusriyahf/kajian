@@ -415,6 +415,23 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
               ),
             ],
           ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.brown,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddEventPage(),
+                ),
+              );
+            },
+            child: const Icon(Icons.add),
+            shape: RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(30), // Menjadikan latar belakang bulat
+            ),
+          ),
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: 1,
             selectedItemColor: Colors.brown,
