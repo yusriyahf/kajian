@@ -37,6 +37,36 @@ Future<ApiResponse> getKajian() async {
   return apiResponse;
 }
 
+Future<ApiResponse> getKajianLast() async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.get(Uri.parse(kajianLastURL), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
+
+    switch (response.statusCode) {
+      case 200:
+        var jsonData = jsonDecode(response.body);
+        apiResponse.data = Kajian.fromJson(jsonData['kajian']);
+
+        // Print data to verify
+        print('Kajian Data: ${apiResponse.data}');
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
 // Create post
 Future<ApiResponse> createKajian(
     String title,

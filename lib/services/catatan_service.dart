@@ -115,11 +115,11 @@ Future<ApiResponse> editCatatan(
 }
 
 // Delete post
-Future<ApiResponse> deletePost(int postId) async {
+Future<ApiResponse> deleteCatatan(int catatanId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.delete(Uri.parse('$catatanURL/$postId'),
+    final response = await http.delete(Uri.parse('$catatanURL/$catatanId'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token'

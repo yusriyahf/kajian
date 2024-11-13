@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:kajian/constant.dart';
 import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/catatan.dart';
+import 'package:kajian/notes.dart';
 import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/services/catatan_service.dart';
 import 'package:kajian/services/user_service.dart';
@@ -41,6 +43,26 @@ class _NoteDetailState extends State<NoteDetail> {
       setState(() {
         _loading = !_loading;
       });
+    }
+  }
+
+  void _handleDeleteNotes(int catatanId) async {
+    ApiResponse response = await deleteCatatan(catatanId);
+    if (response.error == null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => Notes(),
+        ),
+      );
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => SplashScreen()),
+                (route) => false)
+          });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
     }
   }
 
@@ -119,6 +141,12 @@ class _NoteDetailState extends State<NoteDetail> {
               });
             },
           ),
+          IconButton(
+            icon: Icon(Icons.delete, color: Colors.brown),
+            onPressed: () {
+              _handleDeleteNotes(widget.catatan!.id! ?? 0);
+            },
+          )
         ],
       ),
       body: Padding(

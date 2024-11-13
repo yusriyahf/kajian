@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kajian/bayar_tiket.dart';
+import 'package:kajian/constant.dart';
 import 'package:kajian/detailKajian.dart';
 import 'package:kajian/detailkajiann.dart';
+import 'package:kajian/models/api_response.dart';
+import 'package:kajian/models/kajian.dart';
+import 'package:kajian/models/user.dart';
 import 'package:kajian/screens/jadwalKajian.dart';
+import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/screens/tiket.dart';
+import 'package:kajian/services/kajian_service.dart';
+import 'package:kajian/services/user_service.dart';
 // import 'package:kajian/pages/jadwal.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,6 +22,66 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  User? user;
+  Kajian? kajian;
+
+  // get user detail
+  void getUser() async {
+    ApiResponse response = await getUserDetail();
+    if (response.error == null) {
+      setState(() {
+        user = response.data as User;
+        // loading = false;
+        // txtNameController.text = user!.name ?? '';
+      });
+      print(user!.email);
+      print(user!.first_name);
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => SplashScreen()),
+                (route) => false)
+          });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+  }
+
+  void getKajian() async {
+    ApiResponse response = await getKajianLast();
+    if (response.error == null) {
+      setState(() {
+        kajian = response.data as Kajian;
+        // loading = false;
+        // txtNameController.text = user!.name ?? '';
+      });
+      print(kajian!.date);
+      print(kajian!.location);
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => SplashScreen()),
+                (route) => false)
+          });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+  }
+
+  // get user detail
+
+  @override
+  void initState() {
+    print("getUser() is called");
+    getUser();
+    print("getKajian() is called");
+
+    getKajian();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,13 +97,18 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
             SizedBox(height: 5),
-            Text(
-              'Yusriyah F',
-              style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.brown),
-            ),
+            user != null
+                ? Text(
+                    '${user!.first_name!} ${user!.last_name!}',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.brown,
+                    ),
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
           ],
         ),
         backgroundColor: Colors.white,
@@ -63,8 +136,8 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 15),
-            const Text(
-              "Rabu, 19 Des 2024",
+            Text(
+              DateFormat('EEEE, d MMM yyyy', 'id_ID').format(DateTime.now()),
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             const SizedBox(height: 16),
@@ -265,7 +338,7 @@ class KajianCard extends StatelessWidget {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  "Kajian Ustadz Hanan Attaki",
+                  "Naruto",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
