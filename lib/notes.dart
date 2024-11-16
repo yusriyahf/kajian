@@ -98,11 +98,14 @@ class _NotesState extends State<Notes> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => NoteDetail(
-                                catatan: catatan, // Kirim data catatan
-                              ),
+                              builder: (context) =>
+                                  NoteDetail(catatan: catatan),
                             ),
-                          );
+                          ).then((result) {
+                            if (result == true) {
+                              retrieveCatatan(); // Refresh data jika perubahan berhasil
+                            }
+                          });
                         },
                         child: SizedBox(
                           height: 120, // Atur tinggi Card
@@ -163,11 +166,16 @@ class _NotesState extends State<Notes> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
+          onPressed: () async {
+            // Tunggu hasil dari navigasi ke halaman AddNote
+            final result = await Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const AddNote()),
             );
+            // Periksa jika ada hasil (catatan berhasil ditambahkan)
+            if (result == true) {
+              retrieveCatatan(); // Refresh data
+            }
           },
           // onPressed: () async {
           //   final result = await Navigator.push(

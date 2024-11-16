@@ -34,7 +34,7 @@ class _NoteDetailState extends State<NoteDetail> {
     );
 
     if (response.error == null) {
-      Navigator.of(context).pop(); // Kembali setelah berhasil edit
+      Navigator.of(context).pop(true); // Kembali setelah berhasil edit
     } else if (response.error == unauthorized) {
       logout().then((value) => Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => SplashScreen()),

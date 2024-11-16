@@ -23,11 +23,18 @@ class _AddNoteState extends State<AddNote> {
   bool _loading = false;
 
   void _createPost() async {
+    setState(() {
+      _loading = true; // Tampilkan indikator loading
+    });
+
     ApiResponse response = await createCatatan(
-        _titleControllerBody.text, _descriptionControllerBody.text);
+      _titleControllerBody.text,
+      _descriptionControllerBody.text,
+    );
 
     if (response.error == null) {
-      Navigator.of(context).pop();
+      Navigator.of(context)
+          .pop(true); // Kembali ke halaman sebelumnya dengan hasil true
     } else if (response.error == unauthorized) {
       logout().then((value) => {
             Navigator.of(context).pushAndRemoveUntil(
@@ -35,10 +42,11 @@ class _AddNoteState extends State<AddNote> {
                 (route) => false)
           });
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${response.error}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${response.error}')),
+      );
       setState(() {
-        _loading = !_loading;
+        _loading = false; // Sembunyikan indikator loading
       });
     }
   }
