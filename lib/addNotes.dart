@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import intl untuk format tanggal
 import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/catatan.dart';
+import 'package:kajian/models/user.dart';
 import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/services/catatan_service.dart';
 import 'package:kajian/services/user_service.dart';

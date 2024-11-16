@@ -28,20 +28,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _registerUser() async {
     ApiResponse response = await register(
-        firstnameController.text,
-        lastnameController.text,
-        emailController.text,
-        passwordController.text,
-        passwordConfirmController.text);
+      firstnameController.text,
+      lastnameController.text,
+      emailController.text,
+      passwordController.text,
+      passwordConfirmController.text,
+    );
     if (response.error == null) {
-      _showSuccessDialog(); // Show success dialog
-      _saveAndRedirectToHome(response.data as User);
+      _showSuccessDialog(response.data as User);
     } else {
       setState(() {
         loading = false;
       });
-      _showErrorDialog(
-          response.error ?? 'An unknown error occurred.'); // Show error dialog
+      _showErrorDialog(response.error ?? 'An unknown error occurred.');
     }
   }
 
@@ -55,24 +54,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         (route) => false);
   }
 
-  void _showSuccessDialog() {
+  void _showSuccessDialog(User user) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Sukses'),
           content: Text('Akun Anda berhasil dibuat.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-            ),
-          ],
         );
       },
     );
+
+    // Automatically close dialog and redirect after 2 seconds
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pop(); // Close the dialog
+      _saveAndRedirectToHome(user); // Redirect after dialog is closed
+    });
   }
 
   void _showErrorDialog(String errorMessage) {
@@ -181,7 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 validator: (val) =>
                     val!.length < 6 ? 'Required at least 6 chars' : null,
                 decoration: InputDecoration(
-                  hintText: 'Kata Sandi',
+                  hintText: 'Masukkan Kata Sandi',
                   hintStyle: TextStyle(
                     fontWeight:
                         FontWeight.normal, // Mengatur agar teks tidak bold
@@ -197,9 +195,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               TextFormField(
                 controller: passwordConfirmController,
                 obscureText: true,
-                validator: (val) => val!.length < 6 ? 'Fuck you' : null,
+                validator: (val) => val!.length < 6 ? 'a' : null,
                 decoration: InputDecoration(
-                  hintText: 'Kata Sandi',
+                  hintText: 'Masukkan Konfirmasi Kata Sandi',
                   hintStyle: TextStyle(
                     fontWeight:
                         FontWeight.normal, // Mengatur agar teks tidak bold

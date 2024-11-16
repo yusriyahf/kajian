@@ -15,18 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Controllers for managing input values
-  // final TextEditingController emailController = TextEditingController();
-  // final TextEditingController passwordController = TextEditingController();
-
-  // @override
-  // void dispose() {
-  //   // Dispose controllers when not needed
-  //   emailController.dispose();
-  //   passwordController.dispose();
-  //   super.dispose();
-  // }
-
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
@@ -35,8 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void _loginUser() async {
     ApiResponse response = await login(txtEmail.text, txtPassword.text);
     if (response.error == null) {
-      _showSuccessDialog(); // Show success dialog
-      _saveAndRedirectToHome(response.data as User);
+      _showSuccessDialog(response.data as User); // Pass user data to the dialog
     } else {
       setState(() {
         loading = false;
@@ -50,26 +37,42 @@ class _LoginScreenState extends State<LoginScreen> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString('token', user.token ?? '');
     await pref.setInt('userId', user.id ?? 0);
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => HomePage()), (route) => false);
+    // Directly use the 'role' value from the API response since it's already a string
+    // Fallback to '0' if role is null
+
+    // Cek role user dan arahkan ke halaman yang sesuai
+    if (user.role == '2') {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => HomePage()),
+          (route) => false);
+    } else if (user.role == '1') {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => HomeAdmin()),
+          (route) => false);
+    } else {
+      // Anda bisa menambahkan logika lain jika role tidak teridentifikasi
+      _showErrorDialog('Role tidak valid');
+    }
   }
 
-  void _showSuccessDialog() {
+  void _showSuccessDialog(User user) {
     showDialog(
       context: context,
       barrierDismissible:
           false, // Prevent dismissing the dialog by tapping outside
       builder: (BuildContext context) {
+        // Show the success dialog
         return AlertDialog(
           title: Text('Sukses'),
-          content: Text('Akun Anda berhasil dibuat.'),
+          content: Text('Anda berhasil login.'),
         );
       },
     );
 
-    // Automatically close the dialog after a delay
-    Future.delayed(Duration(seconds: 60), () {
-      Navigator.of(context).pop(); // Close the dialog after 3 seconds
+    // Close the dialog after 2 seconds and then redirect
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.of(context).pop(); // Close the dialog
+      _saveAndRedirectToHome(user); // Redirect after dialog is closed
     });
   }
 
@@ -167,10 +170,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(builder: (context) => HomePage()),
-                          // );
                           if (formkey.currentState!.validate()) {
                             setState(() {
                               loading = true;

@@ -50,7 +50,6 @@ Future<ApiResponse> createCatatan(String title, String description) async {
       body: {
         'title': title,
         'description': description,
-        'user_id': '1', // pastikan user_id dikirim sebagai String
       },
     );
 
@@ -83,16 +82,14 @@ Future<ApiResponse> editCatatan(
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.put(Uri.parse('$catatanURL/$catatanId'),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token'
-        },
-        body: {
-          'title': title,
-          'description': description,
-          'user_id': '1'
-        });
+    final response =
+        await http.put(Uri.parse('$catatanURL/$catatanId'), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    }, body: {
+      'title': title,
+      'description': description,
+    });
 
     switch (response.statusCode) {
       case 200:

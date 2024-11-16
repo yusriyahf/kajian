@@ -1,7 +1,7 @@
 // ----- STRINGS ------
 import 'package:flutter/material.dart';
 
-const baseURL = 'http://192.168.62.20:8000/api';
+const baseURL = 'http://192.168.0.10:8000/api';
 const loginURL = baseURL + '/login';
 const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
@@ -12,6 +12,7 @@ const tiketURL = baseURL + '/tiket';
 const commentsURL = baseURL + '/comments';
 const catatanURL = baseURL + '/catatan';
 const kajianLastURL = baseURL + '/kajianlast';
+const getRoleURL = baseURL + '/role';
 
 // ----- Errors -----
 const serverError = 'Server error';

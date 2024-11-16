@@ -171,6 +171,11 @@ Future<String> getToken() async {
   return pref.getString('token') ?? '';
 }
 
+Future<String> getRole() async {
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  return pref.getString('role') ?? '';
+}
+
 // get user id
 Future<int> getUserId() async {
   SharedPreferences pref = await SharedPreferences.getInstance();

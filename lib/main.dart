@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kajian/detailKajian.dart';
+import 'package:kajian/screens/admin.dart';
 import 'package:kajian/screens/home.dart';
 import 'package:kajian/screens/jadwalKajian.dart';
 import 'package:kajian/notes.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       home: Loading(),
       routes: {
         '/home': (context) => HomePage(),
+        '/homeAdmin': (context) => HomeAdmin(),
         '/profile': (context) => ProfilePage(),
         '/jadwal': (context) => JadwalKajianCopy(),
         '/tiket': (context) => Tiket(),

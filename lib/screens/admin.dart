@@ -23,18 +23,12 @@ class HomeAdmin extends StatelessWidget {
           // Navigate to the corresponding page based on the selected index
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushNamed(context, '/homeAdmin');
               break;
             case 1:
               Navigator.pushNamed(context, '/jadwal');
               break;
             case 2:
-              Navigator.pushNamed(context, '/tiket');
-              break;
-            case 3:
-              Navigator.pushNamed(context, '/catatan');
-              break;
-            case 4:
               Navigator.pushNamed(context, '/profile');
               break;
           }
@@ -46,15 +40,7 @@ class HomeAdmin extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
-            label: 'Jadwal',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Tiket',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notes),
-            label: 'Catatan',
+            label: 'Kajian',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

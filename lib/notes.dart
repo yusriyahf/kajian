@@ -9,6 +9,7 @@ import 'package:kajian/models/catatan.dart';
 import 'package:kajian/services/catatan_service.dart';
 import 'package:kajian/services/user_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const Notes());
@@ -27,6 +28,12 @@ class _NotesState extends State<Notes> {
   List<dynamic> _catatanList = [];
   int userId = 0;
   bool _loading = true;
+
+  String formatDate(String dateString) {
+    DateTime date = DateTime.parse(dateString);
+    return DateFormat('EEEE, d MMM yyyy', 'id_ID')
+        .format(date); // Format tanggal
+  }
 
   // get all posts
   Future<void> retrieveCatatan() async {
@@ -122,7 +129,9 @@ class _NotesState extends State<Notes> {
                                       ),
                                       const Spacer(), // Spacer untuk mendorong tanggal ke kanan
                                       Text(
-                                        '${catatan.createdAt}', // Tanggal catatan
+                                        catatan.createdAt != null
+                                            ? formatDate(catatan.createdAt!)
+                                            : 'Tanggal tidak tersedia', // Tanggal catatan
                                         style: const TextStyle(
                                           color: Color(0xFF724820),
                                           fontSize: 12,
@@ -133,12 +142,7 @@ class _NotesState extends State<Notes> {
                                   ),
                                   const SizedBox(height: 20),
                                   Text(
-                                    // Memastikan konten tidak null sebelum menggunakan substring
                                     '${catatan.description}',
-                                    // ('${catatan.description}'?.length ?? 0) > 20
-                                    //     ? '${catatan.description}'?.substring(0, 20)}... // Batasi sampai 20 karakter dan tambahkan ellipsis
-                                    //     : '${catatan.description}' ??
-                                    //         '', // Tampilkan semua
                                     style: const TextStyle(
                                       color: Color(0xFF724820),
                                       fontSize: 12,
