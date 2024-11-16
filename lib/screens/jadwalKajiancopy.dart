@@ -11,7 +11,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import 'dart:collection';
 import '../addEventPage.dart';
-import 'package:kajian/models/user.dart';
 
 void main() {
   runApp(const JadwalKajianCopy());
@@ -450,7 +449,11 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                     MaterialPageRoute(
                       builder: (context) => AddEventPage(),
                     ),
-                  );
+                  ).then((result) {
+                    if (result == true) {
+                      retrieveKajian(); // Refresh data jika perubahan berhasil
+                    }
+                  });
                 },
                 child: const Icon(Icons.add),
                 shape: RoundedRectangleBorder(

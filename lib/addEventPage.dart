@@ -100,7 +100,7 @@ class _AddEventPageState extends State<AddEventPage> {
     );
 
     if (response.error == null) {
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     } else if (response.error == unauthorized) {
       logout().then((value) => {
             Navigator.of(context).pushAndRemoveUntil(

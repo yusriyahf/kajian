@@ -12,7 +12,8 @@ const tiketURL = baseURL + '/tiket';
 const commentsURL = baseURL + '/comments';
 const catatanURL = baseURL + '/catatan';
 const kajianLastURL = baseURL + '/kajianlast';
-const getRoleURL = baseURL + '/role';
+const kajianTodayURL = baseURL + '/kajiantoday';
+const totalUserURL = baseURL + '/totaluser';
 
 // ----- Errors -----
 const serverError = 'Server error';
