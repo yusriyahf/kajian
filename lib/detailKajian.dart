@@ -1,7 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:kajian/models/kajian.dart';
 
-class KajianDetailAdminPage extends StatelessWidget {
-  const KajianDetailAdminPage({super.key});
+class KajianDetailAdminPage extends StatefulWidget {
+  final Kajian? kajian;
+
+  KajianDetailAdminPage({this.kajian});
+
+  @override
+  State<KajianDetailAdminPage> createState() => _KajianDetailAdminPageState();
+}
+
+class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
+  String formatTimeOfDay(TimeOfDay time) {
+    final now = DateTime.now();
+    final timeOfDay =
+        DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    return '${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,7 +59,7 @@ class KajianDetailAdminPage extends StatelessWidget {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'Kajian Ustadz Hanan Attaki',
+                      'Kajian ${widget.kajian!.title!}',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -55,7 +72,8 @@ class KajianDetailAdminPage extends StatelessWidget {
                         Icon(Icons.calendar_today_outlined,
                             color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('Rabu, 19 Des 2024'),
+                        Text(DateFormat('EEEE, dd MMM yyyy', 'id_ID')
+                            .format(widget.kajian!.date!)),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -63,7 +81,8 @@ class KajianDetailAdminPage extends StatelessWidget {
                       children: [
                         Icon(Icons.access_time_outlined, color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('15:00 - 17:00'),
+                        Text(
+                            '${formatTimeOfDay(widget.kajian!.start_time!)} - ${formatTimeOfDay(widget.kajian!.end_time!)}'),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -71,7 +90,7 @@ class KajianDetailAdminPage extends StatelessWidget {
                       children: [
                         Icon(Icons.location_on_outlined, color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('Masjid Borcelle'),
+                        Text('${widget.kajian!.location}'),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -79,7 +98,7 @@ class KajianDetailAdminPage extends StatelessWidget {
                       children: [
                         Icon(Icons.book_outlined, color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('Kajian Akhir Zaman'),
+                        Text('${widget.kajian!.theme}'),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -87,7 +106,7 @@ class KajianDetailAdminPage extends StatelessWidget {
                       children: [
                         Icon(Icons.person_outlined, color: Colors.brown),
                         SizedBox(width: 8),
-                        Text('Ustadz Hanan Attaki'),
+                        Text('${widget.kajian!.speaker_name}'),
                       ],
                     ),
 
@@ -103,7 +122,7 @@ class KajianDetailAdminPage extends StatelessWidget {
                         children: [
                           ListTile(
                             leading: Icon(Icons.people, color: Colors.brown),
-                            title: Text('25 Orang'),
+                            title: Text('0 Orang'),
                             onTap: () {
                               // Add functionality to change password
                             },
@@ -111,7 +130,7 @@ class KajianDetailAdminPage extends StatelessWidget {
                           ),
                           ListTile(
                             leading: Icon(Icons.man, color: Colors.brown),
-                            title: Text('3 Laki-laki'),
+                            title: Text('0 Laki-laki'),
                             onTap: () {
                               // Add functionality for logout
                             },
@@ -119,7 +138,7 @@ class KajianDetailAdminPage extends StatelessWidget {
                           ),
                           ListTile(
                             leading: Icon(Icons.woman, color: Colors.brown),
-                            title: Text('3 Perempuan'),
+                            title: Text('0 Perempuan'),
                             onTap: () {
                               // Add functionality for logout
                             },

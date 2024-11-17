@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/constant.dart';
+import 'package:kajian/detailKajian.dart';
 import 'package:kajian/detailkajiann.dart';
 import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/kajian.dart';
@@ -406,14 +407,25 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                                                   'Speaker Name: ${kajianModel.speaker_name}');
                                               print(
                                                   'Date: ${kajianModel.date}');
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      KajianDetailPage(
-                                                          kajian: kajianModel),
-                                                ),
-                                              );
+                                              userRole == '2'
+                                                  ? Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            KajianDetailPage(
+                                                                kajian:
+                                                                    kajianModel),
+                                                      ),
+                                                    )
+                                                  : Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            KajianDetailAdminPage(
+                                                                kajian:
+                                                                    kajianModel),
+                                                      ),
+                                                    );
                                             },
                                             child: CircleAvatar(
                                               radius: 25, // Ukuran lingkaran

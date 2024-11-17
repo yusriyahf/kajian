@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kajian/constant.dart';
+import 'package:kajian/detailKajian.dart';
+import 'package:kajian/detailkajiann.dart';
 import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/user.dart';
 import 'package:kajian/screens/onboard.dart';
@@ -216,7 +218,6 @@ class _HomeAdminState extends State<HomeAdmin> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
-        // const SizedBox(height: 10),
         _kajianList.isEmpty
             ? const Center(child: CircularProgressIndicator())
             : ListView.builder(
@@ -229,35 +230,46 @@ class _HomeAdminState extends State<HomeAdmin> {
                   final endTime = DateFormat('h:mm a').format(DateTime(
                       0, 0, 0, kajian.end_time!.hour, kajian.end_time!.minute));
 
-                  return Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    padding: const EdgeInsets.only(
-                        left: 30.0, top: 20.0, bottom: 20.0, right: 60.0),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFF8DC),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '$startTime - $endTime',
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          kajian.title ?? 'Kajian Tidak Ditemukan',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        ),
-                        Text(kajian.theme ?? 'Tema Tidak Tersedia'),
-                      ],
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigasi ke halaman detail kajian
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                // KajianDetailPage(kajian: kajian),
+                                KajianDetailAdminPage(kajian: kajian)),
+                      );
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.only(
+                          left: 30.0, top: 20.0, bottom: 20.0, right: 60.0),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF8DC),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '$startTime - $endTime',
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            kajian.title ?? 'Kajian Tidak Ditemukan',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
+                          Text(kajian.theme ?? 'Tema Tidak Tersedia'),
+                        ],
+                      ),
                     ),
                   );
                 },
               ),
-        // _buildKajianItem(),
       ],
     );
   }

@@ -4,20 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:kajian/bayar_tiket.dart';
 import 'package:kajian/models/kajian.dart';
 
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class KajianUser extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: KajianDetailPage(),
-//     );
-//   }
-// }
-
 class KajianDetailPage extends StatefulWidget {
   final Kajian? kajian;
   // final Map<String, String> note; // Menerima data catatan

@@ -77,11 +77,9 @@ Future<ApiResponse> getKajianLast() async {
 
     switch (response.statusCode) {
       case 200:
-        var jsonData = jsonDecode(response.body);
-        apiResponse.data = Kajian.fromJson(jsonData['kajian']);
-
-        // Print data to verify
-        print('Kajian Data: ${apiResponse.data}');
+        apiResponse.data = jsonDecode(response.body)['kajian']
+            .map((kajianLastJson) => Kajian.fromJson(kajianLastJson))
+            .toList();
         break;
       case 401:
         apiResponse.error = unauthorized;
