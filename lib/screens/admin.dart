@@ -100,6 +100,7 @@ class _HomeAdminState extends State<HomeAdmin> {
   void initState() {
     getUser();
     retrieveKajian();
+    print(' INI KAJIAN : ${_kajianList}');
     super.initState();
   }
 
@@ -155,7 +156,7 @@ class _HomeAdminState extends State<HomeAdmin> {
     return Container(
       padding: const EdgeInsets.only(
           left: 20.0, top: 20.0, right: 20.0, bottom: 20.0),
-      color: const Color(0xFFA67B5B),
+      color: const Color.fromARGB(255, 171, 117, 76),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -247,9 +248,21 @@ class _HomeAdminState extends State<HomeAdmin> {
           ),
         ),
         _kajianList.isEmpty
-            ? const Center(child: CircularProgressIndicator())
+            ? Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  'Tidak ada kajian hari ini',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              )
             : ListView.builder(
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: _kajianList.length,
                 itemBuilder: (context, index) {
                   final kajian = _kajianList[index];

@@ -75,6 +75,7 @@ class _AddEventPageState extends State<AddEventPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _txtControllerTitle = TextEditingController();
+  final TextEditingController _txtControllerHarga = TextEditingController();
   final TextEditingController _txtControllerSpeakername =
       TextEditingController();
   final TextEditingController _txtControllerTheme = TextEditingController();
@@ -108,15 +109,15 @@ class _AddEventPageState extends State<AddEventPage> {
 
     String? image = _imageFile == null ? null : getStringImage(_imageFile);
     ApiResponse response = await createKajian(
-      _txtControllerTitle.text,
-      _txtControllerSpeakername.text,
-      _txtControllerTheme.text,
-      formattedDate,
-      _txtControllerLocation.text,
-      startTimes,
-      endTimes,
-      image,
-    );
+        _txtControllerTitle.text,
+        _txtControllerSpeakername.text,
+        _txtControllerTheme.text,
+        formattedDate,
+        _txtControllerLocation.text,
+        startTimes,
+        endTimes,
+        image,
+        _txtControllerHarga.text);
 
     if (response.error == null) {
       Navigator.of(context).pop(true);
@@ -289,6 +290,22 @@ class _AddEventPageState extends State<AddEventPage> {
                 ],
               ),
 
+              const SizedBox(height: 16),
+              Text('Harga Kajian'),
+              SizedBox(height: 6),
+              TextFormField(
+                controller: _txtControllerHarga,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan Harga Kajian',
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
               const SizedBox(height: 16),
               Text('Lokasi Kajian'),
               SizedBox(height: 6),
