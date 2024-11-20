@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:kajian/bayar_tiket.dart';
 import 'package:kajian/models/kajian.dart';
+import 'package:kajian/screens/pembayaran.dart';
 
 class KajianDetailPage extends StatefulWidget {
   final Kajian? kajian;
@@ -153,7 +154,8 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => BayarTiket()),
+                                  builder: (context) =>
+                                      DetailPembayaranTiket()),
                             );
                           },
                           child: Text(

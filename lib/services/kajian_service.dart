@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:kajian/models/api_response.dart';
@@ -96,14 +97,16 @@ Future<ApiResponse> getKajianLast() async {
 
 // Create post
 Future<ApiResponse> createKajian(
-    String title,
-    String speaker_name,
-    String theme,
-    String date,
-    String location,
-    String start_time,
-    String end_time,
-    String? image) async {
+  String title,
+  String speaker_name,
+  String theme,
+  String date,
+  String location,
+  String start_time,
+  String end_time,
+  String? image,
+  String price,
+) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -131,6 +134,7 @@ Future<ApiResponse> createKajian(
                 'location': location,
                 'start_time': start_time,
                 'end_time': end_time,
+                'price': price,
               });
 
     // here if the image is null we just send the body, if not null we send the image too
