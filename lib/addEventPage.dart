@@ -9,6 +9,7 @@ import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/services/kajian_service.dart';
 import 'package:kajian/services/user_service.dart';
 import 'dart:io';
+import 'package:image_picker/image_picker.dart'; // Import image_picker package
 
 class AddEventPage extends StatefulWidget {
   @override
@@ -16,6 +17,23 @@ class AddEventPage extends StatefulWidget {
 }
 
 class _AddEventPageState extends State<AddEventPage> {
+  File? _imageFile;
+
+  // Function to pick an image from the gallery
+  Future<void> _pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path); // Set the picked image file
+      });
+    } else {
+      print("No image selected");
+    }
+  }
+
   Future<void> _selectTime(
       BuildContext context, TextEditingController controller) async {
     final TimeOfDay? pickedTime = await showTimePicker(
@@ -24,9 +42,11 @@ class _AddEventPageState extends State<AddEventPage> {
     );
 
     if (pickedTime != null) {
-      // Format waktu yang dipilih ke dalam format 'HH:mm'
-      final String formattedTime =
-          '${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}';
+      // Format waktu yang dipilih ke dalam format 'hh:mm a'
+      final String formattedTime = pickedTime.hour > 12
+          ? '${pickedTime.hour - 12}:${pickedTime.minute.toString().padLeft(2, '0')} PM'
+          : '${pickedTime.hour == 0 ? 12 : pickedTime.hour}:${pickedTime.minute.toString().padLeft(2, '0')} AM';
+
       setState(() {
         controller.text =
             formattedTime; // Set waktu yang dipilih ke dalam TextFormField
@@ -63,7 +83,6 @@ class _AddEventPageState extends State<AddEventPage> {
   final TextEditingController _txtControllerStarttime = TextEditingController();
   final TextEditingController _txtControllerEndtime = TextEditingController();
   bool _loading = false;
-  File? _imageFile;
 
   void _createPost() async {
     DateTime parseDate(String date) {
@@ -125,7 +144,7 @@ class _AddEventPageState extends State<AddEventPage> {
               color: Colors.brown), // Ikon panah kembali
           iconSize: 20,
           onPressed: () {
-            Navigator.pop(context); // Kembali ke layar sebelumnya
+            Navigator.pop(context, true); // Kembali ke layar sebelumnya
           },
         ),
         title: const Text(
@@ -315,6 +334,40 @@ class _AddEventPageState extends State<AddEventPage> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
               ),
+              const SizedBox(height: 16),
+              // Bagian untuk memilih gambar
+              Text('Pilih Gambar'),
+              SizedBox(height: 6),
+              GestureDetector(
+                onTap: _pickImage, // Tapped to pick an image
+                child: _imageFile == null
+                    ? Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.image_search, // Icon for picking an image
+                            color: Colors.grey,
+                            size: 50,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Image.file(
+                          _imageFile!,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+              ),
+
               // TextFormField(
               //   controller: _durationController,
               //   decoration: const InputDecoration(labelText: 'Durasi'),

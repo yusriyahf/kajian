@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/constant.dart';
+import 'package:intl/intl.dart';
 import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/catatan.dart';
 import 'package:kajian/screens/onboard.dart';
@@ -61,6 +62,8 @@ class _NoteDetailState extends State<NoteDetail> {
     }
   }
 
+  String _formattedDate = ''; // Variabel untuk menyimpan tanggal
+
   @override
   void initState() {
     if (widget.catatan != null) {
@@ -68,6 +71,7 @@ class _NoteDetailState extends State<NoteDetail> {
       _descriptionController.text = widget.catatan!.description ?? '';
     }
     super.initState();
+    _formattedDate = DateFormat('dd MMM yyyy').format(DateTime.now());
   }
 
   @override
@@ -134,6 +138,15 @@ class _NoteDetailState extends State<NoteDetail> {
                 enabled: isEditing,
               ),
               const SizedBox(height: 8),
+              Text(
+                _formattedDate, // Menampilkan tanggal tanpa kata "Date"
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.brown,
+                ),
+              ),
+              const SizedBox(height: 16),
               // Deskripsi Catatan
               Expanded(
                 child: TextFormField(

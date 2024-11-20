@@ -50,12 +50,19 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        'assets/images/banner.png', // Path gambar lokal
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+                      child: widget.kajian!.imageFile != null
+                          ? Image.network(
+                              widget.kajian!.imageFile!,
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            )
+                          : Container(
+                              height: 200,
+                              width: double.infinity,
+                              color: Colors.grey, // Placeholder color
+                              child: Center(child: Text('No Image')),
+                            ),
                     ),
                     SizedBox(height: 16),
                     Text(

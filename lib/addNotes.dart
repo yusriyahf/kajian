@@ -51,6 +51,15 @@ class _AddNoteState extends State<AddNote> {
     }
   }
 
+  String _formattedDate = ''; // Variabel untuk menyimpan tanggal
+
+  @override
+  void initState() {
+    super.initState();
+    // Mendapatkan dan memformat tanggal saat ini
+    _formattedDate = DateFormat('dd MMM yyyy').format(DateTime.now());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,18 +122,15 @@ class _AddNoteState extends State<AddNote> {
                   minLines: 1, // Menampilkan minimal 10 baris secara default
                 ),
                 const SizedBox(height: 8.0), // Jarak antara title dan date
-                Align(
-                  alignment:
-                      Alignment.centerLeft, // Mengatur alignment teks ke kiri
-                  child: Text(
-                    'a', // Menampilkan tanggal tanpa kata "Date"
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.brown,
-                    ),
+                Text(
+                  _formattedDate, // Menampilkan tanggal tanpa kata "Date"
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.brown,
                   ),
                 ),
+
                 const SizedBox(height: 16.0), // Jarak antara date dan content
                 TextFormField(
                   controller: _descriptionControllerBody,

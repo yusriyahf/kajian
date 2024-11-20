@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:dotted_border/dotted_border.dart'; // Import paket untuk border putus-putus
+import 'package:image_picker/image_picker.dart'; // Import paket untuk memilih gambar
+import 'dart:io'; // Untuk mengelola file gambar
 
 void main() {
   runApp(MyApp());
@@ -25,54 +23,28 @@ class UploadScreen extends StatefulWidget {
 }
 
 class _UploadScreenState extends State<UploadScreen> {
-  File? _image;
-  final ImagePicker _picker = ImagePicker();
+  File? _image; // Menyimpan gambar yang dipilih
+  final ImagePicker _picker = ImagePicker(); // Instance dari ImagePicker
 
+  // Fungsi untuk memilih gambar dari galeri
   Future<void> _pickImage() async {
     try {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         setState(() {
-          _image = File(pickedFile.path);
+          _image = File(pickedFile.path); // Mengatur gambar yang dipilih
         });
       } else {
+        // Tampilkan pesan jika tidak ada gambar yang dipilih
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Tidak ada gambar yang dipilih')),
         );
       }
     } catch (e) {
+      // Tampilkan pesan jika terjadi kesalahan
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Terjadi kesalahan: $e')),
       );
-    }
-  }
-
-  Future<void> _uploadImage(File image, int tiketId) async {
-    final uri = Uri.parse('http://192.168.224.166:8000/api/tiket/');
-    final request = http.MultipartRequest('POST', uri);
-
-    request.fields['id'] = tiketId.toString(); // Kirim tiket_id
-    request.files.add(await http.MultipartFile.fromPath('image', image.path));
-
-    try {
-      final response = await request.send();
-      if (response.statusCode == 200) {
-        final responseBody = await response.stream.bytesToString();
-        final jsonResponse = jsonDecode(responseBody);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content:
-                  Text('Upload berhasil: ${jsonResponse['bukti_pembayaran']}')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Upload gagal: ${response.reasonPhrase}')),
-        );
-      }
-    } catch (e) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   SnackBar(content: Text('Terjadi kesalahan: $e')),
-      // );
     }
   }
 
@@ -89,7 +61,9 @@ class _UploadScreenState extends State<UploadScreen> {
               child: Text(
                 'Detail Kajian',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.brown),
+                style: TextStyle(
+                  color: Colors.brown,
+                ),
               ),
             ),
             CircleAvatar(
@@ -110,23 +84,25 @@ class _UploadScreenState extends State<UploadScreen> {
             ),
             SizedBox(height: 20),
             GestureDetector(
-              onTap: _pickImage,
+              onTap: _pickImage, // Menambahkan fungsi untuk memilih gambar
               child: DottedBorder(
-                color: Colors.brown.shade300,
-                strokeWidth: 2,
-                dashPattern: [6, 3],
+                color: Colors.brown.shade300, // Warna border
+                strokeWidth: 2, // Ketebalan garis
+                dashPattern: [6, 3], // Pola garis putus-putus
                 borderType: BorderType.RRect,
-                radius: Radius.circular(10),
+                radius: Radius.circular(10), // Radius border 10
                 child: Container(
                   width: 200,
                   height: 327,
                   decoration: BoxDecoration(
-                    color: Colors.brown.shade50,
-                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.brown.shade50, // Warna dalam kotak
+                    borderRadius:
+                        BorderRadius.circular(10), // Sudut membulat dalam kotak
                   ),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
+                      // Menampilkan gambar yang dipilih jika ada
                       if (_image != null)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
@@ -137,15 +113,18 @@ class _UploadScreenState extends State<UploadScreen> {
                             fit: BoxFit.cover,
                           ),
                         ),
+                      // Lingkaran border dengan latar belakang transparan
                       Container(
                         width: 90,
                         height: 90,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.transparent,
+                          color:
+                              Colors.transparent, // Latar belakang transparan
                           border: Border.all(
-                            color: Colors.brown.shade300,
-                            width: 2,
+                            color:
+                                Colors.brown.shade300, // Warna border lingkaran
+                            width: 2, // Ketebalan border lingkaran
                           ),
                         ),
                         child: Center(
@@ -161,30 +140,24 @@ class _UploadScreenState extends State<UploadScreen> {
                 ),
               ),
             ),
+            // Mengatur jarak 150 piksel antara kotak unggah dan tombol
             SizedBox(height: 150),
             SizedBox(
               width: 300,
               child: OutlinedButton(
-                onPressed: () async {
-                  if (_image != null) {
-                    int tiketId = 123; // Ganti dengan ID tiket yang relevan
-                    await _uploadImage(
-                        _image!, tiketId); // Unggah gambar ke backend
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ConfirmationScreen(),
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text('Harap pilih gambar terlebih dahulu')),
-                    );
-                  }
+                onPressed: () {
+                  // Navigasi ke layar konfirmasi
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ConfirmationScreen(),
+                    ),
+                  );
                 },
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: Colors.brown.shade300, width: 2),
+                  side: BorderSide(
+                      color: Colors.brown.shade300,
+                      width: 2), // Border warna coklat
                   padding: EdgeInsets.symmetric(vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -192,40 +165,15 @@ class _UploadScreenState extends State<UploadScreen> {
                 ),
                 child: Text(
                   'Kirim Bukti Pembayaran',
-                  style: TextStyle(color: Colors.brown.shade300, fontSize: 16),
+                  style: TextStyle(
+                      color: Colors.brown.shade300,
+                      fontSize: 16), // Teks warna coklat
                 ),
               ),
             ),
             SizedBox(height: 20),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.brown,
-        unselectedItemColor: Colors.brown[200],
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Jadwal',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.confirmation_num),
-            label: 'Tiket',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notes),
-            label: 'Catatan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Favorite',
-          ),
-        ],
       ),
     );
   }
@@ -244,20 +192,15 @@ class ConfirmationScreen extends StatelessWidget {
             Text(
               'Pembelian Tiket Berhasil',
               style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.brown,
-              ),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.brown),
             ),
             SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 20.0), // Jarak horizontal (kiri & kanan)
-              child: Text(
-                'Selamat, pembelian tiket Anda berhasil! Sekarang Anda sudah bisa mengikuti kajian yang berlangsung.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.brown),
-              ),
+            Text(
+              'Selamat, pembelian tiket Anda berhasil! Sekarang Anda sudah bisa mengikuti kajian yang berlangsung.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, color: Colors.brown),
             ),
             SizedBox(height: 30),
             ElevatedButton(
@@ -265,16 +208,14 @@ class ConfirmationScreen extends StatelessWidget {
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.brown,
+                backgroundColor: Colors.brown, // Warna tombol
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
               ),
-              child: Text(
-                'Ok',
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
+              child: Text('Lanjut',
+                  style: TextStyle(fontSize: 16, color: Colors.white)),
             ),
           ],
         ),

@@ -65,9 +65,7 @@ class _HomePageState extends State<HomePage> {
                 (route) => false)
           });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
-      ));
+      print('bismillah');
     }
   }
 

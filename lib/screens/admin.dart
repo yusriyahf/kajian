@@ -23,45 +23,73 @@ class _HomeAdminState extends State<HomeAdmin> {
 
   void getUser() async {
     ApiResponse response = await getUserDetail();
+
     if (response.error == null) {
       setState(() {
         user = response.data as User;
-        // loading = false;
-        // txtNameController.text = user!.name ?? '';
+        // txtNameController.text = user!.name ?? ''; // Uncomment jika diperlukan
       });
+
+      // Ambil total user dari API
       ApiResponse totalUserResponse = await getTotalUser();
-      Map<String, dynamic> data =
+
+      // Validasi jika data dari response bernilai null
+      if (totalUserResponse.data == null ||
+          !(totalUserResponse.data is Map<String, dynamic>)) {
+        print('Error: Data is null or not a valid map');
+        return;
+      }
+
+      // Parsing data dan set nilai totalUser
+      final Map<String, dynamic> data =
           totalUserResponse.data as Map<String, dynamic>;
-      totalUser = totalUser = data['user'];
-      print(user!.email);
-      print(user!.first_name);
+      setState(() {
+        totalUser =
+            data['user']; // Pastikan key 'user' sesuai dengan struktur API Anda
+      });
+
+      // Debugging: print informasi user
+      print('User Email: ${user!.email}');
+      print('User First Name: ${user!.first_name}');
     } else if (response.error == unauthorized) {
+      // Jika unauthorized, logout user dan kembali ke SplashScreen
       logout().then((value) => {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => SplashScreen()),
                 (route) => false)
           });
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('${response.error}')));
+      // Tampilkan error jika ada masalah
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${response.error}')),
+      );
     }
   }
 
   Future<void> retrieveKajian() async {
     ApiResponse response = await getKajianToday();
+    print('Response Data: ${response.data}');
 
     if (response.error == null) {
-      setState(() {
-        _kajianList = response.data as List<dynamic>;
-        // _loading = _loading ? !_loading : _loading;
-      });
+      if (response.data != null && response.data is List) {
+        setState(() {
+          _kajianList = response.data as List<dynamic>;
+        });
+      } else {
+        print("Data tidak valid atau kosong.");
+        setState(() {
+          _kajianList = []; // Menangani jika data kosong atau tidak valid
+        });
+      }
     } else if (response.error == unauthorized) {
+      // Handle unauthorized error
       logout().then((value) => {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => SplashScreen()),
                 (route) => false)
           });
     } else {
+      // Tampilkan pesan error jika ada masalah
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('${response.error}'),
       ));
@@ -189,8 +217,8 @@ class _HomeAdminState extends State<HomeAdmin> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildStatItem('${totalUser}', Icons.group),
-          _buildStatItem('120', Icons.person),
-          _buildStatItem('110', Icons.person_outline),
+          _buildStatItem('120', Icons.male),
+          _buildStatItem('110', Icons.female),
         ],
       ),
     );
@@ -237,7 +265,6 @@ class _HomeAdminState extends State<HomeAdmin> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                // KajianDetailPage(kajian: kajian),
                                 KajianDetailAdminPage(kajian: kajian)),
                       );
                     },
