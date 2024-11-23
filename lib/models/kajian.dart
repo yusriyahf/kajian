@@ -7,7 +7,7 @@ TimeOfDay parseTimeOfDay(String time) {
 
 class Kajian {
   int? id;
-  String? imageFile;
+  String? image;
   String? title;
   String? speaker_name;
   String? theme;
@@ -18,7 +18,7 @@ class Kajian {
 
   Kajian({
     this.id,
-    this.imageFile,
+    this.image,
     this.title,
     this.speaker_name,
     this.theme,
@@ -32,7 +32,7 @@ class Kajian {
   factory Kajian.fromJson(Map<String, dynamic> json) {
     return Kajian(
       id: json['id'],
-      imageFile: json['image'],
+      image: json['image'],
       title: json['title'],
       speaker_name: json['speaker_name'],
       theme: json['theme'],

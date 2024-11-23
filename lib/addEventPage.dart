@@ -10,6 +10,7 @@ import 'package:kajian/services/kajian_service.dart';
 import 'package:kajian/services/user_service.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart'; // Import image_picker package
+import 'package:image_cropper/image_cropper.dart';
 
 class AddEventPage extends StatefulWidget {
   @override
@@ -33,6 +34,38 @@ class _AddEventPageState extends State<AddEventPage> {
       print("No image selected");
     }
   }
+
+  // Future<void> _pickImage() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? pickedFile =
+  //       await picker.pickImage(source: ImageSource.gallery);
+
+  //   if (pickedFile != null) {
+  //     final croppedFile = await ImageCropper().cropImage(
+  //       sourcePath: pickedFile.path,
+  //       aspectRatio:
+  //           const CropAspectRatio(ratioX: 1, ratioY: 1), // Square cropping
+  //       uiSettings: [
+  //         AndroidUiSettings(
+  //           toolbarTitle: 'Crop Image',
+  //           toolbarColor: Colors.blue,
+  //           toolbarWidgetColor: Colors.white,
+  //           lockAspectRatio: false,
+  //         ),
+  //         IOSUiSettings(
+  //           title: 'Crop Image',
+  //           aspectRatioLockEnabled: false,
+  //         ),
+  //       ],
+  //     );
+
+  //     if (croppedFile != null) {
+  //       setState(() {
+  //         _imageFile = File(croppedFile.path); // Convert ke File
+  //       });
+  //     }
+  //   }
+  // }
 
   Future<void> _selectTime(
       BuildContext context, TextEditingController controller) async {

@@ -125,6 +125,7 @@ Future<ApiResponse> createKajian(
                 'location': location,
                 'start_time': start_time,
                 'end_time': end_time,
+                'price': price,
               }
             : {
                 'title': title,

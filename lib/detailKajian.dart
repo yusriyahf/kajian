@@ -21,6 +21,7 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('INI GAMBARNYA: ${widget.kajian!.image}');
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
@@ -50,9 +51,9 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: widget.kajian!.imageFile != null
+                      child: widget.kajian!.image != null
                           ? Image.network(
-                              widget.kajian!.imageFile!,
+                              widget.kajian!.image!,
                               height: 200,
                               width: double.infinity,
                               fit: BoxFit.cover,

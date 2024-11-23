@@ -147,6 +147,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       val!.isEmpty ? 'Password is required' : null,
                   obscureText: _isPasswordVisible1,
                   decoration: InputDecoration(
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.grey,
+                    ),
                     hintText: 'Kata Sandi',
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -178,6 +182,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       val!.isEmpty ? 'Password confirmation is required' : null,
                   obscureText: _isPasswordVisible2,
                   decoration: InputDecoration(
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Colors.grey,
+                    ),
                     hintText: 'Konfirmasi Kata Sandi',
                     suffixIcon: IconButton(
                       icon: Icon(

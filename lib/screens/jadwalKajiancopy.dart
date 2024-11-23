@@ -19,6 +19,7 @@ void main() {
 
 class Event {
   final String title;
+  final String image;
   final String subtitle;
   final String timeA;
   final String timeB;
@@ -31,6 +32,7 @@ class Event {
 
   Event({
     required this.title,
+    this.image = '',
     this.subtitle = '',
     this.timeA = '',
     this.timeB = '',
@@ -133,6 +135,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
           DateTime eventDate = kajian.date ?? DateTime.now();
           Event event = Event(
             title: kajian.title ?? '',
+            image: kajian.image ?? '',
             timeA: kajian.start_time != null
                 ? '${kajian.start_time?.hour}:${kajian.start_time?.minute}'
                 : '',
@@ -381,6 +384,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                                               // Create a Kajian object from the Event
                                               Kajian kajianModel = Kajian(
                                                 title: kajian.title,
+                                                image: kajian.image,
                                                 start_time:
                                                     startTimeOfDay, // Use TimeOfDay for start_time
                                                 end_time:
@@ -395,6 +399,8 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                                               print('Kajian Details:');
                                               print(
                                                   'Title: ${kajianModel.title}');
+                                              print(
+                                                  'Image: ${kajianModel.image}');
                                               print(
                                                   'Start Time: ${kajianModel.start_time}');
                                               print(

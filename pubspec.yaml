@@ -43,6 +43,7 @@ dependencies:
   dotted_border: ^2.0.0
   http: ^1.2.2
   shared_preferences: ^2.3.2
+  image_cropper: ^8.0.2
   mockito: ^5.0.0
 
 dev_dependencies:
