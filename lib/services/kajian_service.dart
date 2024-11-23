@@ -51,7 +51,7 @@ Future<ApiResponse> getKajianToday() async {
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(response.body)['kajian']
-            .map((kajianTodayJson) => Kajian.fromJson(kajianTodayJson))
+            .map((kajianLastJson) => Kajian.fromJson(kajianLastJson))
             .toList();
         break;
       case 401:

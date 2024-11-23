@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kajian/bayar_tiket.dart';
 import 'package:kajian/constant.dart';
-import 'package:kajian/detailKajian.dart';
 import 'package:kajian/detailkajiann.dart';
 import 'package:kajian/models/api_response.dart';
-import 'package:kajian/models/kajian.dart';
 import 'package:kajian/models/user.dart';
+import 'package:kajian/screens/detailTiket.dart';
 import 'package:kajian/screens/jadwalKajian.dart';
 import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/screens/profile.dart';
 import 'package:kajian/screens/tiket.dart';
 import 'package:kajian/services/kajian_service.dart';
+import 'package:kajian/services/tiket_service.dart';
 import 'package:kajian/services/user_service.dart';
-// import 'package:kajian/pages/jadwal.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,6 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   User? user;
   List<dynamic> _kajianList = [];
+  List<dynamic> _tiketList = [];
 
   // get user detail
   void getUser() async {
@@ -50,22 +49,62 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> retrieveKajian() async {
-    ApiResponse response = await getKajianLast();
+    ApiResponse response = await getKajianToday();
+    ApiResponse responseTiket = await getTiketLast();
 
+    print('Response Data Kajian: ${response.data}');
+    print('Response Data Tiket: ${responseTiket.data}');
+
+    // Periksa error dan data dari API Kajian
     if (response.error == null) {
-      setState(() {
-        _kajianList = response.data as List<dynamic>;
-        // _loading = _loading ? !_loading : _loading;
-      });
-      print(' NGENTOD : ${_kajianList}');
+      if (response.data != null && response.data is List) {
+        setState(() {
+          _kajianList = response.data as List<dynamic>;
+        });
+      } else {
+        print("Data Kajian tidak valid atau kosong.");
+        setState(() {
+          _kajianList = []; // Menangani jika data kosong atau tidak valid
+        });
+      }
     } else if (response.error == unauthorized) {
+      // Handle unauthorized error untuk Kajian
       logout().then((value) => {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => SplashScreen()),
                 (route) => false)
           });
     } else {
-      print('bismillah');
+      // Tampilkan pesan error jika ada masalah di API Kajian
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${response.error}'),
+      ));
+    }
+
+    // Periksa error dan data dari API Tiket
+    if (responseTiket.error == null) {
+      if (responseTiket.data != null && responseTiket.data is List) {
+        setState(() {
+          _tiketList = responseTiket.data as List<dynamic>;
+        });
+      } else {
+        print("Data Tiket tidak valid atau kosong.");
+        setState(() {
+          _tiketList = []; // Menangani jika data kosong atau tidak valid
+        });
+      }
+    } else if (responseTiket.error == unauthorized) {
+      // Handle unauthorized error untuk Tiket
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => SplashScreen()),
+                (route) => false)
+          });
+    } else {
+      // Tampilkan pesan error jika ada masalah di API Tiket
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${responseTiket.error}'),
+      ));
     }
   }
 
@@ -75,7 +114,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     getUser();
     retrieveKajian();
-    print('IINI : ${_kajianList}');
     super.initState();
   }
 
@@ -151,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Kajian Terdekat",
+                    "Kajian yang akan datang",
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -200,7 +238,9 @@ class _HomePageState extends State<HomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    kajian.start_time ?? 'Waktu tidak tersedia',
+                                    kajian.start_time != null
+                                        ? '${kajian.start_time.hour}:${kajian.start_time.minute.toString().padLeft(2, '0')}'
+                                        : 'Waktu tidak tersedia',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.brown,
@@ -218,7 +258,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    kajian.a ?? 'Topik tidak tersedia',
+                                    kajian.theme ?? 'Topik tidak tersedia',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.brown,
@@ -261,6 +301,81 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               const SizedBox(height: 8),
+              _tiketList
+                      .isNotEmpty // Ganti _myTickets sesuai dengan variabel tiket Anda
+                  ? ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _tiketList.length,
+                      itemBuilder: (context, index) {
+                        final tiket = _tiketList[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailTiket(
+                                  tiket: tiket,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            color: const Color(0xFFEAE6CD),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    tiket!.kajian!.start_time != null
+                                        ? '${tiket!.kajian!.start_time.hour}:${tiket!.kajian!.start_time.minute.toString().padLeft(2, '0')}'
+                                        : 'Waktu tidak tersedia',
+                                    // '1',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.brown,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    // 'a',
+                                    tiket.kajian!.title ??
+                                        'Event tidak tersedia',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.brown,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    // 'a',
+                                    tiket.kajian!.theme ??
+                                        'Pembicara tidak tersedia',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.brown,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : Center(
+                      child: const Text(
+                        'Tiket tidak tersedia',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),
+              const SizedBox(height: 16),
             ],
           ),
         ),

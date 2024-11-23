@@ -271,7 +271,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                 child: _loading
                     ? Center(child: CircularProgressIndicator())
                     : _kajianList.isEmpty
-                        ? Center(child: Text('No events on this date'))
+                        ? Center(child: Text('Pilih Tanggal Kajian'))
                         : ListView.builder(
                             itemCount: _kajianList.length,
                             itemBuilder: (context, index) {

@@ -12,6 +12,7 @@ const tiketURL = baseURL + '/tiket';
 const commentsURL = baseURL + '/comments';
 const catatanURL = baseURL + '/catatan';
 const kajianLastURL = baseURL + '/kajianlast';
+const tiketCok = baseURL + '/tiketlast';
 const kajianTodayURL = baseURL + '/kajiantoday';
 const totalUserURL = baseURL + '/totaluser';
 const upBayar = baseURL + '/tiket/up_bayar';
