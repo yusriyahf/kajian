@@ -54,12 +54,19 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        'assets/images/banner.png', // Path gambar lokal
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
+                      child: widget.kajian!.image != null
+                          ? Image.network(
+                              widget.kajian!.image!,
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            )
+                          : Container(
+                              height: 200,
+                              width: double.infinity,
+                              color: Colors.grey, // Placeholder color
+                              child: Center(child: Text('No Image')),
+                            ),
                     ),
                     SizedBox(height: 16),
                     Text(
@@ -97,6 +104,14 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                         Icon(Icons.location_on_outlined, color: Colors.brown),
                         SizedBox(width: 8),
                         Text('${widget.kajian!.location}'),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(Icons.price_change_outlined, color: Colors.brown),
+                        SizedBox(width: 8),
+                        Text('Rp. ${widget.kajian!.price}'),
                       ],
                     ),
                     SizedBox(height: 8),
@@ -154,8 +169,8 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      DetailPembayaranTiket()),
+                                  builder: (context) => DetailPembayaranTiket(
+                                      kajian: widget.kajian!)),
                             );
                           },
                           child: Text(
@@ -176,32 +191,6 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
           ),
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   selectedItemColor: Colors.brown,
-      //   unselectedItemColor: Colors.grey,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Beranda',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.calendar_today),
-      //       label: 'Jadwal',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.receipt_long),
-      //       label: 'Tiket',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.notes),
-      //       label: 'Catatan',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.person),
-      //       label: 'Profil',
-      //     ),
-      //   ],
-      // ),
     ));
   }
 }

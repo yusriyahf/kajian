@@ -18,7 +18,9 @@ void main() {
 }
 
 class Event {
+  final String id;
   final String title;
+  final String price;
   final String image;
   final String subtitle;
   final String timeA;
@@ -31,7 +33,9 @@ class Event {
   bool isCompleted;
 
   Event({
+    required this.id,
     required this.title,
+    required this.price,
     this.image = '',
     this.subtitle = '',
     this.timeA = '',
@@ -134,7 +138,9 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
         for (Kajian kajian in kajianList) {
           DateTime eventDate = kajian.date ?? DateTime.now();
           Event event = Event(
+            id: kajian.id?.toString() ?? '',
             title: kajian.title ?? '',
+            price: kajian.price != null ? kajian.price.toString() : '',
             image: kajian.image ?? '',
             timeA: kajian.start_time != null
                 ? '${kajian.start_time?.hour}:${kajian.start_time?.minute}'
@@ -383,7 +389,12 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
 
                                               // Create a Kajian object from the Event
                                               Kajian kajianModel = Kajian(
+                                                id: int.tryParse(kajian.id) ??
+                                                    0,
                                                 title: kajian.title,
+                                                price: kajian.price != null
+                                                    ? int.tryParse(kajian.price)
+                                                    : null,
                                                 image: kajian.image,
                                                 start_time:
                                                     startTimeOfDay, // Use TimeOfDay for start_time

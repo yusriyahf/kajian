@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:kajian/bayar_tiket.dart';
+import 'package:kajian/bukti.dart';
+import 'package:kajian/models/kajian.dart';
 import 'package:kajian/models/tiketModel.dart';
 
 // void main() {
@@ -6,11 +10,9 @@ import 'package:kajian/models/tiketModel.dart';
 // }
 
 class DetailPembayaranTiket extends StatefulWidget {
-  // final TiketModel? tiket;
-  // final Map<String, String> note; // Menerima data catatan
+  final Kajian kajian;
 
-  // DetailPembayaranTiket({this.tiket});
-  // const NoteDetail({Key? key, required this.note}) : super(key: key);
+  DetailPembayaranTiket({required this.kajian});
 
   @override
   State<DetailPembayaranTiket> createState() => _DetailPembayaranTiketState();
@@ -64,7 +66,7 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
 
   @override
   Widget build(BuildContext context) {
-    print("Tiket title: judul tiket");
+    print("Tiket title: ${widget.kajian.title}");
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -114,7 +116,7 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                             ),
                           ),
                           Text(
-                            "Rp.156.450",
+                            "Rp.${widget.kajian.price}",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -159,13 +161,13 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                       // ),
                       // SizedBox(height: 16),
                       Text(
-                        "Tanggal Booking : tgl dump",
+                        "Tanggal Booking : ${DateFormat('EEEE, d MMM yyyy', 'id_ID').format(DateTime.now())}",
                         // "Tanggal Booking : Kamis, 8/Agustus/2024 Pukul 19:46 WIB",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Tanggal Event Dimulai : tgl dump",
+                        "Tanggal Event Dimulai : ${widget.kajian.date}",
                         // "Tanggal Event Dimulai : Minggu, 6/Oktober/2024 Pukul 15:00 WIB",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
@@ -213,7 +215,7 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Event :  judul",
+                        "Event :  ${widget.kajian.title}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       // SizedBox(height: 16),
@@ -228,15 +230,44 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Metode Pembayaran : BCAVA",
+                        "Metode Pembayaran : s",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      SizedBox(height: 16),
-                      Text(
-                        "Status Pembayaran : Dibayar",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      )
+                      // SizedBox(height: 16),
+                      // Text(
+                      //   "Status Pembayaran : Belum",
+                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      // )
                     ],
+                  ),
+                ),
+                Container(
+                  width: 320,
+                  height: 59,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors
+                          .brown, // Mengganti 'primary' menjadi 'backgroundColor'
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10), // Border radius
+                      ),
+                    ),
+                    onPressed: () {
+                      // Aksi ketika button ditekan
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => BayarTiket()),
+                      );
+                    },
+                    child: Text(
+                      'Bayar Tiket',
+                      style: TextStyle(
+                        color: Colors.white, // Warna tulisan putih
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ],
