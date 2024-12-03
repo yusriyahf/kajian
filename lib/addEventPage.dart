@@ -35,38 +35,6 @@ class _AddEventPageState extends State<AddEventPage> {
     }
   }
 
-  // Future<void> _pickImage() async {
-  //   final ImagePicker picker = ImagePicker();
-  //   final XFile? pickedFile =
-  //       await picker.pickImage(source: ImageSource.gallery);
-
-  //   if (pickedFile != null) {
-  //     final croppedFile = await ImageCropper().cropImage(
-  //       sourcePath: pickedFile.path,
-  //       aspectRatio:
-  //           const CropAspectRatio(ratioX: 1, ratioY: 1), // Square cropping
-  //       uiSettings: [
-  //         AndroidUiSettings(
-  //           toolbarTitle: 'Crop Image',
-  //           toolbarColor: Colors.blue,
-  //           toolbarWidgetColor: Colors.white,
-  //           lockAspectRatio: false,
-  //         ),
-  //         IOSUiSettings(
-  //           title: 'Crop Image',
-  //           aspectRatioLockEnabled: false,
-  //         ),
-  //       ],
-  //     );
-
-  //     if (croppedFile != null) {
-  //       setState(() {
-  //         _imageFile = File(croppedFile.path); // Convert ke File
-  //       });
-  //     }
-  //   }
-  // }
-
   Future<void> _selectTime(
       BuildContext context, TextEditingController controller) async {
     final TimeOfDay? pickedTime = await showTimePicker(

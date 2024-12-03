@@ -130,6 +130,9 @@ class _HomeAdminState extends State<HomeAdmin> {
               Navigator.pushNamed(context, '/jadwal');
               break;
             case 2:
+              Navigator.pushNamed(context, '/pembayaran');
+              break;
+            case 3:
               Navigator.pushNamed(context, '/profile');
               break;
           }
@@ -142,6 +145,10 @@ class _HomeAdminState extends State<HomeAdmin> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: 'Kajian',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.payment),
+            label: 'Pembayaran',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

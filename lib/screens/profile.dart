@@ -318,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 )
               : BottomNavigationBar(
-                  currentIndex: 2,
+                  currentIndex: 3,
                   selectedItemColor: Colors.brown,
                   unselectedItemColor: Colors.grey,
                   type: BottomNavigationBarType.fixed,
@@ -331,6 +331,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.pushNamed(context, '/jadwal');
                         break;
                       case 2:
+                        Navigator.pushNamed(context, '/pembayaran');
+                        break;
+                      case 3:
                         Navigator.pushNamed(context, '/profile');
                         break;
                     }
@@ -343,6 +346,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     BottomNavigationBarItem(
                       icon: Icon(Icons.calendar_today),
                       label: 'Kajian',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.payment),
+                      label: 'Pembayaran',
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.person),

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kajian/detailKajian.dart';
 import 'package:kajian/screens/admin.dart';
+import 'package:kajian/screens/detailPembayaranAdmin.dart';
 import 'package:kajian/screens/home.dart';
 import 'package:kajian/screens/jadwalKajian.dart';
 import 'package:kajian/notes.dart';
 import 'package:kajian/screens/jadwalKajiancopy.dart';
+import 'package:kajian/screens/pembayaranAdmin.dart';
 import 'package:kajian/screens/profile.dart';
 import 'package:kajian/screens/loading.dart';
 import 'package:kajian/screens/tiket.dart';
@@ -33,6 +35,8 @@ class MyApp extends StatelessWidget {
         '/catatan': (context) => Notes(),
         '/detailkajianAdmin': (context) => KajianDetailAdminPage(),
         '/detailkajian': (context) => KajianDetailAdminPage(),
+        '/pembayaran': (context) => AdminKonfirmPage(),
+        '/detailPembayaran': (context) => AdminKonfirmPageDetail(),
       },
     );
   }

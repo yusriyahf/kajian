@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kajian/bayar_tiket.dart';
 import 'package:kajian/bukti.dart';
+import 'package:kajian/constant.dart';
+import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/kajian.dart';
 import 'package:kajian/models/tiketModel.dart';
+import 'package:kajian/models/user.dart';
+import 'package:kajian/screens/onboard.dart';
+import 'package:kajian/services/user_service.dart';
 
 // void main() {
 //   runApp(DetailPembayaranTiket());
@@ -19,6 +24,26 @@ class DetailPembayaranTiket extends StatefulWidget {
 }
 
 class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
+  User? user;
+  // get user detail
+  void getUser() async {
+    ApiResponse response = await getUserDetail();
+    if (response.error == null) {
+      setState(() {
+        user = response.data as User;
+      });
+    } else if (response.error == unauthorized) {
+      logout().then((value) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => SplashScreen()),
+            (route) => false);
+      });
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+  }
+
   String formatDateTime(DateTime dateTime) {
     List<String> days = [
       "Minggu",
@@ -65,8 +90,28 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
   }
 
   @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     print("Tiket title: ${widget.kajian.title}");
+
+    if (user == null) {
+      // Show a loading indicator while user data is being fetched
+      return Scaffold(
+        appBar: AppBar(
+          title: Center(child: Text("Pembayaran Tiket")),
+          backgroundColor: Colors.brown,
+          foregroundColor: Colors.white,
+        ),
+        body: Center(
+          child: CircularProgressIndicator(), // Loading spinner
+        ),
+      );
+    }
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -179,12 +224,12 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Nama : yusriyah  firjatullah",
+                        "Nama : ${user?.first_name ?? 'Unknown'} ${user?.last_name ?? 'Unknown'}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Email :  yusriyah9@gmail.com",
+                        "Email :  ${user!.email ?? 'Unknown'}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
@@ -192,21 +237,11 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                         "No. Handphone : 08123456676",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "No. Identitas : 35345735483659454",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // ),
                       SizedBox(height: 16),
                       Text(
                         "Tanggal Lahir : 2003-09-27",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "Catatan : -",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // ),
                       SizedBox(height: 50),
                       Text(
                         "Informasi Pembayaran",
@@ -218,11 +253,6 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                         "Event :  ${widget.kajian.title}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "Pajak : 7450 IDR",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // ),
                       SizedBox(height: 16),
                       Text(
                         "Total Pembayaran : Rp.156.450",
@@ -233,11 +263,6 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                         "Metode Pembayaran : s",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "Status Pembayaran : Belum",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // )
                     ],
                   ),
                 ),
@@ -257,7 +282,9 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                       // Aksi ketika button ditekan
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => BayarTiket()),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                DetailKajianScreen(kajian: widget.kajian!)),
                       );
                     },
                     child: Text(

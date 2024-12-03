@@ -7,7 +7,6 @@ import 'package:kajian/screens/pembayaran.dart';
 
 class KajianDetailPage extends StatefulWidget {
   final Kajian? kajian;
-  // final Map<String, String> note; // Menerima data catatan
 
   KajianDetailPage({this.kajian});
 

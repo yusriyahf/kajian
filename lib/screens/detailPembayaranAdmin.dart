@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:kajian/models/tiketModel.dart';
+import 'package:kajian/models/pembayaran.dart';
 
 // void main() {
-//   runApp(DetailTiket());
+//   runApp(AdminKonfirmPageDetail());
 // }
 
-class DetailTiket extends StatefulWidget {
-  final TiketModel? tiket;
-  // final Map<String, String> note; // Menerima data catatan
+class AdminKonfirmPageDetail extends StatefulWidget {
+  final Pembayaran? pembayaran;
 
-  DetailTiket({this.tiket});
-  // const NoteDetail({Key? key, required this.note}) : super(key: key);
+  AdminKonfirmPageDetail({this.pembayaran});
 
   @override
-  State<DetailTiket> createState() => _DetailTiketState();
+  State<AdminKonfirmPageDetail> createState() => _AdminKonfirmPageDetailState();
 }
 
-class _DetailTiketState extends State<DetailTiket> {
-  String formatDateTime(DateTime dateTime) {
+class _AdminKonfirmPageDetailState extends State<AdminKonfirmPageDetail> {
+  String formatDateTime(DateTime? dateTime) {
+    if (dateTime == null) {
+      return "Tanggal tidak tersedia";
+    }
+
     List<String> days = [
       "Minggu",
       "Senin",
@@ -55,20 +57,13 @@ class _DetailTiketState extends State<DetailTiket> {
     return "$dayName, $day/$monthName/$year Pukul $hour:$minute WIB";
   }
 
-  String formatTimeOfDay(TimeOfDay time) {
-    final now = DateTime.now();
-    final timeOfDay =
-        DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    return '${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')}';
-  }
-
   @override
   Widget build(BuildContext context) {
-    print("Tiket title: ${widget.tiket?.kajian?.title}");
+    print("Building widget with data: ${widget.pembayaran?.kajian?.image}");
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text("Detail Tiket")),
+          title: Center(child: Text("Detail Pembayaran")),
           backgroundColor: Colors.brown,
           foregroundColor: Colors.white,
         ),
@@ -95,8 +90,26 @@ class _DetailTiketState extends State<DetailTiket> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: widget.pembayaran?.kajian?.image != null &&
+                                widget.pembayaran!.kajian!.image!.isNotEmpty
+                            ? Image.network(
+                                widget.pembayaran!.kajian!.image!,
+                                height: 200,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                height: 200,
+                                width: double.infinity,
+                                color: Colors.grey, // Placeholder color
+                                child: Center(child: Text('No Image')),
+                              ),
+                      ),
+                      SizedBox(height: 16),
                       Text(
-                        widget.tiket!.kajian!.title!,
+                        "${widget.pembayaran?.kajian?.title}",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -114,7 +127,7 @@ class _DetailTiketState extends State<DetailTiket> {
                             ),
                           ),
                           Text(
-                            "Rp.${widget.tiket!.kajian!.price}",
+                            "Rp. ${widget.pembayaran?.kajian?.price}",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -153,20 +166,19 @@ class _DetailTiketState extends State<DetailTiket> {
                         ),
                       ),
                       Divider(),
-                      // Text(
-                      //   "Booking #T2351817303268K9JXU",
-                      //   style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                      // ),
-                      // SizedBox(height: 16),
                       Text(
-                        "Tanggal Booking : ${formatDateTime(widget.tiket!.created_at!)}",
-                        // "Tanggal Booking : Kamis, 8/Agustus/2024 Pukul 19:46 WIB",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        "Booking #T2351817303268K9JXU",
+                        style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Tanggal Event Dimulai :${formatDateTime(widget.tiket!.kajian!.date!)}",
-                        // "Tanggal Event Dimulai : Minggu, 6/Oktober/2024 Pukul 15:00 WIB",
+                        "Tanggal Booking : ${widget.pembayaran!.created_at}",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
+
+                      SizedBox(height: 16),
+                      Text(
+                        "Tanggal Event Dimulai : ${widget.pembayaran?.kajian?.date}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 50),
@@ -177,12 +189,12 @@ class _DetailTiketState extends State<DetailTiket> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Nama : ${widget.tiket!.user!.first_name}  ${widget.tiket!.user!.last_name}",
+                        "Nama : ${widget.pembayaran?.user?.first_name} ${widget.pembayaran?.user?.last_name}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Email :  ${widget.tiket!.user!.email}",
+                        "Email : ${widget.pembayaran?.user?.email}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
@@ -190,21 +202,21 @@ class _DetailTiketState extends State<DetailTiket> {
                         "No. Handphone : 08123456676",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "No. Identitas : 35345735483659454",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // ),
+                      SizedBox(height: 16),
+                      Text(
+                        "No. Identitas : 35345735483659454",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
                       SizedBox(height: 16),
                       Text(
                         "Tanggal Lahir : 2003-09-27",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "Catatan : -",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // ),
+                      SizedBox(height: 16),
+                      Text(
+                        "Catatan : -",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
                       SizedBox(height: 50),
                       Text(
                         "Informasi Pembayaran",
@@ -213,17 +225,12 @@ class _DetailTiketState extends State<DetailTiket> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Event :  ${widget.tiket!.kajian!.title!}",
+                        "Event : ${widget.pembayaran?.kajian?.title}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "Pajak : 7450 IDR",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // ),
                       SizedBox(height: 16),
                       Text(
-                        "Total Pembayaran : Rp.156.450",
+                        "Total Pembayaran : Rp. ${widget.pembayaran?.kajian?.price}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
@@ -235,7 +242,77 @@ class _DetailTiketState extends State<DetailTiket> {
                       Text(
                         "Status Pembayaran : Dibayar",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      )
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        "Bukti Pembayaran",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
+                      SizedBox(height: 8), // Beri jarak antara teks dan gambar
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          widget.pembayaran?.bukti_pembayaran ??
+                              '', // Use an empty string or fallback URL if null
+                          height: 400,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              // Action for Accept button
+                              // You can show a dialog or handle your logic here
+                              print('Tiket Ditolak');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Colors.red, // Green color for accept
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              'Tolak',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Action for Reject button
+                              // You can show a dialog or handle your logic here
+                              print('Tiket Diterima');
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Colors.green, // Red color for reject
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              'Acc',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
