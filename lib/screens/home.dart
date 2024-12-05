@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: Colors.brown,
+                        color: Color(0xFF724820),
                       ),
                     )
                   : Center(
@@ -193,11 +193,11 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.brown),
+                        color: Color(0xFF724820)),
                   ),
                   IconButton(
                     icon: const Icon(Icons.arrow_forward_ios,
-                        color: Colors.brown, size: 16),
+                        color: Color(0xFF724820), size: 16),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -243,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                                         : 'Waktu tidak tersedia',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                   SizedBox(height: 8),
@@ -253,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                   SizedBox(height: 4),
@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                                     kajian.theme ?? 'Topik tidak tersedia',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                 ],
@@ -286,11 +286,11 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.brown),
+                        color: Color(0xFF724820)),
                   ),
                   IconButton(
                     icon: const Icon(Icons.arrow_forward_ios,
-                        color: Colors.brown, size: 16),
+                        color: Color(0xFF724820), size: 16),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -338,7 +338,7 @@ class _HomePageState extends State<HomePage> {
                                     // '1',
                                     style: const TextStyle(
                                       fontSize: 14,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                   const SizedBox(height: 8),
@@ -349,7 +349,7 @@ class _HomePageState extends State<HomePage> {
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -359,7 +359,7 @@ class _HomePageState extends State<HomePage> {
                                         'Pembicara tidak tersedia',
                                     style: const TextStyle(
                                       fontSize: 14,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                 ],
@@ -381,7 +381,7 @@ class _HomePageState extends State<HomePage> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: 0,
-          selectedItemColor: Colors.brown,
+          selectedItemColor: Color(0xFF724820),
           unselectedItemColor: Colors.grey,
           type: BottomNavigationBarType.fixed,
           onTap: (index) {

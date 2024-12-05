@@ -49,7 +49,7 @@ class FaceRecognitionScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Pengenalan Wajah'),
         centerTitle: true,
-        backgroundColor: Colors.brown,
+        backgroundColor: Color(0xFF724820),
       ),
       body: Center(
         child: Column(

@@ -71,11 +71,11 @@ class _NotesState extends State<Notes> {
       home: Scaffold(
         // backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xFF724820),
           title: const Center(
             child: Text(
               'Catatan Saya',
-              style: TextStyle(color: Colors.brown),
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ),
@@ -189,7 +189,7 @@ class _NotesState extends State<Notes> {
           //     });
           //   }
           // },
-          backgroundColor: Colors.brown,
+          backgroundColor: Color(0xFF724820),
           child: const Icon(Icons.add, color: Colors.white),
           shape: RoundedRectangleBorder(
             borderRadius:
@@ -198,7 +198,7 @@ class _NotesState extends State<Notes> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: 3,
-          selectedItemColor: Colors.brown,
+          selectedItemColor: Color(0xFF724820),
           unselectedItemColor: Colors.grey,
           type: BottomNavigationBarType.fixed,
           onTap: (index) {

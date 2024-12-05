@@ -109,8 +109,10 @@ class _HomeAdminState extends State<HomeAdmin> {
     return Scaffold(
       body: Column(
         children: [
-          _buildHeader(),
-          _buildStatistics(),
+          // _buildHeader(),
+          // _buildStatistics(),
+          _buildContent(),
+          SizedBox(height: 40),
           _buildKajianList(),
           const Spacer(),
         ],
@@ -130,9 +132,6 @@ class _HomeAdminState extends State<HomeAdmin> {
               Navigator.pushNamed(context, '/jadwal');
               break;
             case 2:
-              Navigator.pushNamed(context, '/pembayaran');
-              break;
-            case 3:
               Navigator.pushNamed(context, '/profile');
               break;
           }
@@ -147,10 +146,6 @@ class _HomeAdminState extends State<HomeAdmin> {
             label: 'Kajian',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.payment),
-            label: 'Pembayaran',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profil',
           ),
@@ -160,48 +155,68 @@ class _HomeAdminState extends State<HomeAdmin> {
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.only(
-          left: 20.0, top: 20.0, right: 20.0, bottom: 20.0),
-      color: const Color.fromARGB(255, 171, 117, 76),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return SizedBox(
+      width: double.infinity, // Lebar sesuai dengan lebar layar
+      height: 240, // Tinggi sesuai kebutuhan
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20.0), // Radius untuk sudut kiri bawah
+          bottomRight: Radius.circular(20.0), // Radius untuk sudut kanan bawah
+        ),
+        child: Container(
+          padding: const EdgeInsets.only(
+              left: 20.0, top: 20.0, right: 20.0, bottom: 20.0),
+          color: Color(0xFF724820),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Selamat Datang',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 40),
+                  const Text(
+                    'Selamat Datang',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  user != null
+                      ? Text(
+                          '${user!.first_name!}',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold),
+                        )
+                      : Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                  const SizedBox(height: 15),
+                  Text(
+                    DateFormat('EEEE, d MMM yyyy', 'id_ID')
+                        .format(DateTime.now()),
+                    style: const TextStyle(color: Colors.white70),
+                  ),
+                ],
               ),
-              user != null
-                  ? Text(
-                      '${user!.first_name!}',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold),
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    ),
-              const SizedBox(height: 5),
-              Text(
-                DateFormat('EEEE, d MMM yyyy', 'id_ID').format(DateTime.now()),
-                style: const TextStyle(color: Colors.white70),
-              ),
+              Container(
+                padding: EdgeInsets.only(top: 3.0),
+                margin: const EdgeInsets.only(
+                    left: 10.0, top: 0.0, right: 20.0, bottom: 30.0),
+                child: const CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.person,
+                    color: Color(0xFFA67B5B),
+                    size: 30,
+                  ),
+                ),
+              )
             ],
           ),
-          Container(
-            margin: const EdgeInsets.only(
-                left: 10.0, top: 0.0, right: 20.0, bottom: 30.0),
-            child: const CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: Color(0xFFA67B5B)),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -232,6 +247,24 @@ class _HomeAdminState extends State<HomeAdmin> {
     );
   }
 
+  Widget _buildContent() {
+    return Stack(
+      clipBehavior: Clip.none, // Mengizinkan elemen keluar dari batas Stack
+      children: [
+        // Widget header berada di belakang
+        _buildHeader(),
+        // Widget statistik berada di depan dan memastikan ukuran asli tanpa terpotong
+        Positioned(
+          top: 180, // Posisi awal dari atas, sesuaikan dengan tinggi header
+          left: 10, // Jarak dari kiri
+          right: 10, // Jarak dari kanan
+          child:
+              _buildStatistics(), // Widget statistik yang akan berada di atas header
+        ),
+      ],
+    );
+  }
+
   Widget _buildStatItem(String value, IconData icon) {
     return Column(
       children: [
@@ -251,7 +284,10 @@ class _HomeAdminState extends State<HomeAdmin> {
           padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 20.0),
           child: Text(
             'Kajian Hari ini',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF724820)),
           ),
         ),
         _kajianList.isEmpty
@@ -294,23 +330,38 @@ class _HomeAdminState extends State<HomeAdmin> {
                       padding: const EdgeInsets.only(
                           left: 30.0, top: 20.0, bottom: 20.0, right: 60.0),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFF8DC),
+                        color: const Color(0xFFEAE6CD),
                         borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(
+                                0.2), // Warna shadow dengan opacity
+                            blurRadius: 2, // Besar blur
+                            offset: Offset(0, 4), // Arah dan jarak bayangan
+                          ),
+                        ],
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             '$startTime - $endTime',
-                            style: const TextStyle(color: Colors.grey),
+                            style: const TextStyle(
+                                color: Color(0xFF724820), fontSize: 13),
                           ),
                           const SizedBox(height: 5),
                           Text(
                             kajian.title ?? 'Kajian Tidak Ditemukan',
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Color(0xFF724820)),
                           ),
-                          Text(kajian.theme ?? 'Tema Tidak Tersedia'),
+                          Text(
+                            kajian.theme ?? 'Tema Tidak Tersedia',
+                            style: const TextStyle(
+                                fontSize: 13, color: Color(0xFF724820)),
+                          ),
                         ],
                       ),
                     ),

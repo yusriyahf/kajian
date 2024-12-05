@@ -89,7 +89,7 @@ class _TiketState extends State<Tiket> {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              backgroundColor: Colors.brown,
+              backgroundColor: Color(0xFF724820),
             ),
             body: Column(
               children: [
@@ -229,7 +229,7 @@ class _TiketState extends State<Tiket> {
             ),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: 2,
-              selectedItemColor: Colors.brown,
+              selectedItemColor: Color(0xFF724820),
               unselectedItemColor: Colors.grey,
               type: BottomNavigationBarType.fixed,
               onTap: (index) {

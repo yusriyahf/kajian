@@ -82,11 +82,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     Text(
                       'Profile Saya',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 15),
                     Text(
                       'Username',
                       style: TextStyle(
@@ -117,7 +117,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(height: 20),
                     Divider(color: Colors.brown.shade100),
                     ListTile(
-                      leading: Icon(Icons.lock_outline, color: Colors.brown),
+                      leading: Icon(Icons.account_circle_outlined,
+                          color: Color(0xFF724820)),
+                      title: Text('Info Akun'),
+                      onTap: () {},
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    ListTile(
+                      leading:
+                          Icon(Icons.lock_outline, color: Color(0xFF724820)),
                       title: Text('Ganti Password'),
                       onTap: () {
                         Navigator.push(
@@ -128,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       contentPadding: EdgeInsets.zero,
                     ),
                     ListTile(
-                      leading: Icon(Icons.logout, color: Colors.brown),
+                      leading: Icon(Icons.logout, color: Color(0xFF724820)),
                       title: Text('Logout'),
                       onTap: () {
                         showModalBottomSheet(
@@ -182,7 +190,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               borderRadius:
                                                   BorderRadius.circular(64),
                                               side: BorderSide(
-                                                  color: Colors.brown),
+                                                  color: Color(0xFF724820)),
                                             ),
                                             padding: EdgeInsets.symmetric(
                                                 vertical: 12),
@@ -210,7 +218,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 });
                                           },
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.brown,
+                                            backgroundColor: Color(0xFF724820),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(64),
@@ -245,7 +253,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       contentPadding: EdgeInsets.zero,
                     ),
                     ListTile(
-                      leading: Icon(Icons.info_outline, color: Colors.brown),
+                      leading:
+                          Icon(Icons.info_outline, color: Color(0xFF724820)),
                       title: Text('Tentang Aplikasi'),
                       onTap: () {
                         Navigator.push(
@@ -272,7 +281,7 @@ class _ProfilePageState extends State<ProfilePage> {
           : userRole == '2'
               ? BottomNavigationBar(
                   currentIndex: 4,
-                  selectedItemColor: Colors.brown,
+                  selectedItemColor: Color(0xFF724820),
                   unselectedItemColor: Colors.grey,
                   type: BottomNavigationBarType.fixed,
                   onTap: (index) {
@@ -319,7 +328,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 )
               : BottomNavigationBar(
                   currentIndex: 3,
-                  selectedItemColor: Colors.brown,
+                  selectedItemColor: Color(0xFF724820),
                   unselectedItemColor: Colors.grey,
                   type: BottomNavigationBarType.fixed,
                   onTap: (index) {

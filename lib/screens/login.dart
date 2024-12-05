@@ -23,13 +23,12 @@ class _LoginScreenState extends State<LoginScreen> {
   void _loginUser() async {
     ApiResponse response = await login(txtEmail.text, txtPassword.text);
     if (response.error == null) {
-      _showSuccessDialog(response.data as User); // Pass user data to the dialog
+      _showSuccessSnackBar(response.data as User); // Ganti dengan SnackBar
     } else {
       setState(() {
         loading = false;
       });
-      _showErrorDialog(
-          response.error ?? 'An unknown error occurred.'); // Show error dialog
+      _showErrorSnackBar(response.error ?? 'An unknown error occurred.');
     }
   }
 
@@ -51,48 +50,32 @@ class _LoginScreenState extends State<LoginScreen> {
           (route) => false);
     } else {
       // Anda bisa menambahkan logika lain jika role tidak teridentifikasi
-      _showErrorDialog('Role tidak valid');
+      _showErrorSnackBar('Role tidak valid');
     }
   }
 
-  void _showSuccessDialog(User user) {
-    showDialog(
-      context: context,
-      barrierDismissible:
-          false, // Prevent dismissing the dialog by tapping outside
-      builder: (BuildContext context) {
-        // Show the success dialog
-        return AlertDialog(
-          title: Text('Sukses'),
-          content: Text('Anda berhasil login.'),
-        );
-      },
+  void _showSuccessSnackBar(User user) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Anda berhasil login.'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2), // SnackBar tampil selama 2 detik
+      ),
     );
 
-    // Close the dialog after 2 seconds and then redirect
+    // Redirect ke halaman sesuai role setelah SnackBar selesai
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.of(context).pop(); // Close the dialog
-      _saveAndRedirectToHome(user); // Redirect after dialog is closed
+      _saveAndRedirectToHome(user);
     });
   }
 
-  void _showErrorDialog(String errorMessage) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text('Gagal Masuk'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-            ),
-          ],
-        );
-      },
+  void _showErrorSnackBar(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Gagal Masuk: $errorMessage'),
+        backgroundColor: Colors.red,
+        duration: Duration(seconds: 3), // SnackBar tampil selama 3 detik
+      ),
     );
   }
 
@@ -179,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF98614A),
+                          backgroundColor: Color(0xFF724820),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),

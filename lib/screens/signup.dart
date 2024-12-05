@@ -244,7 +244,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     Text(
                                       'Pengenalan Wajah',
                                       style: TextStyle(
-                                        color: Color(0xFF98614A),
+                                        color: Color(0xFF724820),
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -376,7 +376,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF98614A),
+                    backgroundColor: Color(0xFF724820),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
