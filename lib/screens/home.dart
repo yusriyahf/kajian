@@ -102,9 +102,10 @@ class _HomePageState extends State<HomePage> {
           });
     } else {
       // Tampilkan pesan error jika ada masalah di API Tiket
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${responseTiket.error}'),
-      ));
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text('${responseTiket.error}'),
+      // ));
+      print('anjay');
     }
   }
 
@@ -123,13 +124,17 @@ class _HomePageState extends State<HomePage> {
       home: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          toolbarHeight: 90,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 5),
               Text(
                 'Selamat Datang',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.grey,
+                ),
               ),
               SizedBox(height: 5),
               user != null

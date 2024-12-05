@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:http/http.dart' as http;
+import 'package:kajian/resultScreen.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -18,40 +22,67 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<void> _initializeCameras() async {
-    // Ambil daftar kamera yang tersedia
     cameras = await availableCameras();
-
-    // Periksa apakah ada kamera yang tersedia
     if (cameras.isEmpty) {
-      // Menampilkan pesan kesalahan jika tidak ada kamera
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text('No camera available.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+      _showErrorDialog('No camera available.');
       return;
     }
 
-    // Inisialisasi kamera depan
     final frontCamera = cameras.firstWhere(
       (camera) => camera.lensDirection == CameraLensDirection.front,
-      orElse: () => cameras[
-          0], // fallback to the first camera if front camera is not found
+      orElse: () => cameras[0],
     );
 
     controller = CameraController(frontCamera, ResolutionPreset.high);
     _initializeControllerFuture = controller!.initialize();
     setState(() {});
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _analyzeImage(XFile imageFile) async {
+    final url =
+        Uri.parse('http://192.168.20.6:8001/analyze/'); // Ganti dengan URL API
+    final request = http.MultipartRequest('POST', url)
+      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+
+    final response = await request.send();
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(await response.stream.bytesToString());
+      final faceRecognitionResult =
+          "Face: ${responseData['face_recognition']['label']} (Confidence: ${responseData['face_recognition']['confidence']})";
+      final genderDetectionResult =
+          "Gender: ${responseData['gender_detection']['gender']} (Confidence: ${responseData['gender_detection']['confidence']})";
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultScreen(
+            faceRecognitionResult: faceRecognitionResult,
+            genderDetectionResult: genderDetectionResult,
+            imageFile: File(imageFile.path), // Kirim file foto ke ResultScreen
+          ),
+        ),
+      );
+    } else {
+      _showErrorDialog('Failed to analyze image.');
+    }
   }
 
   @override
@@ -79,58 +110,54 @@ class _CameraScreenState extends State<CameraScreen> {
               centerTitle: true,
             ),
             body: Padding(
-              padding: const EdgeInsets.all(40.0), // Adjust padding as needed
+              padding: const EdgeInsets.all(40.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20), // Border radius
+                      borderRadius: BorderRadius.circular(20),
                       child: Transform(
                         alignment: Alignment.center,
-                        transform:
-                            Matrix4.rotationY(3.14159), // Flip horizontally
+                        transform: Matrix4.rotationY(3.14159),
                         child: Container(
-                          height:
-                              500, // Set the desired height for the camera preview
+                          height: 500,
                           child: CameraPreview(controller!),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                      height: 20), // Space between camera preview and button
+                  SizedBox(height: 20),
                   Stack(
-                    alignment: Alignment.center, // Center the children
+                    alignment: Alignment.center,
                     children: [
                       Container(
-                        width:
-                            80, // Width of the outer circular button (outline)
-                        height: 80, // Height of the outer circular button
+                        width: 80,
+                        height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.transparent, // Make it transparent
-                          shape: BoxShape.circle, // Make it circular
+                          color: Colors.transparent,
+                          shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.brown, // Brown outline
-                            width: 3, // Width of the outline
+                            color: Colors.brown,
+                            width: 3,
                           ),
                         ),
                       ),
                       GestureDetector(
                         onTap: () async {
                           try {
-                            await controller!.takePicture();
-                            // Tambahkan logika untuk menangani foto di sini
+                            final image = await controller!.takePicture();
+                            await _analyzeImage(image);
                           } catch (e) {
-                            print(e);
+                            _showErrorDialog(e.toString());
                           }
                         },
                         child: Container(
-                          width: 60, // Width of the inner circular button
-                          height: 60, // Height of the inner circular button
+                          width: 60,
+                          height: 60,
                           decoration: BoxDecoration(
-                            color: Colors.brown, // Filled brown color
-                            shape: BoxShape.circle, // Make it circular
+                            color: Colors.brown,
+                            shape: BoxShape.circle,
                           ),
                         ),
                       ),

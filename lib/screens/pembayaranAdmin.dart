@@ -24,6 +24,48 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
   List<dynamic> _pembayaranList = [];
   bool _loading = true;
 
+  void _accPembayaran(int pembayaranId, int kajianId, String image) async {
+    // if (!_formKey.currentState!.validate()) return; // Validasi form
+    setState(() => _loading = true);
+
+    ApiResponse response = await accPembayaran(
+      pembayaranId,
+      kajianId,
+      image,
+    );
+
+    if (response.error == null) {
+      Navigator.pop(context);
+    } else if (response.error == unauthorized) {
+      logout().then((value) => Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => SplashScreen()),
+          (route) => false));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+    setState(() => _loading = false);
+  }
+
+  void _tolakPembayaran(int pembayaranId) async {
+    // if (!_formKey.currentState!.validate()) return; // Validasi form
+    setState(() => _loading = true);
+
+    ApiResponse response = await tolakPembayaran(pembayaranId);
+
+    if (response.error == null) {
+      Navigator.pop(context);
+    } else if (response.error == unauthorized) {
+      logout().then((value) => Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => SplashScreen()),
+          (route) => false));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+    setState(() => _loading = false);
+  }
+
   Future<void> retrievePembayaran() async {
     ApiResponse response = await getPembayaran();
 
@@ -88,15 +130,6 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
           style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: CircleAvatar(
-        //       backgroundImage: AssetImage('assets/profile.jpg'),
-        //       radius: 16,
-        //     ),
-        //   ),
-        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -186,11 +219,20 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
                                             children: [
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  print(
-                                                      'Tiket Ditolak ID: ${pembayaran.id}');
+                                                  showConfirmationDialog(
+                                                    context,
+                                                    'Tolak',
+                                                    'Apakah Anda yakin ingin menolak pembayaran ini?',
+                                                    () {
+                                                      print('Tiket Ditolak');
+                                                      _tolakPembayaran(
+                                                          pembayaran.id!);
+                                                    },
+                                                  );
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.red,
+                                                  backgroundColor: Colors
+                                                      .red, // Green color for accept
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 12,
                                                       horizontal: 20),
@@ -211,11 +253,25 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
                                               SizedBox(width: 8),
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  print(
-                                                      'Tiket Diterima ID: ${pembayaran.id}');
+                                                  showConfirmationDialog(
+                                                    context,
+                                                    'Acc',
+                                                    'Apakah Anda yakin ingin menerima pembayaran ini?',
+                                                    () {
+                                                      print(
+                                                          'Hasil : ${pembayaran.id!} ${pembayaran.kajian!.id!}');
+                                                      _accPembayaran(
+                                                          pembayaran.id!,
+                                                          pembayaran
+                                                              .kajian!.id!,
+                                                          pembayaran
+                                                              .kajian!.image!);
+                                                    },
+                                                  );
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.green,
+                                                  backgroundColor: Colors
+                                                      .green, // Red color for reject
                                                   padding: EdgeInsets.symmetric(
                                                       vertical: 12,
                                                       horizontal: 20),
@@ -338,4 +394,97 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
             ),
     );
   }
+}
+
+void showConfirmationDialog(BuildContext context, String title, String message,
+    VoidCallback onConfirm) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return Container(
+        padding: EdgeInsets.all(16),
+        height: MediaQuery.of(context).size.height * 0.25,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 15),
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            Text(
+              message,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 40),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(64),
+                        side: BorderSide(color: Colors.brown),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Text(
+                      'Tidak',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.brown,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: onConfirm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.brown,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(64),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Text(
+                      'Iya',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:kajian/camera.dart';
 import 'package:kajian/models/kajian.dart';
+import 'package:kajian/tesfix.dart';
 
 class KajianDetailAdminPage extends StatefulWidget {
   final Kajian? kajian;
@@ -172,7 +174,11 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                             ),
                           ),
                           onPressed: () {
-                            // Action when the button is pressed
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CameraScreen()),
+                            );
                             print('Pesan Tiket button pressed');
                           },
                           child: Row(

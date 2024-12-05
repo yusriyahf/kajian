@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kajian/constant.dart';
 import 'package:kajian/models/pembayaran.dart';
-
+import 'package:kajian/models/api_response.dart';
+import 'package:kajian/screens/onboard.dart';
+import 'package:kajian/services/pembayaran_service.dart';
+import 'package:kajian/services/user_service.dart';
 // void main() {
 //   runApp(AdminKonfirmPageDetail());
 // }
@@ -15,6 +19,49 @@ class AdminKonfirmPageDetail extends StatefulWidget {
 }
 
 class _AdminKonfirmPageDetailState extends State<AdminKonfirmPageDetail> {
+  bool _loading = true;
+  void _accPembayaran(int pembayaranId, int kajianId, String image) async {
+    // if (!_formKey.currentState!.validate()) return; // Validasi form
+    setState(() => _loading = true);
+
+    ApiResponse response = await accPembayaran(
+      pembayaranId,
+      kajianId,
+      image,
+    );
+
+    if (response.error == null) {
+      Navigator.of(context).pop(true);
+    } else if (response.error == unauthorized) {
+      logout().then((value) => Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => SplashScreen()),
+          (route) => false));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+    setState(() => _loading = false);
+  }
+
+  void _tolakPembayaran(int pembayaranId) async {
+    // if (!_formKey.currentState!.validate()) return; // Validasi form
+    setState(() => _loading = true);
+
+    ApiResponse response = await tolakPembayaran(pembayaranId);
+
+    if (response.error == null) {
+      Navigator.of(context).pop(true);
+    } else if (response.error == unauthorized) {
+      logout().then((value) => Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => SplashScreen()),
+          (route) => false));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+    setState(() => _loading = false);
+  }
+
   String formatDateTime(DateTime? dateTime) {
     if (dateTime == null) {
       return "Tanggal tidak tersedia";
@@ -90,23 +137,23 @@ class _AdminKonfirmPageDetailState extends State<AdminKonfirmPageDetail> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: widget.pembayaran?.kajian?.image != null &&
-                                widget.pembayaran!.kajian!.image!.isNotEmpty
-                            ? Image.network(
-                                widget.pembayaran!.kajian!.image!,
-                                height: 200,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              )
-                            : Container(
-                                height: 200,
-                                width: double.infinity,
-                                color: Colors.grey, // Placeholder color
-                                child: Center(child: Text('No Image')),
-                              ),
-                      ),
+                      // ClipRRect(
+                      //   borderRadius: BorderRadius.circular(10),
+                      //   child: widget.pembayaran?.kajian?.image != null &&
+                      //           widget.pembayaran!.kajian!.image!.isNotEmpty
+                      //       ? Image.network(
+                      //           widget.pembayaran!.kajian!.image!,
+                      //           height: 200,
+                      //           width: double.infinity,
+                      //           fit: BoxFit.cover,
+                      //         )
+                      //       : Container(
+                      //           height: 200,
+                      //           width: double.infinity,
+                      //           color: Colors.grey, // Placeholder color
+                      //           child: Center(child: Text('No Image')),
+                      //         ),
+                      // ),
                       SizedBox(height: 16),
                       Text(
                         "${widget.pembayaran?.kajian?.title}",
@@ -266,9 +313,16 @@ class _AdminKonfirmPageDetailState extends State<AdminKonfirmPageDetail> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              // Action for Accept button
-                              // You can show a dialog or handle your logic here
-                              print('Tiket Ditolak');
+                              showConfirmationDialog(
+                                context,
+                                'Tolak',
+                                'Apakah Anda yakin ingin menolak pembayaran ini?',
+                                () {
+                                  print('Tiket Ditolak');
+                                  _tolakPembayaran(widget.pembayaran!.id!);
+                                  Navigator.pop(context);
+                                },
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
@@ -290,9 +344,20 @@ class _AdminKonfirmPageDetailState extends State<AdminKonfirmPageDetail> {
                           SizedBox(width: 8),
                           ElevatedButton(
                             onPressed: () {
-                              // Action for Reject button
-                              // You can show a dialog or handle your logic here
-                              print('Tiket Diterima');
+                              showConfirmationDialog(
+                                context,
+                                'Acc',
+                                'Apakah Anda yakin ingin menerima Pembayaran ini?',
+                                () {
+                                  print('Tiket Diterima');
+
+                                  _accPembayaran(
+                                      widget.pembayaran!.id!,
+                                      widget.pembayaran!.kajian!.id!,
+                                      widget.pembayaran!.kajian!.image!);
+                                  Navigator.pop(context);
+                                },
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
@@ -323,4 +388,97 @@ class _AdminKonfirmPageDetailState extends State<AdminKonfirmPageDetail> {
       ),
     );
   }
+}
+
+void showConfirmationDialog(BuildContext context, String title, String message,
+    VoidCallback onConfirm) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return Container(
+        padding: EdgeInsets.all(16),
+        height: MediaQuery.of(context).size.height * 0.25,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 15),
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            Text(
+              message,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 40),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(64),
+                        side: BorderSide(color: Colors.brown),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Text(
+                      'Tidak',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.brown,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: onConfirm,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.brown,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(64),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    child: Text(
+                      'Iya',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
