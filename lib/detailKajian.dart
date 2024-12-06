@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:kajian/camera.dart';
+import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/kajian.dart';
+import 'package:kajian/services/kehadiran_service.dart';
 import 'package:kajian/tesfix.dart';
 
 class KajianDetailAdminPage extends StatefulWidget {
@@ -14,6 +16,55 @@ class KajianDetailAdminPage extends StatefulWidget {
 }
 
 class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
+  int _totalMale = 0;
+  int _totalFemale = 0;
+  int _total = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Panggil fetchTotalMale saat halaman dibuka
+    fetchTotalMale(widget.kajian!.id!);
+    fetchTotalFemale(widget.kajian!.id!);
+    fetchTotal(widget.kajian!.id!);
+  }
+
+  void fetchTotalMale(int kajianId) async {
+    ApiResponse response = await getTotalMale(kajianId);
+    if (response.error == null) {
+      setState(() {
+        // Casting explicit dari Object? ke int
+        _totalMale = response.data as int;
+      });
+    } else {
+      print('Error: ${response.error}');
+    }
+  }
+
+  void fetchTotalFemale(int kajianId) async {
+    ApiResponse response = await getTotalFemale(kajianId);
+    if (response.error == null) {
+      setState(() {
+        // Casting explicit dari Object? ke int
+        _totalFemale = response.data as int;
+      });
+    } else {
+      print('Error: ${response.error}');
+    }
+  }
+
+  void fetchTotal(int kajianId) async {
+    ApiResponse response = await getTotal(kajianId);
+    if (response.error == null) {
+      setState(() {
+        // Casting explicit dari Object? ke int
+        _total = response.data as int;
+      });
+    } else {
+      print('Error: ${response.error}');
+    }
+  }
+
   String formatTimeOfDay(TimeOfDay time) {
     final now = DateTime.now();
     final timeOfDay =
@@ -132,7 +183,7 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                         children: [
                           ListTile(
                             leading: Icon(Icons.people, color: Colors.brown),
-                            title: Text('0 Orang'),
+                            title: Text('$_total Orang'),
                             onTap: () {
                               // Add functionality to change password
                             },
@@ -140,7 +191,7 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                           ),
                           ListTile(
                             leading: Icon(Icons.man, color: Colors.brown),
-                            title: Text('0 Laki-laki'),
+                            title: Text('$_totalMale Laki-laki'),
                             onTap: () {
                               // Add functionality for logout
                             },
@@ -148,7 +199,7 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                           ),
                           ListTile(
                             leading: Icon(Icons.woman, color: Colors.brown),
-                            title: Text('0 Perempuan'),
+                            title: Text('$_totalFemale Perempuan'),
                             onTap: () {
                               // Add functionality for logout
                             },
@@ -189,15 +240,9 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                                 'assets/images/scanicon.png', // Path to the local icon
                                 width: 24, // Width of the icon
                                 height: 24, // Height of the icon
-                                color: Colors
-                                    .white, // Apply color to the icon (optional)
+                                color: Colors.white,
                               ),
-                              // Icon(
-                              //   Icons
-                              //       .qr_code_scanner, // Use an appropriate scan icon
-                              //   color: Colors.white, // Color of the icon
-                              //   size: 24, // Size of the icon
-                              // ),
+
                               SizedBox(width: 8), // Space between icon and text
                               Text(
                                 'Scan Kehadiran',
@@ -219,54 +264,6 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
           ),
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   currentIndex: 1,
-      //   selectedItemColor: Colors.brown,
-      //   unselectedItemColor: Colors.grey,
-      //   type: BottomNavigationBarType.fixed,
-      //   onTap: (index) {
-      //     // Navigate to the corresponding page based on the selected index
-      //     switch (index) {
-      //       case 0:
-      //         Navigator.pushNamed(context, '/home');
-      //         break;
-      //       case 1:
-      //         Navigator.pushNamed(context, '/jadwal');
-      //         break;
-      //       case 2:
-      //         Navigator.pushNamed(context, '/tiket');
-      //         break;
-      //       case 3:
-      //         Navigator.pushNamed(context, '/catatan');
-      //         break;
-      //       case 4:
-      //         Navigator.pushNamed(context, '/profile');
-      //         break;
-      //     }
-      //   },
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Beranda',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.calendar_today),
-      //       label: 'Jadwal',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.receipt_long),
-      //       label: 'Tiket',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.notes),
-      //       label: 'Catatan',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.person),
-      //       label: 'Profil',
-      //     ),
-      //   ],
-      // ),
     ));
   }
 }

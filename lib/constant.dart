@@ -19,6 +19,10 @@ const upBayar = baseURL + '/tiket/up_bayar';
 const pembayaranTiket = baseURL + '/pembayaran';
 const accPembayaranURL = baseURL + '/accpembayaran';
 const tolakPembayaranURL = baseURL + '/tolakpembayaran';
+const totalMale = baseURL + '/totalmale';
+const totalFemale = baseURL + '/totalfemale';
+const total = baseURL + '/total';
+// const totalKehadiran = baseURL + '/totalkehadiran';
 
 // ----- Errors -----
 const serverError = 'Server error';

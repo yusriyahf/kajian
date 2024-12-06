@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class FaceRecognitionScreen extends StatelessWidget {
+class FaceRecognitionScreens extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

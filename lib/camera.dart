@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
+import 'package:kajian/main.dart';
 import 'package:kajian/resultScreen.dart';
+import 'package:kajian/screens/hasilKamera.dart';
 
 class CameraScreen extends StatefulWidget {
   @override
@@ -66,9 +68,9 @@ class _CameraScreenState extends State<CameraScreen> {
     if (response.statusCode == 200) {
       final responseData = jsonDecode(await response.stream.bytesToString());
       final faceRecognitionResult =
-          "Face: ${responseData['face_recognition']['label']} (Confidence: ${responseData['face_recognition']['confidence']})";
+          responseData['face_recognition']['label'] ?? "Unknown";
       final genderDetectionResult =
-          "Gender: ${responseData['gender_detection']['gender']} (Confidence: ${responseData['gender_detection']['confidence']})";
+          responseData['gender_detection']['gender'] ?? "Unknown";
 
       Navigator.push(
         context,
@@ -76,7 +78,7 @@ class _CameraScreenState extends State<CameraScreen> {
           builder: (context) => ResultScreen(
             faceRecognitionResult: faceRecognitionResult,
             genderDetectionResult: genderDetectionResult,
-            imageFile: File(imageFile.path), // Kirim file foto ke ResultScreen
+            imageFile: File(imageFile.path), // Kirim file gambar ke layar hasil
           ),
         ),
       );
