@@ -78,7 +78,7 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
     retrievePembayaran();
 
     // Set Timer untuk auto-refresh setiap 30 detik
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    _timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
       retrievePembayaran();
     });
   }

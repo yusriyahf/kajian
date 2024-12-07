@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:kajian/cange_password.dart';
+import 'package:kajian/detailProfile.dart';
 import 'package:kajian/tentangAplikasi.dart';
 import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/services/user_service.dart';
@@ -117,12 +118,39 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(height: 20),
                     Divider(color: Colors.brown.shade100),
                     ListTile(
+                      leading:
+                          Icon(Icons.people_alt_outlined, color: Colors.brown),
+                      title: Text('Detail Profile'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  AccountInfoPage(user: user!)),
+                        );
+                      },
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    ListTile(
                       leading: Icon(Icons.lock_outline, color: Colors.brown),
                       title: Text('Ganti Password'),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => MyAppPass()),
+                        );
+                      },
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.info_outline, color: Colors.brown),
+                      title: Text('Tentang Aplikasi'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  AboutPage()), // Navigate to About Me Page
                         );
                       },
                       contentPadding: EdgeInsets.zero,
@@ -241,19 +269,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         //               builder: (context) => SplashScreen()),
                         //           (route) => false)
                         //     });
-                      },
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.info_outline, color: Colors.brown),
-                      title: Text('Tentang Aplikasi'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  AboutPage()), // Navigate to About Me Page
-                        );
                       },
                       contentPadding: EdgeInsets.zero,
                     ),
