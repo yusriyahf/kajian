@@ -320,11 +320,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             // Tombol Mulai Verifikasi (dengan lebar yang sama)
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CameraScreen()),
-                                );
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(
+                                //       builder: (context) => CameraScreen()),
+                                // );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(

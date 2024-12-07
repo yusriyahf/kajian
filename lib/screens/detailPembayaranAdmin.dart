@@ -20,15 +20,10 @@ class AdminKonfirmPageDetail extends StatefulWidget {
 
 class _AdminKonfirmPageDetailState extends State<AdminKonfirmPageDetail> {
   bool _loading = true;
-  void _accPembayaran(int pembayaranId, int kajianId, String image) async {
-    // if (!_formKey.currentState!.validate()) return; // Validasi form
+  void _accPembayaran(int pembayaranId, int kajianId, int userId) async {
     setState(() => _loading = true);
 
-    ApiResponse response = await accPembayaran(
-      pembayaranId,
-      kajianId,
-      image,
-    );
+    ApiResponse response = await accPembayaran(pembayaranId, kajianId, userId);
 
     if (response.error == null) {
       Navigator.of(context).pop(true);
@@ -308,76 +303,119 @@ class _AdminKonfirmPageDetailState extends State<AdminKonfirmPageDetail> {
                       ),
 
                       SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              showConfirmationDialog(
-                                context,
-                                'Tolak',
-                                'Apakah Anda yakin ingin menolak pembayaran ini?',
-                                () {
-                                  print('Tiket Ditolak');
-                                  _tolakPembayaran(widget.pembayaran!.id!);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.red, // Green color for accept
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 20),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                      widget.pembayaran?.status == 'diproses'
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    showConfirmationDialog(
+                                      context,
+                                      'Tolak',
+                                      'Apakah Anda yakin ingin menolak pembayaran ini?',
+                                      () {
+                                        print('Tiket Ditolak');
+                                        _tolakPembayaran(
+                                            widget.pembayaran!.id!);
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.red, // Green color for accept
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 20),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Tolak',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    showConfirmationDialog(
+                                      context,
+                                      'Acc',
+                                      'Apakah Anda yakin ingin acc pembayaran ini?',
+                                      () {
+                                        print(
+                                            'PEMBAYARAN ID ${widget.pembayaran!.id}');
+                                        print(
+                                            'KAJIAN ID ${widget.pembayaran!.kajian!.id}');
+                                        print(
+                                            'USER ID ${widget.pembayaran!.user!.id}');
+                                        _accPembayaran(
+                                            widget.pembayaran!.id!,
+                                            widget.pembayaran!.kajian!.id!,
+                                            widget.pembayaran!.user!.id!);
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        Colors.green, // Red color for reject
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 20),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Acc',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Center(
+                              child: RichText(
+                                text: TextSpan(
+                                  text:
+                                      "Pembayaran ini telah ", // Teks sebelum status
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[
+                                        600], // Warna default untuk teks biasa
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text:
+                                          "${widget.pembayaran?.status}", // Status
+                                      style: TextStyle(
+                                        color: widget.pembayaran?.status ==
+                                                'ditolak'
+                                            ? Colors.red // Merah jika ditolak
+                                            : widget.pembayaran?.status ==
+                                                    'diacc'
+                                                ? Colors
+                                                    .green // Hijau jika diacc
+                                                : Colors.grey[
+                                                    600], // Warna default jika status lain
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: ".", // Teks setelah status
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            child: Text(
-                              'Tolak',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          ElevatedButton(
-                            onPressed: () {
-                              showConfirmationDialog(
-                                context,
-                                'Acc',
-                                'Apakah Anda yakin ingin menerima Pembayaran ini?',
-                                () {
-                                  print('Tiket Diterima');
-
-                                  _accPembayaran(
-                                      widget.pembayaran!.id!,
-                                      widget.pembayaran!.kajian!.id!,
-                                      widget.pembayaran!.kajian!.image!);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Colors.green, // Red color for reject
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 20),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: Text(
-                              'Acc',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ),

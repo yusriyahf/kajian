@@ -22,6 +22,7 @@ const tolakPembayaranURL = baseURL + '/tolakpembayaran';
 const totalMale = baseURL + '/totalmale';
 const totalFemale = baseURL + '/totalfemale';
 const total = baseURL + '/total';
+const addKehadiranURL = baseURL + '/addkehadiran';
 // const totalKehadiran = baseURL + '/totalkehadiran';
 
 // ----- Errors -----

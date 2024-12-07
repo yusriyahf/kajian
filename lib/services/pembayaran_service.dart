@@ -85,7 +85,7 @@ Future<ApiResponse> createPembayaran(
 
 // Edit post
 Future<ApiResponse> accPembayaran(
-    int pembayaranId, int kajianId, String image) async {
+    int pembayaranId, int kajianId, int userId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -95,7 +95,9 @@ Future<ApiResponse> accPembayaran(
       'Authorization': 'Bearer $token'
     }, body: {
       'kajian_id': kajianId.toString(),
-      'bukti_pembayaran': image,
+      'user_id': userId.toString(),
+      // 'user_id': kajianId.toString(),
+      // 'bukti_pembayaran': image,
     });
 
     switch (response.statusCode) {
