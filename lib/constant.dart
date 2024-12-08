@@ -23,6 +23,9 @@ const totalMale = baseURL + '/totalmale';
 const totalFemale = baseURL + '/totalfemale';
 const total = baseURL + '/total';
 const addKehadiranURL = baseURL + '/addkehadiran';
+const updateProfileURL = baseURL + '/editprofile';
+const pembayaranUser = baseURL + '/pembayaranuser';
+
 // const totalKehadiran = baseURL + '/totalkehadiran';
 
 // ----- Errors -----

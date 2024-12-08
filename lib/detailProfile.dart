@@ -16,10 +16,25 @@ import 'package:kajian/screens/editProfile.dart';
 //   }
 // }
 
-class AccountInfoPage extends StatelessWidget {
+class AccountInfoPage extends StatefulWidget {
   final User user;
 
   const AccountInfoPage({Key? key, required this.user}) : super(key: key);
+
+  @override
+  State<AccountInfoPage> createState() => _AccountInfoPageState();
+}
+
+class _AccountInfoPageState extends State<AccountInfoPage> {
+  late User _user;
+
+  @override
+  void initState() {
+    super.initState();
+    // Menginisialisasi _user dengan data yang diterima
+    _user = widget.user;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +74,9 @@ class AccountInfoPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => EditProfile()),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                EditProfile(user: widget.user)),
                       );
                     },
                     child: Text(
@@ -89,11 +106,11 @@ class AccountInfoPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildInfoRow('First Name', '${user.first_name}'),
-                      _buildInfoRow('Last Name', '${user.last_name}'),
-                      _buildInfoRow('Email', '${user.email}'),
-                      _buildInfoRow('No. Handphone', '081234567890'),
-                      _buildInfoRow('Tanggal Lahir', '29/04/2004'),
+                      _buildInfoRow('First Name', '${widget.user.first_name}'),
+                      _buildInfoRow('Last Name', '${widget.user.last_name}'),
+                      _buildInfoRow('Email', '${widget.user.email}'),
+                      // _buildInfoRow('No. Handphone', '081234567890'),
+                      // _buildInfoRow('Tanggal Lahir', '29/04/2004'),
                     ],
                   ),
                 ),

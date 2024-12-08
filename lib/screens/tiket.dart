@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kajian/constant.dart';
 import 'package:kajian/models/api_response.dart';
+import 'package:kajian/models/pembayaran.dart';
 import 'package:kajian/models/tiketModel.dart';
+import 'package:kajian/screens/detailPembayaranAdmin.dart';
+import 'package:kajian/screens/detailPembayaranUser.dart';
 import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/screens/detailTiket.dart'; // Import your detail page
+import 'package:kajian/services/pembayaran_service.dart';
 import 'package:kajian/services/tiket_service.dart';
 import 'package:kajian/services/user_service.dart';
 
@@ -48,50 +52,81 @@ class _TiketState extends State<Tiket> {
   }
 
   List<dynamic> _tiketList = [];
+  List<dynamic> _pembayaranList = [];
   bool _loading = true;
 
-  // get all posts
-  Future<void> retrieveTiket() async {
-    ApiResponse response = await getTiket();
-
-    if (response.error == null) {
+  // get all posts and pembayaran
+  Future<void> retrieveData() async {
+    // Retrieving tiket
+    ApiResponse tiketResponse = await getTiket();
+    if (tiketResponse.error == null) {
       setState(() {
-        _tiketList = response.data as List<dynamic>;
-        _loading = _loading ? !_loading : _loading;
+        _tiketList = tiketResponse.data as List<dynamic>;
       });
-    } else if (response.error == unauthorized) {
-      logout().then((value) => {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => SplashScreen()),
-                (route) => false)
-          });
+    } else if (tiketResponse.error == unauthorized) {
+      _handleUnauthorized();
+      return;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
+        content: Text('${tiketResponse.error}'),
+      ));
+    }
+
+    // Retrieving pembayaran
+    ApiResponse pembayaranResponse = await getPembayaranUser();
+    if (pembayaranResponse.error == null) {
+      setState(() {
+        _pembayaranList = pembayaranResponse.data as List<dynamic>;
+        _loading =
+            false; // Set _loading to false after both requests are complete
+      });
+    } else if (pembayaranResponse.error == unauthorized) {
+      _handleUnauthorized();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${pembayaranResponse.error}'),
       ));
     }
   }
 
+  void _handleUnauthorized() {
+    logout().then((value) => {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => SplashScreen()),
+              (route) => false)
+        });
+  }
+
   @override
   void initState() {
-    retrieveTiket();
+    retrieveData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(
-              title: Center(
-                child: Text(
-                  'Tiket Saya',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              backgroundColor: Colors.brown,
+    return DefaultTabController(
+      length: 2, // Two tabs
+      child: Scaffold(
+        appBar: AppBar(
+          title: Center(
+            child: Text(
+              'Tiket Saya',
+              style: TextStyle(color: Colors.white),
             ),
-            body: Column(
+          ),
+          backgroundColor: Colors.brown,
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'Tiket'),
+              Tab(text: 'Proses'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            // "Tiket" tab content
+            Column(
               children: [
                 Expanded(
                   child: ListView.builder(
@@ -116,8 +151,7 @@ class _TiketState extends State<Tiket> {
                             child: Container(
                               decoration: ShapeDecoration(
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      20), // Border radius remains the same
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
                               child: Stack(
@@ -127,13 +161,12 @@ class _TiketState extends State<Tiket> {
                                     top: 20,
                                     child: Container(
                                       width: 320,
-                                      height:
-                                          145, // Adjusted inner container height without affecting border radius
+                                      height: 145,
                                       decoration: ShapeDecoration(
                                         color: Color(0xFFEAE6CD),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              15), // Border radius remains the same
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                         ),
                                       ),
                                     ),
@@ -153,10 +186,9 @@ class _TiketState extends State<Tiket> {
                                       ),
                                     ),
                                   ),
-// Increased spacing between time and title
                                   Positioned(
                                     left: 40,
-                                    top: 64, // Adjusted spacing for title
+                                    top: 64,
                                     child: Text(
                                       '${tiket.kajian!.title}',
                                       textAlign: TextAlign.left,
@@ -169,10 +201,9 @@ class _TiketState extends State<Tiket> {
                                       ),
                                     ),
                                   ),
-// Increased spacing between title and theme
                                   Positioned(
                                     left: 40,
-                                    top: 94, // Increased top value for theme
+                                    top: 94,
                                     child: Text(
                                       '${tiket.kajian!.theme}',
                                       textAlign: TextAlign.left,
@@ -185,25 +216,20 @@ class _TiketState extends State<Tiket> {
                                       ),
                                     ),
                                   ),
-// Increased spacing between theme and dashed line
                                   Positioned(
                                     left: 40,
-                                    top:
-                                        120, // Adjusted top position for dashed line
+                                    top: 120,
                                     child: SizedBox(
-                                      width:
-                                          283, // Set to match the width of the card
-                                      height:
-                                          1, // The height of the dashed line
+                                      width: 283,
+                                      height: 1,
                                       child: CustomPaint(
                                         painter: DashedLinePainter(),
                                       ),
                                     ),
                                   ),
-// Increased spacing between dashed line and price
                                   Positioned(
                                     left: 40,
-                                    top: 128, // Adjusted top position for price
+                                    top: 128,
                                     child: Text(
                                       "Rp.156.450",
                                       textAlign: TextAlign.left,
@@ -227,52 +253,113 @@ class _TiketState extends State<Tiket> {
                 )
               ],
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: 2,
-              selectedItemColor: Colors.brown,
-              unselectedItemColor: Colors.grey,
-              type: BottomNavigationBarType.fixed,
-              onTap: (index) {
-                switch (index) {
-                  case 0:
-                    Navigator.pushNamed(context, '/home');
-                    break;
-                  case 1:
-                    Navigator.pushNamed(context, '/jadwal');
-                    break;
-                  case 2:
-                    Navigator.pushNamed(context, '/tiket');
-                    break;
-                  case 3:
-                    Navigator.pushNamed(context, '/catatan');
-                    break;
-                  case 4:
-                    Navigator.pushNamed(context, '/profile');
-                    break;
-                }
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Beranda',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_today),
-                  label: 'Jadwal',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.receipt_long),
-                  label: 'Tiket',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notes),
-                  label: 'Catatan',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profil',
-                ),
-              ],
-            )));
+            // "Proses" tab content
+            _loading
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16.0),
+                    itemCount: _pembayaranList.length,
+                    itemBuilder: (context, index) {
+                      Pembayaran pembayaran = _pembayaranList[
+                          index]; // Assuming each item in _pembayaranList is a Map
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 5,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(16),
+                            title: Text(
+                              '${pembayaran.kajian!.title}',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Status: ${pembayaran.status ?? 'Unknown'}',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Text(
+                                  'Tanggal: ${pembayaran.date ?? 'N/A'}',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                Text(
+                                  'Jumlah: Rp ${pembayaran.kajian!.price ?? '0'}',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                            trailing: Icon(Icons.arrow_forward_ios),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailPembayaranUser(
+                                    pembayaran: _pembayaranList[
+                                        index], // Pass the data of the tapped payment item
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: 2,
+          selectedItemColor: Colors.brown,
+          unselectedItemColor: Colors.grey,
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                Navigator.pushNamed(context, '/home');
+                break;
+              case 1:
+                Navigator.pushNamed(context, '/jadwal');
+                break;
+              case 2:
+                Navigator.pushNamed(context, '/tiket');
+                break;
+              case 3:
+                Navigator.pushNamed(context, '/catatan');
+                break;
+              case 4:
+                Navigator.pushNamed(context, '/profile');
+                break;
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Beranda',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Jadwal',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long),
+              label: 'Tiket',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.notes),
+              label: 'Catatan',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profil',
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

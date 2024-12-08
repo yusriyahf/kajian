@@ -1,12 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:kajian/constant.dart';
+import 'package:kajian/models/api_response.dart';
+import 'package:kajian/models/user.dart';
+import 'package:kajian/screens/onboard.dart';
+import 'package:kajian/services/user_service.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: EditProfile(),
-  ));
+// void main() {
+//   runApp(MaterialApp(
+//     home: EditProfile(),
+//   ));
+// }
+
+class EditProfile extends StatefulWidget {
+  final User user;
+
+  const EditProfile({Key? key, required this.user}) : super(key: key);
+
+  @override
+  State<EditProfile> createState() => _EditProfileState();
 }
 
-class EditProfile extends StatelessWidget {
+class _EditProfileState extends State<EditProfile> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _firstNameControllerBody =
+      TextEditingController();
+  final TextEditingController _lastNameControllerBody = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers with existing user data
+    _firstNameControllerBody.text = widget.user.first_name ?? '';
+    _lastNameControllerBody.text = widget.user.last_name ?? '';
+    _emailController.text = widget.user.email ?? '';
+  }
+
+  void _updateProfile() async {
+    ApiResponse response = await editProfile(_firstNameControllerBody.text,
+        _lastNameControllerBody.text, _emailController.text);
+
+    if (response.error == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Profile updated successfully!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pop(
+          context,
+          User(
+            first_name: _firstNameControllerBody.text,
+            last_name: _lastNameControllerBody.text,
+            email: _emailController.text,
+          ));
+    } else if (response.error == unauthorized) {
+      logout().then((value) => {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => SplashScreen()),
+                (route) => false)
+          });
+    } else {
+      // Use the null-aware operator to provide a default error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.error ?? "Failed to update profile."),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,11 +120,12 @@ class EditProfile extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 16),
-                      _buildTextField('First Name', 'Maulita'),
-                      _buildTextField('Last Name', 'Yasmin'),
-                      _buildTextField('Email', 'maulita@gmail.com'),
-                      _buildTextField('No. Handphone', '081234567890'),
-                      _buildTextField('Tanggal Lahir', '29/04/2004'),
+                      _buildTextField(
+                        'First Name',
+                        _firstNameControllerBody,
+                      ),
+                      _buildTextField('Last Name', _lastNameControllerBody),
+                      _buildTextField('Email', _emailController),
                       SizedBox(height: 16),
                       Center(
                         child: Container(
@@ -74,7 +139,9 @@ class EditProfile extends StatelessWidget {
                                 BorderRadius.circular(20), // Rounded corners
                           ),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _updateProfile();
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors
                                   .transparent, // Make the button background transparent
@@ -105,7 +172,7 @@ class EditProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String label, String placeholder,
+  Widget _buildTextField(String label, TextEditingController controller,
       {bool verified = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -129,9 +196,10 @@ class EditProfile extends StatelessWidget {
             ],
           ),
           SizedBox(height: 4),
-          TextField(
+          TextFormField(
+            controller: controller,
             decoration: InputDecoration(
-              hintText: placeholder,
+              hintText: 'Enter $label', // Gunakan label untuk hint
               filled: true,
               fillColor: Colors.grey[100],
               border: OutlineInputBorder(
