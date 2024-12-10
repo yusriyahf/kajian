@@ -52,31 +52,44 @@ class _DetailKajianScreenState extends State<DetailKajianScreen> {
 
   void _createPembayaran() async {
     setState(() {
-      _loading = true; // Tampilkan indikator loading
+      _loading = true; // Menampilkan indikator loading
     });
 
-    String? idKajian = widget.kajian?.id?.toString();
+    try {
+      String? idKajian = widget.kajian?.id?.toString();
+      String? image = _imageFile == null ? null : getStringImage(_imageFile);
 
-    String? image = _imageFile == null ? null : getStringImage(_imageFile);
-    ApiResponse response = await createPembayaran(idKajian!, image);
+      ApiResponse response = await createPembayaran(idKajian!, image);
 
-    if (response.error == null) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => Tiket()),
-        (route) => false,
-      );
-    } else if (response.error == unauthorized) {
-      logout().then((value) => {
-            Navigator.of(context).pushAndRemoveUntil(
+      if (response.error == null) {
+        // Jika tidak ada error, navigasi ke halaman Tiket
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Tiket()),
+          (route) => false, // Menghapus semua route sebelumnya
+        );
+      } else if (response.error == unauthorized) {
+        // Menangani error unauthorized (misalnya logout)
+        logout().then((value) => {
+              Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => SplashScreen()),
-                (route) => false)
-          });
-    } else {
+                (route) => false,
+              ),
+            });
+      } else {
+        // Menampilkan pesan error dari API
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('${response.error}')),
+        );
+      }
+    } catch (e) {
+      // Menangani jika ada exception yang terjadi selama proses
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${response.error}')),
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
       );
+    } finally {
+      // Menyembunyikan indikator loading setelah operasi selesai
       setState(() {
-        _loading = false; // Sembunyikan indikator loading
+        _loading = false;
       });
     }
   }
@@ -85,30 +98,19 @@ class _DetailKajianScreenState extends State<DetailKajianScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color(0xFF724820),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.brown),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: Text(
-          'Detail Kajian',
-          style: TextStyle(color: Colors.brown),
+          'Detail Pembayaran',
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundImage: AssetImage(
-                'assets/img/profil.png', // Gambar profil lokal
-              ),
-            ),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -116,7 +118,7 @@ class _DetailKajianScreenState extends State<DetailKajianScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/dana.png', // logo DANA
+              'assets/images/profile.png',
               height: 60,
             ),
             SizedBox(height: 20),
@@ -198,24 +200,28 @@ class _DetailKajianScreenState extends State<DetailKajianScreen> {
                       ),
                     ),
             ),
-            SizedBox(height: 30),
-            OutlinedButton(
-              onPressed: () {
-                setState(() {
-                  // loading = !loading;
-                  _createPembayaran();
-                });
-              },
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.brown, width: 2),
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            SizedBox(height: 25),
+            SizedBox(
+              width: 320, // Lebar tombol
+              height: 50, // Tinggi tombol
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  backgroundColor: Color(0xFF724820),
+                  side: BorderSide(color: Colors.brown, width: 2),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-              ),
-              child: Text(
-                'Bayar',
-                style: TextStyle(fontSize: 16, color: Colors.brown),
+                onPressed: () {
+                  // Aksi ketika ditekan
+                },
+                child: Text(
+                  'Bayar Tiket',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
           ],

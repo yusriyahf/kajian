@@ -1,5 +1,7 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:kajian/camera.dart';
+import 'package:kajian/screens/cameraRegister.dart';
 import 'package:kajian/screens/login.dart';
 
 import 'package:kajian/models/api_response.dart';
@@ -8,8 +10,12 @@ import 'package:kajian/models/user.dart';
 import 'package:kajian/screens/onboard.dart';
 import 'package:kajian/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
+import 'package:http_parser/http_parser.dart';
 // import '../constant.dart';
+import 'dart:io';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -19,12 +25,85 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   // Controllers for managing input values
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
+  String _result = "";
   bool loading = false;
+  File? _selectedImage;
   TextEditingController firstnameController = TextEditingController(),
       lastnameController = TextEditingController(),
       emailController = TextEditingController(),
       passwordController = TextEditingController(),
       passwordConfirmController = TextEditingController();
+
+  Future<void> pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  // Fungsi untuk mengambil gambar dari kamera
+  Future<void> captureImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String> registerFace(
+      File imageFile, String firstName, String lastName) async {
+    final uri = Uri.parse(
+        "http://192.168.20.6:8001/register-face?name=$firstName%20$lastName");
+    final request = http.MultipartRequest('POST', uri)
+      ..files.add(await http.MultipartFile.fromPath(
+        'file',
+        imageFile.path,
+        contentType: MediaType('image', 'jpeg'),
+      ));
+
+    final response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(responseBody);
+      return jsonResponse["message"].toString();
+    } else {
+      throw Exception("Failed to register face: $responseBody");
+    }
+  }
+
+  Future<void> handleRegister() async {
+    print('Menjalankan handleRegister');
+    if (_selectedImage != null &&
+        firstnameController.text.isNotEmpty &&
+        lastnameController.text.isNotEmpty) {
+      setState(() {
+        print('register diproses');
+      });
+      try {
+        final message = await registerFace(
+            _selectedImage!, firstnameController.text, lastnameController.text);
+        setState(() {
+          print('Pesan berhasil: $message');
+        });
+      } catch (e) {
+        setState(() {
+          _result = "Error: $e";
+          print(_result);
+        });
+      }
+    } else {
+      setState(() {
+        _result = "Please select an image and enter both first and last name.";
+        print(_result);
+      });
+    }
+  }
 
   void _registerUser() async {
     ApiResponse response = await register(
@@ -35,69 +114,77 @@ class _SignUpScreenState extends State<SignUpScreen> {
       passwordConfirmController.text,
     );
     if (response.error == null) {
-      _showSuccessDialog(response.data as User);
+      _showSuccessSnackbar();
     } else {
       setState(() {
         loading = false;
       });
-      _showErrorDialog(response.error ?? 'An unknown error occurred.');
+      _showErrorSnackbar(response.error ?? 'An unknown error occurred.');
     }
   }
 
-  // Save and redirect to home
-  void _saveAndRedirectToHome(User user) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString('token', user.token ?? '');
-    await pref.setInt('userId', user.id ?? 0);
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-        (route) => false);
-  }
-
-  void _showSuccessDialog(User user) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Sukses'),
-          content: Text('Akun Anda berhasil dibuat.'),
-        );
-      },
+  void _showSuccessSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Akun Anda berhasil dibuat.'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      ),
     );
 
-    // Automatically close dialog and redirect after 2 seconds
+    // Automatically redirect after the snackbar is shown
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.of(context).pop(); // Close the dialog
-      _saveAndRedirectToHome(user); // Redirect after dialog is closed
+      _redirectToHome();
     });
   }
 
-  void _showErrorDialog(String errorMessage) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text(errorMessage),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-            ),
-          ],
-        );
-      },
+  void _showErrorSnackbar(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Data Berhasil Ditambahkan'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      ),
+    );
+    // Future.delayed(Duration(seconds: 15), () {
+    //   _redirectToHome();
+    // });
+  }
+
+  void _redirectToHome() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('token', ''); // Optionally clear token
+    await pref.setInt('userId', 0); // Optionally clear user ID
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (route) => false,
     );
   }
+
+  // Save and redirect to home
+  // void _saveAndRedirectToHome(User user) async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   await pref.setString('token', user.token ?? '');
+  //   await pref.setInt('userId', user.id ?? 0);
+  //   Navigator.of(context).pushAndRemoveUntil(
+  //       MaterialPageRoute(builder: (context) => LoginScreen()),
+  //       (route) => false);
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF724820)),
+          onPressed: () {
+            Navigator.pop(
+                context); // Fungsi untuk kembali ke halaman sebelumnya
+          },
+        ),
+        backgroundColor: Colors.white,
+        // title: Text('Sign Up', style: TextStyle(color: Colors.white)),
+        // centerTitle: true,
       ),
       resizeToAvoidBottomInset: false, // Prevent offset when keyboard appears
       body: Form(
@@ -124,9 +211,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(height: 6),
               TextFormField(
                 controller: firstnameController,
-                validator: (val) => val!.isEmpty ? 'Invalid name' : null,
+                validator: (val) => val!.isEmpty ? 'Invalid first name' : null,
                 decoration: InputDecoration(
-                  hintText: 'Masukkan Nama',
+                  hintText: 'Masukkan Nama Depan',
                   hintStyle: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
@@ -140,9 +227,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(height: 6),
               TextFormField(
                 controller: lastnameController,
-                validator: (val) => val!.isEmpty ? 'Invalid name' : null,
+                validator: (val) => val!.isEmpty ? 'Invalid last name' : null,
                 decoration: InputDecoration(
-                  hintText: 'Masukkan Nama',
+                  hintText: 'Masukkan Nama Belakang',
                   hintStyle: TextStyle(
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
@@ -195,7 +282,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               TextFormField(
                 controller: passwordConfirmController,
                 obscureText: true,
-                validator: (val) => val!.length < 6 ? 'a' : null,
+                validator: (val) =>
+                    val!.length < 6 ? 'Required at least 6 chars' : null,
                 decoration: InputDecoration(
                   hintText: 'Masukkan Konfirmasi Kata Sandi',
                   hintStyle: TextStyle(
@@ -207,6 +295,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
               ),
+              SizedBox(height: 20),
+              _selectedImage != null
+                  ? Image.file(_selectedImage!, height: 200)
+                  : Container(height: 1, color: Colors.transparent),
+
+              SizedBox(height: 16),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: [
+              //     ElevatedButton(
+              //         onPressed: pickImage, child: Text("Pick Image")),
+              //     ElevatedButton(
+              //         onPressed: captureImage, child: Text("Capture Image")),
+              //   ],
+              // ),
               SizedBox(height: 20),
               Text('Verifikasi Wajah'),
               SizedBox(height: 6),
@@ -244,7 +347,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     Text(
                                       'Pengenalan Wajah',
                                       style: TextStyle(
-                                        color: Color(0xFF98614A),
+                                        color: Color(0xFF724820),
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -319,16 +422,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                             // Tombol Mulai Verifikasi (dengan lebar yang sama)
                             ElevatedButton(
-                              onPressed: () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //       builder: (context) => CameraScreen()),
-                                // );
-                              },
+                              onPressed: captureImage,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color(
-                                    0xFF8D6E63), // Warna coklat seperti di gambar
+                                    0xFF724820), // Warna coklat seperti di gambar
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -357,7 +454,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Icon(
                       Icons.camera_alt, // Ikon kamera
                       size: 30, // Ukuran ikon
-                      color: Color(0xFF8D6E63), // Warna coklat
+                      color: Color(0xFF724820), // Warna coklat
                     ),
                   ),
                 ),
@@ -368,6 +465,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
+                    handleRegister();
+                    print('INI ${firstnameController.text}');
+                    print('INI ${lastnameController.text}');
+                    print('INI ${emailController.text}');
+                    print('INI ${passwordController.text}');
+                    print('INI ${passwordConfirmController.text}');
                     if (formKey.currentState!.validate()) {
                       setState(() {
                         loading = !loading;
@@ -376,7 +479,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF98614A),
+                    backgroundColor: Color(0xFF724820),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -404,7 +507,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: [
                         TextSpan(
                           text: 'Masuk',
-                          style: TextStyle(color: Color(0xFF98614A)),
+                          style: TextStyle(color: Color(0xFF724820)),
                         ),
                       ],
                     ),

@@ -100,16 +100,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.brown),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF724820),
         elevation: 0,
         title: Text(
-          'Profil',
-          style: TextStyle(color: Colors.brown),
+          'Kata Sandi',
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -127,7 +127,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.brown,
+                    color: Color(0xFF724820),
                   ),
                 ),
                 SizedBox(height: 8),
@@ -138,7 +138,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 SizedBox(height: 47),
                 Text(
                   'Kata Sandi',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Colors.black),
                 ),
                 SizedBox(height: 9),
                 TextFormField(
@@ -173,7 +173,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 SizedBox(height: 16),
                 Text(
                   'Konfirmasi Kata Sandi',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Colors.black),
                 ),
                 SizedBox(height: 9),
                 TextFormField(
@@ -215,14 +215,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.brown,
+                      backgroundColor: Color(0xFF724820),
                       padding: EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: Text(
-                      'Reset Password',
+                      'Ganti Kata Sandi',
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),

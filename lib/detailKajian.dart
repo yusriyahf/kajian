@@ -4,7 +4,6 @@ import 'package:kajian/camera.dart';
 import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/kajian.dart';
 import 'package:kajian/services/kehadiran_service.dart';
-import 'package:kajian/tesfix.dart';
 
 class KajianDetailAdminPage extends StatefulWidget {
   final Kajian? kajian;
@@ -76,23 +75,25 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
     if (widget.kajian == null) {
       return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xFF724820),
           elevation: 0,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.brown),
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
-          title: Text(
-            'Detail Kajian',
-            style: TextStyle(color: Colors.brown),
+          title: Center(
+            child: Text(
+              'Detail Kajian',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ),
         body: Center(
           child: Text(
             'Kajian tidak ditemukan',
-            style: TextStyle(fontSize: 18, color: Colors.brown),
+            style: TextStyle(fontSize: 18, color: Color(0xFF724820)),
           ),
         ),
       );
@@ -101,18 +102,19 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF724820),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.brown),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: Text(
           'Detail Kajian',
-          style: TextStyle(color: Colors.brown),
+          style: TextStyle(color: Colors.white),
         ),
+        centerTitle: true, // Tambahkan ini untuk membuat title di tengah
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -147,14 +149,14 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.brown,
+                        color: Color(0xFF724820),
                       ),
                     ),
                     SizedBox(height: 8),
                     Row(
                       children: [
                         Icon(Icons.calendar_today_outlined,
-                            color: Colors.brown),
+                            color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text(widget.kajian?.date != null
                             ? DateFormat('EEEE, dd MMM yyyy', 'id_ID')
@@ -165,7 +167,8 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.access_time_outlined, color: Colors.brown),
+                        Icon(Icons.access_time_outlined,
+                            color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text(
                             '${formatTimeOfDay(widget.kajian?.start_time)} - ${formatTimeOfDay(widget.kajian?.end_time)}'),
@@ -174,7 +177,8 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined, color: Colors.brown),
+                        Icon(Icons.location_on_outlined,
+                            color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text('${widget.kajian?.location ?? '-'}'),
                       ],
@@ -182,7 +186,7 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.book_outlined, color: Colors.brown),
+                        Icon(Icons.book_outlined, color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text('${widget.kajian?.theme ?? '-'}'),
                       ],
@@ -190,7 +194,7 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.person_outlined, color: Colors.brown),
+                        Icon(Icons.person_outlined, color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text('${widget.kajian?.speaker_name ?? '-'}'),
                       ],
@@ -199,21 +203,23 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                     Container(
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.brown.shade100),
+                        border: Border.all(color: Color(0xFFEAE6CD)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
                         children: [
                           ListTile(
-                            leading: Icon(Icons.people, color: Colors.brown),
+                            leading:
+                                Icon(Icons.people, color: Color(0xFF724820)),
                             title: Text('$_total Orang'),
                           ),
                           ListTile(
-                            leading: Icon(Icons.man, color: Colors.brown),
+                            leading: Icon(Icons.man, color: Color(0xFF724820)),
                             title: Text('$_totalMale Laki-laki'),
                           ),
                           ListTile(
-                            leading: Icon(Icons.woman, color: Colors.brown),
+                            leading:
+                                Icon(Icons.woman, color: Color(0xFF724820)),
                             title: Text('$_totalFemale Perempuan'),
                           ),
                         ],
@@ -226,7 +232,7 @@ class _KajianDetailAdminPageState extends State<KajianDetailAdminPage> {
                         height: 59,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF98614A),
+                            backgroundColor: Color(0xFF724820),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),

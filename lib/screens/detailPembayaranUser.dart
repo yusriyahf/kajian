@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kajian/constant.dart';
 import 'package:kajian/models/pembayaran.dart';
 import 'package:kajian/models/api_response.dart';
@@ -99,14 +100,28 @@ class _DetailPembayaranUserState extends State<DetailPembayaranUser> {
     return "$dayName, $day/$monthName/$year Pukul $hour:$minute WIB";
   }
 
+  String formatCurrency(int price) {
+    final formatter = NumberFormat.currency(
+        locale: 'id_ID', symbol: 'Rp. ', decimalDigits: 0);
+    return formatter.format(price);
+  }
+
   @override
   Widget build(BuildContext context) {
     print("Building widget with data: ${widget.pembayaran?.kajian?.image}");
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text("Detail Pembayaran")),
-          backgroundColor: Colors.brown,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(
+                  context); // Fungsi untuk kembali ke halaman sebelumnya
+            },
+          ),
+          title: Text("Detail Pembayaran"),
+          centerTitle: true,
+          backgroundColor: Color(0xFF724820),
           foregroundColor: Colors.white,
         ),
         body: SingleChildScrollView(
@@ -191,11 +206,7 @@ class _DetailPembayaranUserState extends State<DetailPembayaranUser> {
                         ),
                       ),
                       Divider(),
-                      Text(
-                        "Booking #T2351817303268K9JXU",
-                        style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                      ),
-                      SizedBox(height: 16),
+
                       Text(
                         "Tanggal Booking : ${widget.pembayaran!.created_at}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
@@ -214,7 +225,12 @@ class _DetailPembayaranUserState extends State<DetailPembayaranUser> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Nama : ${widget.pembayaran?.user?.first_name} ${widget.pembayaran?.user?.last_name}",
+                        "Nama Depan : ${widget.pembayaran?.user?.first_name} ",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        "Nama Belakang : ${widget.pembayaran?.user?.last_name} ",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
@@ -222,26 +238,7 @@ class _DetailPembayaranUserState extends State<DetailPembayaranUser> {
                         "Email : ${widget.pembayaran?.user?.email}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      SizedBox(height: 16),
-                      Text(
-                        "No. Handphone : 08123456676",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        "No. Identitas : 35345735483659454",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        "Tanggal Lahir : 2003-09-27",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        "Catatan : -",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
+
                       SizedBox(height: 50),
                       Text(
                         "Informasi Pembayaran",
@@ -250,7 +247,7 @@ class _DetailPembayaranUserState extends State<DetailPembayaranUser> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Event : ${widget.pembayaran?.kajian?.title}",
+                        "Judul Kajian : ${widget.pembayaran?.kajian?.title}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
@@ -260,12 +257,12 @@ class _DetailPembayaranUserState extends State<DetailPembayaranUser> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Metode Pembayaran : BCAVA",
+                        "Metode Pembayaran : DANA",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Status Pembayaran : Dibayar",
+                        "Status Pembayaran : ${widget.pembayaran?.status}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),

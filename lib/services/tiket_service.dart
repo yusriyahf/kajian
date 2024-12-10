@@ -63,3 +63,72 @@ Future<ApiResponse> getTiketLast() async {
   }
   return apiResponse;
 }
+
+Future<ApiResponse> checkTiket(int kajianId, String name) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.post(
+      Uri.parse(checkTiketURL),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode({
+        'kajian_id': kajianId,
+        'name': name,
+      }),
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        // Assuming the response is {"tiket": false}
+        apiResponse.data = jsonDecode(response.body)['tiket'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
+Future<ApiResponse> getIdUser(String name) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.post(
+      Uri.parse(getIdUserURL),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      },
+      body: jsonEncode({
+        'name': name,
+      }),
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        // Assuming the response is {"tiket": false}
+        apiResponse.data = jsonDecode(response.body)['user_id'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}

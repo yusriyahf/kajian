@@ -99,7 +99,15 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Color(0xFF724820)),
+          onPressed: () {
+            Navigator.pop(
+                context); // Fungsi untuk kembali ke halaman sebelumnya
+          },
+        ),
+      ),
       resizeToAvoidBottomInset: false, // Prevent offset when keyboard appears
       body: Form(
         key: formkey,
@@ -179,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF98614A),
+                          backgroundColor: Color(0xFF724820),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -207,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         TextSpan(
                           text: 'Daftar',
-                          style: TextStyle(color: Color(0xFF98614A)),
+                          style: TextStyle(color: Color(0xFF724820)),
                         ),
                       ],
                     ),

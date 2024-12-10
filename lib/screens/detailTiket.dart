@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kajian/models/tiketModel.dart';
 
 // void main() {
@@ -17,6 +18,12 @@ class DetailTiket extends StatefulWidget {
 }
 
 class _DetailTiketState extends State<DetailTiket> {
+  String formatCurrency(int? price) {
+    final formatCurrency =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ');
+    return formatCurrency.format(price ?? 0);
+  }
+
   String formatDateTime(DateTime dateTime) {
     List<String> days = [
       "Minggu",
@@ -114,7 +121,7 @@ class _DetailTiketState extends State<DetailTiket> {
                             ),
                           ),
                           Text(
-                            "Rp.${widget.tiket!.kajian!.price}",
+                            " ${formatCurrency(widget.tiket!.kajian!.price)}",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -153,11 +160,6 @@ class _DetailTiketState extends State<DetailTiket> {
                         ),
                       ),
                       Divider(),
-                      // Text(
-                      //   "Booking #T2351817303268K9JXU",
-                      //   style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                      // ),
-                      // SizedBox(height: 16),
                       Text(
                         "Tanggal Booking : ${formatDateTime(widget.tiket!.created_at!)}",
                         // "Tanggal Booking : Kamis, 8/Agustus/2024 Pukul 19:46 WIB",
@@ -177,7 +179,12 @@ class _DetailTiketState extends State<DetailTiket> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Nama : ${widget.tiket!.user!.first_name}  ${widget.tiket!.user!.last_name}",
+                        "Nama Depan : ${widget.tiket!.user!.first_name} ",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        "Nama Belakang : ${widget.tiket!.user!.last_name} ",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
@@ -185,26 +192,6 @@ class _DetailTiketState extends State<DetailTiket> {
                         "Email :  ${widget.tiket!.user!.email}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      SizedBox(height: 16),
-                      Text(
-                        "No. Handphone : 08123456676",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "No. Identitas : 35345735483659454",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // ),
-                      SizedBox(height: 16),
-                      Text(
-                        "Tanggal Lahir : 2003-09-27",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "Catatan : -",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // ),
                       SizedBox(height: 50),
                       Text(
                         "Informasi Pembayaran",
@@ -216,19 +203,14 @@ class _DetailTiketState extends State<DetailTiket> {
                         "Event :  ${widget.tiket!.kajian!.title!}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      // SizedBox(height: 16),
-                      // Text(
-                      //   "Pajak : 7450 IDR",
-                      //   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      // ),
                       SizedBox(height: 16),
                       Text(
-                        "Total Pembayaran : Rp.156.450",
+                        "Total Pembayaran : ${formatCurrency(widget.tiket!.kajian!.price)}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Metode Pembayaran : BCAVA",
+                        "Metode Pembayaran : DANA",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),

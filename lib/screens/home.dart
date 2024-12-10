@@ -123,62 +123,89 @@ class _HomePageState extends State<HomePage> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          toolbarHeight: 90,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 5),
-              Text(
-                'Selamat Datang',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.grey,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(180),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(20), // Radius kiri bawah
+              bottomRight: Radius.circular(20), // Radius kanan bawah
+            ),
+            child: Container(
+              color: const Color(0xFF724820), // Warna latar belakang AppBar
+              child: SafeArea(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Bagian kiri: Selamat Datang dan Nama User
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Selamat Datang',
+                                style: TextStyle(
+                                    fontSize: 24, color: Colors.white),
+                              ),
+                              const SizedBox(height: 10),
+                              user != null
+                                  ? Text(
+                                      '${user!.first_name!} ${user!.last_name!}',
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const CircularProgressIndicator(),
+                            ],
+                          ),
+                          // Bagian kanan: Avatar Profile
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfilePage()),
+                              );
+                            },
+                            child: const CircleAvatar(
+                              radius: 30,
+                              backgroundImage:
+                                  AssetImage('assets/images/profile.png'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      // Tanggal di bawah teks utama
+                      Text(
+                        DateFormat('EEEE, d MMM yyyy', 'id_ID')
+                            .format(DateTime.now()),
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 5),
-              user != null
-                  ? Text(
-                      '${user!.first_name!} ${user!.last_name!}',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.brown,
-                      ),
-                    )
-                  : Center(
-                      child: CircularProgressIndicator(),
-                    ),
-            ],
-          ),
-          backgroundColor: Colors.white,
-          elevation: 0,
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()),
-                );
-              },
-              child: const CircleAvatar(
-                backgroundImage: AssetImage(
-                    'assets/images/profile.png'), // Ganti dengan gambar pengguna
-              ),
             ),
-            const SizedBox(width: 16),
-          ],
+          ),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 19),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 15),
-              Text(
-                DateFormat('EEEE, d MMM yyyy', 'id_ID').format(DateTime.now()),
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
+              // const SizedBox(height: 15),
+              // Text(
+              //   DateFormat('EEEE, d MMM yyyy', 'id_ID').format(DateTime.now()),
+              //   style: TextStyle(fontSize: 14, color: Colors.grey),
+              // ),
               const SizedBox(height: 16),
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -198,11 +225,11 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.brown),
+                        color: Color(0xFF724820)),
                   ),
                   IconButton(
                     icon: const Icon(Icons.arrow_forward_ios,
-                        color: Colors.brown, size: 16),
+                        color: Color(0xFF724820), size: 16),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -248,7 +275,7 @@ class _HomePageState extends State<HomePage> {
                                         : 'Waktu tidak tersedia',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                   SizedBox(height: 8),
@@ -258,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                   SizedBox(height: 4),
@@ -266,7 +293,7 @@ class _HomePageState extends State<HomePage> {
                                     kajian.theme ?? 'Topik tidak tersedia',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                 ],
@@ -291,11 +318,11 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.brown),
+                        color: Color(0xFF724820)),
                   ),
                   IconButton(
                     icon: const Icon(Icons.arrow_forward_ios,
-                        color: Colors.brown, size: 16),
+                        color: Color(0xFF724820), size: 16),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -343,7 +370,7 @@ class _HomePageState extends State<HomePage> {
                                     // '1',
                                     style: const TextStyle(
                                       fontSize: 14,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                   const SizedBox(height: 8),
@@ -354,7 +381,7 @@ class _HomePageState extends State<HomePage> {
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -364,7 +391,7 @@ class _HomePageState extends State<HomePage> {
                                         'Pembicara tidak tersedia',
                                     style: const TextStyle(
                                       fontSize: 14,
-                                      color: Colors.brown,
+                                      color: Color(0xFF724820),
                                     ),
                                   ),
                                 ],
@@ -386,7 +413,7 @@ class _HomePageState extends State<HomePage> {
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: 0,
-          selectedItemColor: Colors.brown,
+          selectedItemColor: Color(0xFF724820),
           unselectedItemColor: Colors.grey,
           type: BottomNavigationBarType.fixed,
           onTap: (index) {

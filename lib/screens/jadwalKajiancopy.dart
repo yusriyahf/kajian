@@ -214,7 +214,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
               style: TextStyle(color: Colors.white),
             ),
           ),
-          backgroundColor: Colors.brown,
+          backgroundColor: Color(0xFF724820),
         ),
         body: Column(
           children: [
@@ -222,7 +222,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
             Container(
               height: 320,
               decoration: BoxDecoration(
-                color: const Color(0xFFEAE6CD),
+                color: Color(0xFFEAE6CD),
                 borderRadius:
                     const BorderRadius.vertical(bottom: Radius.circular(25)),
               ),
@@ -232,7 +232,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                   formatButtonVisible: false,
                   titleCentered: true,
                   titleTextStyle: TextStyle(
-                    color: Colors.brown,
+                    color: Color(0xFF724820),
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -246,7 +246,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                 availableGestures: AvailableGestures.all,
                 calendarStyle: CalendarStyle(
                   selectedDecoration: BoxDecoration(
-                    color: Colors.brown,
+                    color: Color(0xFF724820),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   selectedTextStyle: const TextStyle(
@@ -254,11 +254,11 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                   ),
                   todayDecoration: BoxDecoration(
                     color: const Color(0xFFEAE6CD),
-                    border: Border.all(color: Colors.brown, width: 2),
+                    border: Border.all(color: Color(0xFF724820), width: 2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   todayTextStyle: const TextStyle(
-                    color: Colors.brown,
+                    color: Color(0xFF724820),
                   ),
                   defaultDecoration: BoxDecoration(
                     color: Colors.transparent,
@@ -309,7 +309,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                                               style: const TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.brown,
+                                                color: Color(0xFF724820),
                                               ),
                                             ),
                                             const SizedBox(height: 8),
@@ -319,7 +319,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                                               style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.brown,
+                                                color: Color(0xFF724820),
                                               ),
                                             ),
                                             const SizedBox(height: 8),
@@ -328,7 +328,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                                               kajian.theme ?? '',
                                               style: const TextStyle(
                                                 fontSize: 14,
-                                                color: Colors.brown,
+                                                color: Color(0xFF724820),
                                               ),
                                             ),
                                             const SizedBox(height: 8),
@@ -339,8 +339,8 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                                                         horizontal: 20,
                                                         vertical: 8),
                                                 decoration: BoxDecoration(
-                                                  color: Colors
-                                                      .brown, // Background color of the box
+                                                  color: Color(
+                                                      0xFF724820), // Background color of the box
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           20), // Rounded corners
@@ -446,7 +446,8 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
                                             },
                                             child: CircleAvatar(
                                               radius: 25, // Ukuran lingkaran
-                                              backgroundColor: Colors.brown,
+                                              backgroundColor:
+                                                  Color(0xFF724820),
                                               child: Icon(
                                                 Icons
                                                     .arrow_forward_rounded, // Ikon panah
@@ -470,7 +471,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
         ),
         floatingActionButton: userRole == '1'
             ? FloatingActionButton(
-                backgroundColor: Colors.brown,
+                backgroundColor: Color(0xFF724820),
                 foregroundColor: Colors.white,
                 onPressed: () {
                   Navigator.push(
@@ -495,7 +496,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
         bottomNavigationBar: userRole == '2'
             ? BottomNavigationBar(
                 currentIndex: 1,
-                selectedItemColor: Colors.brown,
+                selectedItemColor: Color(0xFF724820),
                 unselectedItemColor: Colors.grey,
                 type: BottomNavigationBarType.fixed,
                 onTap: (index) {
@@ -542,7 +543,7 @@ class _JadwalKajianCopyState extends State<JadwalKajianCopy> {
               )
             : BottomNavigationBar(
                 currentIndex: 1,
-                selectedItemColor: Colors.brown,
+                selectedItemColor: Color(0xFF724820),
                 unselectedItemColor: Colors.grey,
                 type: BottomNavigationBarType.fixed,
                 onTap: (index) {

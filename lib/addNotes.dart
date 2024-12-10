@@ -64,16 +64,15 @@ class _AddNoteState extends State<AddNote> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Center(
-          child: const Text(
-            'Catatan Saya',
-            style: TextStyle(color: Colors.brown),
-          ),
+        backgroundColor: Color(0xFF724820),
+        title: Text(
+          'Catatan Saya',
+          style: TextStyle(color: Colors.white),
         ),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios,
-              color: Colors.brown), // Ikon panah kembali
+              color: Colors.white), // Ikon panah kembali
           iconSize: 20,
           onPressed: () {
             Navigator.pop(context); // Kembali ke layar sebelumnya
@@ -81,7 +80,7 @@ class _AddNoteState extends State<AddNote> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.check, color: Colors.brown),
+            icon: const Icon(Icons.check, color: Colors.white),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 _createPost();
@@ -105,7 +104,7 @@ class _AddNoteState extends State<AddNote> {
                   style: const TextStyle(
                     // Menentukan style text field
                     fontSize: 30, // Ukuran font
-                    color: Colors.brown,
+                    color: Color(0xFF724820),
                     fontWeight: FontWeight.bold, // Ketebalan font
                   ),
                   decoration: const InputDecoration(
@@ -127,7 +126,7 @@ class _AddNoteState extends State<AddNote> {
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
-                    color: Colors.brown,
+                    color: Color(0xFF724820),
                   ),
                 ),
 
@@ -138,7 +137,7 @@ class _AddNoteState extends State<AddNote> {
                       val!.isEmpty ? 'Catatan description is required' : null,
                   style: const TextStyle(
                     fontSize: 15, // Ukuran font
-                    color: Colors.brown, // Warna font
+                    color: Color(0xFF724820), // Warna font
                   ),
                   decoration: const InputDecoration(
                     hintText: 'Deskripsi',

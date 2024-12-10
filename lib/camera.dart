@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart'; // Untuk MediaType
+import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/kajian.dart';
 import 'package:kajian/screens/hasilKamera.dart';
+import 'package:kajian/services/tiket_service.dart';
 
 class CameraScreen extends StatefulWidget {
-  // final int kajianId;
   final Kajian? kajian;
 
   CameraScreen({required this.kajian});
@@ -20,6 +22,7 @@ class _CameraScreenState extends State<CameraScreen> {
   List<CameraDescription> cameras = [];
   CameraController? controller;
   Future<void>? _initializeControllerFuture;
+  bool isLoading = false; // Status loading untuk proses prediksi
 
   @override
   void initState() {
@@ -65,39 +68,83 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<void> _analyzeImage(XFile imageFile) async {
-    final url = Uri.parse('http://192.168.20.6:8001/analyze/');
-    final request = http.MultipartRequest('POST', url)
-      ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
+    setState(() {
+      isLoading = true; // Tampilkan loading saat proses berlangsung
+    });
 
     try {
-      final response = await request.send();
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(await response.stream.bytesToString());
-        final faceRecognitionResult =
-            responseData['face_recognition']['label'] ?? "Unknown";
-        final genderDetectionResult =
-            responseData['gender_detection']['gender'] ?? "Unknown";
+      // Prediksi wajah dan gender
+      final faceResult = await _predictFace(File(imageFile.path));
+      final genderResult = await _predictGender(File(imageFile.path));
 
-        // Hentikan kamera sebelum navigasi
-        await _stopCamera();
+      ApiResponse statusTiket =
+          await checkTiket(widget.kajian!.id!, faceResult);
+      ApiResponse idUser = await getIdUser(faceResult);
+      int? userIdfix = idUser.data as int? ?? 0;
+      bool? tiketStatus = statusTiket.data as bool? ?? false;
+      setState(() {
+        isLoading = false; // Sembunyikan loading setelah selesai
+      });
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ResultScreenfix(
-              faceRecognitionResult: faceRecognitionResult,
-              genderDetectionResult: genderDetectionResult,
-              imageFile: File(imageFile.path),
-              kajian: widget.kajian,
-            ),
+      // Hentikan kamera sebelum navigasi
+      await _stopCamera();
+
+      // Navigasi ke halaman hasil
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultScreenfix(
+            faceRecognitionResult: faceResult,
+            genderDetectionResult: genderResult,
+            imageFile: File(imageFile.path),
+            kajian: widget.kajian,
+            statusTiket: tiketStatus,
+            idKajian: widget.kajian!.id!,
+            idUser: userIdfix,
           ),
-        );
-      } else {
-        _showErrorDialog(
-            'Failed to analyze image. Status: ${response.statusCode}');
-      }
+        ),
+      );
     } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
       _showErrorDialog('Error: $e');
+    }
+  }
+
+  Future<String> _predictFace(File imageFile) async {
+    final uri = Uri.parse("http://192.168.20.6:8001/predict");
+    final request = http.MultipartRequest('POST', uri)
+      ..files.add(await http.MultipartFile.fromPath(
+        'file',
+        imageFile.path,
+        contentType: MediaType('image', 'jpeg'),
+      ));
+
+    final response = await request.send();
+    if (response.statusCode == 200) {
+      final respStr = await response.stream.bytesToString();
+      return jsonDecode(respStr)["predict"].toString();
+    } else {
+      throw Exception('Failed to predict face');
+    }
+  }
+
+  Future<String> _predictGender(File imageFile) async {
+    final uri = Uri.parse("http://192.168.20.6:8001/predict-gender");
+    final request = http.MultipartRequest('POST', uri)
+      ..files.add(await http.MultipartFile.fromPath(
+        'file',
+        imageFile.path,
+        contentType: MediaType('image', 'jpeg'),
+      ));
+
+    final response = await request.send();
+    if (response.statusCode == 200) {
+      final respStr = await response.stream.bytesToString();
+      return jsonDecode(respStr)["predict"].toString();
+    } else {
+      throw Exception('Failed to predict gender');
     }
   }
 
@@ -116,6 +163,14 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     if (controller == null || _initializeControllerFuture == null) {
       return Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -128,9 +183,19 @@ class _CameraScreenState extends State<CameraScreen> {
         if (snapshot.connectionState == ConnectionState.done) {
           return Scaffold(
             appBar: AppBar(
+              backgroundColor: Color(0xFF724820),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(
+                      context); // Fungsi untuk kembali ke halaman sebelumnya
+                },
+              ),
               title: Text(
                 'Pengenalan Wajah',
-                style: TextStyle(color: Colors.brown),
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
               centerTitle: true,
             ),
@@ -163,7 +228,7 @@ class _CameraScreenState extends State<CameraScreen> {
                           color: Colors.transparent,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.brown,
+                            color: Color(0xFF724820),
                             width: 3,
                           ),
                         ),
@@ -181,7 +246,7 @@ class _CameraScreenState extends State<CameraScreen> {
                           width: 60,
                           height: 60,
                           decoration: BoxDecoration(
-                            color: Colors.brown,
+                            color: Color(0xFF724820),
                             shape: BoxShape.circle,
                           ),
                         ),

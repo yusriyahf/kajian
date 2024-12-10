@@ -14,12 +14,18 @@ class ResultScreenfix extends StatefulWidget {
   final String genderDetectionResult;
   final File imageFile;
   final Kajian? kajian;
+  final bool? statusTiket;
+  final int? idKajian;
+  final int? idUser;
 
   ResultScreenfix({
     required this.faceRecognitionResult,
     required this.genderDetectionResult,
     required this.imageFile,
     required this.kajian,
+    required this.statusTiket,
+    required this.idKajian,
+    required this.idUser,
   });
 
   @override
@@ -27,10 +33,10 @@ class ResultScreenfix extends StatefulWidget {
 }
 
 class _ResultScreenfixState extends State<ResultScreenfix> {
-  void _addKehadiran(int? kajianid, String gender) async {
+  void _addKehadiran(int? kajianid, String gender, int userId) async {
     print('Creating Kehadiran for Kajian ID: $kajianid, Gender: $gender');
 
-    ApiResponse response = await createKehadiran(kajianid!, gender);
+    ApiResponse response = await createKehadiran(kajianid!, gender, userId);
 
     if (response.error == null) {
       // Show success message
@@ -63,7 +69,7 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
       );
 
       // Navigate to KajianDetailAdminPage after a delay
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 5));
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => KajianDetailAdminPage(
@@ -80,7 +86,7 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
       );
 
       // Navigate to KajianDetailAdminPage after a delay to let the user see the success message
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 5));
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => KajianDetailAdminPage(
@@ -94,17 +100,18 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.statusTiket);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Pengenalan Wajah',
-          style: TextStyle(color: Color(0xFF724820)),
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF724820),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Color(0xFF724820)),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -119,7 +126,7 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
               // Kontainer untuk menampilkan gambar wajah
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.brown.shade50,
+                  color: Color(0xFFEAE6CD),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 padding: EdgeInsets.all(16),
@@ -130,11 +137,16 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: Image.file(
-                            widget.imageFile, // Tampilkan gambar dari kamera
-                            width: 200,
-                            height: 300,
-                            fit: BoxFit.cover,
+                          child: Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.rotationY(
+                                3.14159), // Rotasi 180 derajat untuk memperbaiki efek mirror
+                            child: Image.file(
+                              widget.imageFile, // Tampilkan gambar dari kamera
+                              width: 200,
+                              height: 300,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ],
@@ -145,7 +157,7 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
                       width: double.infinity, // Lebar container
                       height: 150, // Tinggi container
                       decoration: BoxDecoration(
-                        color: Color(0xFFF5EEDC), // Warna latar belakang
+                        color: Color(0xFFEAE6CD), // Warna latar belakang
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Stack(
@@ -155,14 +167,19 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
                           Positioned(
                             top: 20, // Jarak dari atas container
                             child: Text(
-                              '${widget.faceRecognitionResult} \nYou have purchased a ticket \nGender: ${widget.genderDetectionResult}',
+                              widget.faceRecognitionResult == 'Unknown'
+                                  ? 'Anda belum terdaftar'
+                                  : '${widget.faceRecognitionResult} \n'
+                                      '${widget.statusTiket! ? 'Anda sudah membeli tiket' : (widget.faceRecognitionResult == 'No face detected' ? '' : 'Anda belum membeli tiket')} \n'
+                                      'Gender: ${widget.genderDetectionResult}',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Color(0xFF6D4C41), // Warna teks
+                                color: Color(0xFF724820), // Warna teks
                               ),
                             ),
                           ),
+
                           // Tombol
                           Positioned(
                             left: 0,
@@ -172,7 +189,7 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
                             child: GestureDetector(
                               onTap: () {
                                 // Logika aksi saat tombol ditekan
-                                print("Go to right clicked");
+                                print("Go to right clicked ");
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -185,30 +202,39 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
                                   // Menempatkan konten di tengah
                                   child: Row(
                                     mainAxisSize: MainAxisSize
-                                        .min, // Agar elemen mengikuti isi kontennya
+                                        .min, // Agar elemen mengikuti ukuran kontennya
                                     children: [
+                                      // Icon(
+                                      //   widget.genderDetectionResult ==
+                                      //           "Laki-laki"
+                                      //       ? Icons.male // Ikon untuk laki-laki
+                                      //       : Icons
+                                      //           .female, // Ikon untuk perempuan
+                                      //   color: Colors.white, // Warna ikon
+                                      //   size: 16,
+                                      // ),
+                                      SizedBox(
+                                          width:
+                                              8), // Jarak antara ikon dan teks
                                       Text(
-                                        'GO TO RIGHT',
+                                        widget.faceRecognitionResult ==
+                                                'Unknown'
+                                            ? 'Silahkan Registrasi dahulu'
+                                            : widget.statusTiket == false
+                                                ? 'Silahkan beli tiket dulu'
+                                                : 'SILAHKAN KE ${widget.genderDetectionResult == "Laki-laki" ? "KANAN" : "KIRI"}',
                                         style: TextStyle(
                                           fontSize: 14,
                                           color:
                                               Colors.white, // Warna teks tombol
                                         ),
-                                      ),
-                                      SizedBox(
-                                          width:
-                                              8), // Jarak antara teks dan ikon
-                                      Icon(
-                                        Icons.arrow_forward, // Ikon panah
-                                        color: Colors.white,
-                                        size: 16,
-                                      ),
+                                      )
                                     ],
                                   ),
                                 ),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -221,11 +247,24 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                    // loading = !loading;
-                    _addKehadiran(
-                        widget.kajian!.id, widget.genderDetectionResult);
+                    if (widget.statusTiket == true) {
+                      // If statusTiket is true, add kehadiran
+                      _addKehadiran(widget.kajian!.id,
+                          widget.genderDetectionResult, widget.idUser!);
+                      print("Kehadiran Added");
+                    } else {
+                      // If statusTiket is false, navigate to KajianDetailAdminPage
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => KajianDetailAdminPage(
+                            kajian: widget.kajian,
+                          ),
+                        ),
+                        (route) => false,
+                      );
+                      print("Navigated to KajianDetailAdminPage");
+                    }
                   });
-                  print("Save clicked");
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -235,7 +274,9 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   child: Center(
                     child: Text(
-                      'Simpan',
+                      widget.statusTiket == true
+                          ? 'Tambah Kehadiran'
+                          : 'Kembali', // Change text based on statusTiket
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white, // Warna teks
@@ -243,7 +284,7 @@ class _ResultScreenfixState extends State<ResultScreenfix> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

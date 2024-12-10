@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 const baseURL = 'http://192.168.20.6:8000/api';
 const loginURL = baseURL + '/login';
-const registerURL = baseURL + ' /register';
+const registerURL = baseURL + '/register';
 const logoutURL = baseURL + '/logout';
 const userURL = baseURL + '/user';
 const passwordURL = baseURL + '/password';
@@ -25,6 +25,8 @@ const total = baseURL + '/total';
 const addKehadiranURL = baseURL + '/addkehadiran';
 const updateProfileURL = baseURL + '/editprofile';
 const pembayaranUser = baseURL + '/pembayaranuser';
+const checkTiketURL = baseURL + '/checktiket';
+const getIdUserURL = baseURL + '/iduser';
 
 // const totalKehadiran = baseURL + '/totalkehadiran';
 

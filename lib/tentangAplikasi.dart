@@ -18,9 +18,14 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tentang Aplikasi'),
+        backgroundColor: Color(0xFF724820),
+        title: Text(
+          'Tentang Aplikasi',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             // Handle back action here
           },

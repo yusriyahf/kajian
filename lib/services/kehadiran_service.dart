@@ -94,7 +94,8 @@ Future<ApiResponse> getTotal(int kajianId) async {
 }
 
 // Create Keharian
-Future<ApiResponse> createKehadiran(int kajianId, String gender) async {
+Future<ApiResponse> createKehadiran(
+    int kajianId, String gender, int userId) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -105,7 +106,7 @@ Future<ApiResponse> createKehadiran(int kajianId, String gender) async {
         'Authorization': 'Bearer $token',
       },
       body: {
-        'user_id': '5',
+        'user_id': userId.toString(),
         'kajian_id': kajianId.toString(),
         'gender': gender,
       },

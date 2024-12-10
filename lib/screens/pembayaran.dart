@@ -44,6 +44,12 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
     }
   }
 
+  String formatCurrency(int? price) {
+    final formatCurrency =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ');
+    return formatCurrency.format(price ?? 0);
+  }
+
   String formatDateTime(DateTime dateTime) {
     List<String> days = [
       "Minggu",
@@ -115,8 +121,19 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text("Pembayaran Tiket")),
-          backgroundColor: Colors.brown,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(
+                  context); // Fungsi untuk kembali ke halaman sebelumnya
+            },
+          ),
+          title: Text(
+            "Pembayaran Tiket",
+            style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: true,
+          backgroundColor: Color(0xFF724820),
           foregroundColor: Colors.white,
         ),
         body: SingleChildScrollView(
@@ -143,7 +160,7 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'judul',
+                        '${widget.kajian.title}',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -161,7 +178,7 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                             ),
                           ),
                           Text(
-                            "Rp.${widget.kajian.price}",
+                            "${formatCurrency(widget.kajian.price)}",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -224,7 +241,12 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Nama : ${user?.first_name ?? 'Unknown'} ${user?.last_name ?? 'Unknown'}",
+                        "Nama Depan : ${user?.first_name ?? 'Unknown'} ",
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        "Nama Belakang : ${user?.last_name ?? 'Unknown'}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
@@ -232,16 +254,7 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                         "Email :  ${user!.email ?? 'Unknown'}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
-                      SizedBox(height: 16),
-                      Text(
-                        "No. Handphone : 08123456676",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        "Tanggal Lahir : 2003-09-27",
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                      ),
+
                       SizedBox(height: 50),
                       Text(
                         "Informasi Pembayaran",
@@ -250,49 +263,52 @@ class _DetailPembayaranTiketState extends State<DetailPembayaranTiket> {
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Event :  ${widget.kajian.title}",
+                        "Judul Kajian :  ${widget.kajian.title}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Total Pembayaran : Rp.156.450",
+                        "Metode Pembayaran : Dana",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                       SizedBox(height: 16),
                       Text(
-                        "Metode Pembayaran : s",
+                        "Total Pembayaran : ${formatCurrency(widget.kajian.price)}",
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  width: 320,
-                  height: 59,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors
-                          .brown, // Mengganti 'primary' menjadi 'backgroundColor'
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10), // Border radius
+                SizedBox(height: 16),
+                Center(
+                  child: Container(
+                    width: 350,
+                    height: 59,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(
+                            0xFF724820), // Mengganti 'primary' menjadi 'backgroundColor'
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(10), // Border radius
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      // Aksi ketika button ditekan
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                DetailKajianScreen(kajian: widget.kajian!)),
-                      );
-                    },
-                    child: Text(
-                      'Bayar Tiket',
-                      style: TextStyle(
-                        color: Colors.white, // Warna tulisan putih
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      onPressed: () {
+                        // Aksi ketika button ditekan
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DetailKajianScreen(kajian: widget.kajian!)),
+                        );
+                      },
+                      child: Text(
+                        'Bayar Tiket',
+                        style: TextStyle(
+                          color: Colors.white, // Warna tulisan putih
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

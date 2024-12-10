@@ -27,18 +27,19 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF724820),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.brown),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: Text(
           'Detail Kajian',
-          style: TextStyle(color: Colors.brown),
+          style: TextStyle(color: Colors.white),
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -73,14 +74,14 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.brown,
+                        color: Color(0xFF724820),
                       ),
                     ),
                     SizedBox(height: 8),
                     Row(
                       children: [
                         Icon(Icons.calendar_today_outlined,
-                            color: Colors.brown),
+                            color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text(DateFormat('EEEE, dd MMM yyyy', 'id_ID')
                             .format(widget.kajian!.date!)),
@@ -91,7 +92,8 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.access_time_outlined, color: Colors.brown),
+                        Icon(Icons.access_time_outlined,
+                            color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text(
                             '${formatTimeOfDay(widget.kajian!.start_time!)} - ${formatTimeOfDay(widget.kajian!.end_time!)}'),
@@ -100,7 +102,8 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined, color: Colors.brown),
+                        Icon(Icons.location_on_outlined,
+                            color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text('${widget.kajian!.location}'),
                       ],
@@ -108,7 +111,8 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.price_change_outlined, color: Colors.brown),
+                        Icon(Icons.price_change_outlined,
+                            color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text('Rp. ${widget.kajian!.price}'),
                       ],
@@ -116,7 +120,7 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.book_outlined, color: Colors.brown),
+                        Icon(Icons.book_outlined, color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text('${widget.kajian!.theme}'),
                       ],
@@ -124,7 +128,7 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.person_outlined, color: Colors.brown),
+                        Icon(Icons.person_outlined, color: Color(0xFF724820)),
                         SizedBox(width: 8),
                         Text('${widget.kajian!.speaker_name}'),
                       ],
@@ -157,7 +161,7 @@ class _KajianDetailPageState extends State<KajianDetailPage> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(
-                                0xFF98614A), // Mengganti 'primary' menjadi 'backgroundColor'
+                                0xFF724820), // Mengganti 'primary' menjadi 'backgroundColor'
                             shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.circular(10), // Border radius

@@ -78,21 +78,20 @@ class _NoteDetailState extends State<NoteDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Center(
-          child: Text(
-            'Detail Catatan',
-            style: TextStyle(color: Colors.brown),
-          ),
+        backgroundColor: Color(0xFF724820),
+        title: Text(
+          'Detail Catatan',
+          style: TextStyle(color: Colors.white),
         ),
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.brown),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
             icon:
-                Icon(isEditing ? Icons.save : Icons.edit, color: Colors.brown),
+                Icon(isEditing ? Icons.save : Icons.edit, color: Colors.white),
             onPressed: () {
               if (isEditing) {
                 // Simpan perubahan
@@ -102,7 +101,7 @@ class _NoteDetailState extends State<NoteDetail> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.delete, color: Colors.brown),
+            icon: const Icon(Icons.delete, color: Colors.white),
             onPressed: () {
               _handleDeleteNotes(widget.catatan!.id!);
             },
@@ -124,7 +123,7 @@ class _NoteDetailState extends State<NoteDetail> {
                 style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: Colors.brown,
+                  color: Color(0xFF724820),
                 ),
                 decoration: const InputDecoration(
                   hintText: 'Judul',
@@ -143,7 +142,7 @@ class _NoteDetailState extends State<NoteDetail> {
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
-                  color: Colors.brown,
+                  color: Color(0xFF724820),
                 ),
               ),
               const SizedBox(height: 16),
@@ -155,7 +154,7 @@ class _NoteDetailState extends State<NoteDetail> {
                       val!.isEmpty ? 'Catatan description is required' : null,
                   style: const TextStyle(
                     fontSize: 15,
-                    color: Colors.brown,
+                    color: Color(0xFF724820),
                   ),
                   maxLines: null,
                   decoration: const InputDecoration(

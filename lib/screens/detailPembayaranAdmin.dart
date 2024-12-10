@@ -105,8 +105,16 @@ class _AdminKonfirmPageDetailState extends State<AdminKonfirmPageDetail> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text("Detail Pembayaran")),
-          backgroundColor: Colors.brown,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(
+                  context); // Fungsi untuk kembali ke halaman sebelumnya
+            },
+          ),
+          title: Text("Detail Pembayaran"),
+          centerTitle: true,
+          backgroundColor: Color(0xFF724820),
           foregroundColor: Colors.white,
         ),
         body: SingleChildScrollView(

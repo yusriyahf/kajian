@@ -1,5 +1,6 @@
 import 'dart:async'; // Import untuk menggunakan Timer
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kajian/constant.dart';
 import 'package:kajian/models/api_response.dart';
 import 'package:kajian/models/pembayaran.dart';
@@ -21,6 +22,12 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
   List<Pembayaran> _pembayaranSudahDiproses = [];
   bool _loading = true;
   Timer? _timer; // Deklarasi Timer
+
+  String formatCurrency(int? price) {
+    final formatCurrency =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp. ');
+    return formatCurrency.format(price ?? 0);
+  }
 
   Future<void> retrievePembayaran() async {
     ApiResponse response = await getPembayaran();
@@ -78,9 +85,9 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
     retrievePembayaran();
 
     // Set Timer untuk auto-refresh setiap 30 detik
-    _timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
-      retrievePembayaran();
-    });
+    // _timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
+    //   retrievePembayaran();
+    // });
   }
 
   @override
@@ -96,17 +103,18 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xFF724820),
+          automaticallyImplyLeading: false, // Menghapus panah "back" default
           elevation: 0,
           title: const Text(
             'Pembayaran',
-            style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.white),
           ),
           centerTitle: true,
           bottom: const TabBar(
-            labelColor: Colors.brown,
+            labelColor: Colors.white,
             unselectedLabelColor: Colors.grey,
-            indicatorColor: Colors.brown,
+            indicatorColor: Colors.white,
             tabs: [
               Tab(text: 'Proses'),
               Tab(text: 'Sudah Diproses'),
@@ -147,7 +155,7 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
 
   Widget _buildPembayaranCard(Pembayaran pembayaran) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: const EdgeInsets.all(16.0),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -159,7 +167,7 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
           );
         },
         child: SizedBox(
-          height: 175,
+          height: 140,
           width: double.infinity,
           child: Card(
             shape: RoundedRectangleBorder(
@@ -188,6 +196,28 @@ class _AdminKonfirmPageState extends State<AdminKonfirmPage> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
+                  const SizedBox(height: 14),
+                  Container(
+                    width: 100, // Lebar kotak
+                    height: 30, // Tinggi kotak
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF724820), // Warna latar belakang
+                      borderRadius: BorderRadius.circular(
+                          16), // Sudut melengkung (opsional)
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 4), // Padding di dalam kotak
+                    child: Text(
+                      formatCurrency(pembayaran.kajian?.price),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                 ],
               ),
             ),

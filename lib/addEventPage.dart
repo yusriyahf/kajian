@@ -143,7 +143,7 @@ class _AddEventPageState extends State<AddEventPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios,
-              color: Colors.brown), // Ikon panah kembali
+              color: Colors.white), // Ikon panah kembali
           iconSize: 20,
           onPressed: () {
             Navigator.pop(context, true); // Kembali ke layar sebelumnya
@@ -151,9 +151,10 @@ class _AddEventPageState extends State<AddEventPage> {
         ),
         title: const Text(
           'Tambah Jadwal Kajian',
-          style: TextStyle(color: Colors.brown),
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.white,
+        centerTitle: true,
+        backgroundColor: Color(0xFF724820),
       ),
       body: Form(
         key: _formKey,
@@ -174,7 +175,7 @@ class _AddEventPageState extends State<AddEventPage> {
                 'Tambah jadwal anda di sini',
                 style: TextStyle(fontSize: 16, color: Color(0xFF61677D)),
               ),
-              const SizedBox(height: 32), // Add space between title and form
+              const SizedBox(height: 40), // Add space between title and form
               Text('Nama Kajian'),
               SizedBox(height: 6),
               TextFormField(
@@ -396,7 +397,7 @@ class _AddEventPageState extends State<AddEventPage> {
                   padding: const EdgeInsets.symmetric(
                       vertical: 5, horizontal: 100), // Adjust padding as needed
                   decoration: BoxDecoration(
-                    color: Colors.brown, // Background color of the box
+                    color: Color(0xFF724820), // Background color of the box
                     borderRadius: BorderRadius.circular(20), // Rounded corners
                   ),
                   child: ElevatedButton(

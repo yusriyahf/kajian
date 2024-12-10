@@ -109,18 +109,29 @@ class _TiketState extends State<Tiket> {
       length: 2, // Two tabs
       child: Scaffold(
         appBar: AppBar(
-          title: Center(
-            child: Text(
-              'Tiket Saya',
-              style: TextStyle(color: Colors.white),
-            ),
+          // leading: IconButton(
+          //   icon: Icon(Icons.arrow_back_ios, color: Colors.brown),
+          //   onPressed: () {
+          //     Navigator.pop(
+          //         context); // Fungsi untuk kembali ke halaman sebelumnya
+          //   },
+          // ),
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Tiket Saya',
+            style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Colors.brown,
+          centerTitle: true,
+          backgroundColor: Color(0xFF724820),
           bottom: TabBar(
             tabs: [
               Tab(text: 'Tiket'),
               Tab(text: 'Proses'),
             ],
+            labelColor: Colors.white, // Warna teks tab yang aktif
+            unselectedLabelColor:
+                Colors.grey, // Warna teks tab yang tidak aktif
+            indicatorColor: Colors.white, // Warna indikator tab yang aktif
           ),
         ),
         body: TabBarView(
@@ -147,7 +158,7 @@ class _TiketState extends State<Tiket> {
                           },
                           child: SizedBox(
                             width: 414,
-                            height: 180, // Adjusted height
+                            height: 180,
                             child: Container(
                               decoration: ShapeDecoration(
                                 shape: RoundedRectangleBorder(
@@ -254,62 +265,118 @@ class _TiketState extends State<Tiket> {
               ],
             ),
             // "Proses" tab content
-            _loading
-                ? Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16.0),
-                    itemCount: _pembayaranList.length,
-                    itemBuilder: (context, index) {
-                      Pembayaran pembayaran = _pembayaranList[
-                          index]; // Assuming each item in _pembayaranList is a Map
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          elevation: 5,
-                          child: ListTile(
-                            contentPadding: EdgeInsets.all(16),
-                            title: Text(
-                              '${pembayaran.kajian!.title}',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Status: ${pembayaran.status ?? 'Unknown'}',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                Text(
-                                  'Tanggal: ${pembayaran.date ?? 'N/A'}',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                                Text(
-                                  'Jumlah: Rp ${pembayaran.kajian!.price ?? '0'}',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
-                            trailing: Icon(Icons.arrow_forward_ios),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailPembayaranUser(
-                                    pembayaran: _pembayaranList[
-                                        index], // Pass the data of the tapped payment item
-                                  ),
-                                ),
-                              );
-                            },
+            ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: _pembayaranList.length,
+              itemBuilder: (context, index) {
+                Pembayaran pembayaran = _pembayaranList[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailPembayaranUser(
+                            pembayaran: pembayaran,
                           ),
                         ),
                       );
                     },
+                    child: SizedBox(
+                      width: 414,
+                      height: 180,
+                      child: Container(
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: Stack(
+                          children: [
+                            // Background color for the main card
+                            Positioned(
+                              left: 20,
+                              top: 20,
+                              child: Container(
+                                width: 320,
+                                height: 145,
+                                decoration: ShapeDecoration(
+                                  color: Color(0xFFEAE6CD),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Title of the payment (kajian's title)
+                            Positioned(
+                              left: 40,
+                              top: 37,
+                              child: Text(
+                                '${pembayaran.kajian!.title}',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Color(0xFF724820),
+                                  fontSize: 20,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w700,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                            // Status information
+                            Positioned(
+                              left: 40,
+                              top: 70,
+                              child: Text(
+                                'Status: ${pembayaran.status ?? 'Unknown'}',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Color(0xFF724820),
+                                  fontSize: 12,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                            // Garis putus-putus di bawah teks Status
+                            Positioned(
+                              left: 40,
+                              top: 100, // Tempatkan di bawah teks status
+                              child: SizedBox(
+                                width: 283,
+                                height: 1,
+                                child: CustomPaint(
+                                  painter: DashedLinePainter(),
+                                ),
+                              ),
+                            ),
+                            // Harga pembayaran
+                            Positioned(
+                              left: 40,
+                              top: 120,
+                              child: Text(
+                                'Rp ${pembayaran.kajian!.price ?? '0'}',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Color(0xFF724820),
+                                  fontSize: 18,
+                                  fontFamily: 'Inter',
+                                  fontWeight: FontWeight.bold,
+                                  height: 1.2,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
+                );
+              },
+            ),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

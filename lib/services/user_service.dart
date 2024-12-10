@@ -52,10 +52,12 @@ Future<ApiResponse> register(String first_name, String last_name, String email,
       'password_confirmation': passwordConfirmation
     });
 
+    print('Response status: ${response.statusCode}');
+    print(
+        'Response body: ${response.body}'); // Log response body untuk melihat pesan dari server
+
     switch (response.statusCode) {
       case 200:
-        apiResponse.data = User.fromJson(jsonDecode(response.body));
-        break;
       case 422:
         final errors = jsonDecode(response.body)['errors'];
         apiResponse.error = errors[errors.keys.elementAt(0)][0];
@@ -66,6 +68,7 @@ Future<ApiResponse> register(String first_name, String last_name, String email,
     }
   } catch (e) {
     apiResponse.error = serverError;
+    print('Error: $e'); // Log error
   }
   return apiResponse;
 }

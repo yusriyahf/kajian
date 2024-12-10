@@ -54,12 +54,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profil'),
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {},
-        ),
+        title: Text('Profil', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        backgroundColor: Color(0xFF724820),
+        automaticallyImplyLeading: false, // Menghapus panah "back" default
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -74,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.brown.shade100),
+                  border: Border.all(color: Color(0xFFEAE6CD)),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
@@ -116,10 +114,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Divider(color: Colors.brown.shade100),
+                    Divider(color: Color(0xFFEAE6CD)),
                     ListTile(
-                      leading:
-                          Icon(Icons.people_alt_outlined, color: Colors.brown),
+                      leading: Icon(Icons.people_alt_outlined,
+                          color: Color(0xFF724820)),
                       title: Text('Detail Profile'),
                       onTap: () {
                         Navigator.push(
@@ -132,7 +130,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       contentPadding: EdgeInsets.zero,
                     ),
                     ListTile(
-                      leading: Icon(Icons.lock_outline, color: Colors.brown),
+                      leading:
+                          Icon(Icons.lock_outline, color: Color(0xFF724820)),
                       title: Text('Ganti Password'),
                       onTap: () {
                         Navigator.push(
@@ -143,7 +142,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       contentPadding: EdgeInsets.zero,
                     ),
                     ListTile(
-                      leading: Icon(Icons.info_outline, color: Colors.brown),
+                      leading:
+                          Icon(Icons.info_outline, color: Color(0xFF724820)),
                       title: Text('Tentang Aplikasi'),
                       onTap: () {
                         Navigator.push(
@@ -156,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       contentPadding: EdgeInsets.zero,
                     ),
                     ListTile(
-                      leading: Icon(Icons.logout, color: Colors.brown),
+                      leading: Icon(Icons.logout, color: Colors.red[700]),
                       title: Text('Logout'),
                       onTap: () {
                         showModalBottomSheet(
@@ -210,7 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               borderRadius:
                                                   BorderRadius.circular(64),
                                               side: BorderSide(
-                                                  color: Colors.brown),
+                                                  color: Color(0xFF724820)),
                                             ),
                                             padding: EdgeInsets.symmetric(
                                                 vertical: 12),
@@ -219,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             'Tidak',
                                             style: TextStyle(
                                               fontSize: 16,
-                                              color: Colors.brown,
+                                              color: Color(0xFF724820),
                                             ),
                                           ),
                                         ),
@@ -238,7 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 });
                                           },
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.brown,
+                                            backgroundColor: Color(0xFF724820),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(64),
@@ -287,7 +287,7 @@ class _ProfilePageState extends State<ProfilePage> {
           : userRole == '2'
               ? BottomNavigationBar(
                   currentIndex: 4,
-                  selectedItemColor: Colors.brown,
+                  selectedItemColor: Color(0xFF724820),
                   unselectedItemColor: Colors.grey,
                   type: BottomNavigationBarType.fixed,
                   onTap: (index) {
@@ -334,7 +334,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 )
               : BottomNavigationBar(
                   currentIndex: 3,
-                  selectedItemColor: Colors.brown,
+                  selectedItemColor: Color(0xFF724820),
                   unselectedItemColor: Colors.grey,
                   type: BottomNavigationBarType.fixed,
                   onTap: (index) {

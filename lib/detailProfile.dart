@@ -39,15 +39,15 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF724820),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {},
         ),
         title: Text(
-          'Account Info',
-          style: TextStyle(color: Colors.black),
+          'Info Akun',
+          style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -67,7 +67,7 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'User Info',
+                    'Info Pengguna',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
@@ -106,8 +106,9 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildInfoRow('First Name', '${widget.user.first_name}'),
-                      _buildInfoRow('Last Name', '${widget.user.last_name}'),
+                      _buildInfoRow('Nama Depan', '${widget.user.first_name}'),
+                      _buildInfoRow(
+                          'Nama Belakang', '${widget.user.last_name}'),
                       _buildInfoRow('Email', '${widget.user.email}'),
                       // _buildInfoRow('No. Handphone', '081234567890'),
                       // _buildInfoRow('Tanggal Lahir', '29/04/2004'),

@@ -69,7 +69,7 @@ class SplashScreen extends StatelessWidget {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF98614A),
+                          backgroundColor: Color(0xFF724820),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -97,7 +97,7 @@ class SplashScreen extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: 'Masuk',
-                                style: TextStyle(color: Color(0xFF98614A)),
+                                style: TextStyle(color: Color(0xFF724820)),
                               ),
                             ],
                           ),

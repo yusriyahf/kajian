@@ -119,7 +119,7 @@ class _HomeAdminState extends State<HomeAdmin> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
-        selectedItemColor: Colors.brown,
+        selectedItemColor: Color(0xFF724820),
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
@@ -216,7 +216,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                   backgroundColor: Colors.white,
                   child: Icon(
                     Icons.person,
-                    color: Color(0xFFA67B5B),
+                    color: Color(0xFF724820),
                     size: 30,
                   ),
                 ),
@@ -247,8 +247,8 @@ class _HomeAdminState extends State<HomeAdmin> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildStatItem('${totalUser}', Icons.group),
-          _buildStatItem('120', Icons.male),
-          _buildStatItem('110', Icons.female),
+          _buildStatItem('120', Icons.man),
+          _buildStatItem('110', Icons.woman),
         ],
       ),
     );
@@ -275,7 +275,7 @@ class _HomeAdminState extends State<HomeAdmin> {
   Widget _buildStatItem(String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: const Color(0xFFA67B5B)),
+        Icon(icon, color: Color(0xFF724820)),
         const SizedBox(height: 5),
         Text(value,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),

@@ -75,7 +75,15 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Edit Profile')),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(
+                context); // Fungsi untuk kembali ke halaman sebelumnya
+          },
+        ),
+        title: Text('Edit Profile'),
+        centerTitle: true,
         backgroundColor: Color(0xFF724820),
         foregroundColor: Colors.white,
       ),
@@ -108,23 +116,14 @@ class _EditProfileState extends State<EditProfile> {
                             backgroundImage:
                                 AssetImage('assets/images/profile.png'),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.edit,
-                                color: Colors.white), // Pencil icon for editing
-                            onPressed: () {
-                              // Add the logic to edit the image
-                            },
-                            padding:
-                                EdgeInsets.all(8), // Adjust padding if needed
-                          ),
                         ],
                       ),
                       SizedBox(height: 16),
                       _buildTextField(
-                        'First Name',
+                        'Nama Depan',
                         _firstNameControllerBody,
                       ),
-                      _buildTextField('Last Name', _lastNameControllerBody),
+                      _buildTextField('Nama Belakang', _lastNameControllerBody),
                       _buildTextField('Email', _emailController),
                       SizedBox(height: 16),
                       Center(
